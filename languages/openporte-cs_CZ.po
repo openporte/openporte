@@ -1,16 +1,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.28.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-07-30T08:00:15+00:00\n"
-"PO-Revision-Date: 2026-07-30 00:00+0000\n"
-"Last-Translator: Crush-0.87.0:qwen3.6-27b-mtp - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"PO-Revision-Date: 2026-09-07 00:00+0000\n"
+"Last-Translator: Codex-GPT-5:gpt-5 - signed-off by J-C Berthon\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
 "X-Domain: openporte\n"
 
 #. Plugin Name of the plugin
@@ -37,22 +38,83 @@ msgstr "Přispěvatelé OpenPorte"
 msgid "https://github.com/openporte/openporte/graphs/contributors"
 msgstr "https://github.com/openporte/openporte/graphs/contributors"
 
-#: admin/healthcheck.php:48
+#: admin/healthcheck.php:93
 msgid "OpenPorte endpoint check:"
 msgstr "Kontrola koncového bodu OpenPorte:"
 
-#: admin/healthcheck.php:67
+#: admin/healthcheck.php:121
+msgid "OpenPorte Expiration:"
+msgstr "Platnost OpenPorte:"
+
+#: admin/healthcheck.php:125
+msgid "OpenPorte replay protection:"
+msgstr "Ochrana OpenPorte proti opětovnému použití:"
+
+#: admin/healthcheck.php:153
+msgid ""
+"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
+"only Replay limit bounds how often it can be resubmitted. This is strongly "
+"discouraged and is being evaluated for deprecation — set an expiry of 60 "
+"seconds or more."
+msgstr "Platnost je nastavena na 0 (\"Žádná\"), takže vyřešená výzva nikdy nevyprší a počet jejích opětovných odeslání omezuje pouze limit opakovaného použití. Toto nastavení se důrazně nedoporučuje a zvažuje se jeho odstranění; nastavte platnost alespoň na 60 sekund."
+
+#. translators: %d is the configured Expiration value, in seconds
+#: admin/healthcheck.php:161
+#, php-format
+msgid ""
+"Expiration is set to %d seconds, which can elapse before a slow device "
+"finishes solving the challenge and turn legitimate submissions into "
+"failures. Values below 60 seconds are being evaluated for deprecation."
+msgstr "Platnost je nastavena na %d sekund. Tato doba může uplynout dříve, než pomalé zařízení dokončí řešení výzvy, a způsobit selhání oprávněných odeslání. Zvažuje se odstranění hodnot nižších než 60 sekund."
+
+#. translators: %s is a duration such as "5 mins"
+#: admin/healthcheck.php:194
+#, php-format
+msgid ""
+"Submissions were accepted without being counted in the last %s, because the "
+"reuse counter could not be stored. Protection degrades to accepting valid "
+"challenges unconditionally while that lasts — check the persistent object "
+"cache or the database."
+msgstr "Odeslání byla během posledních %s přijímána bez započítání, protože se nepodařilo uložit čítač opětovného použití. Ochrana se po tuto dobu omezí na bezpodmínečné přijímání platných výzev; zkontrolujte trvalou mezipaměť objektů nebo databázi."
+
+#: admin/healthcheck.php:203
+msgid ""
+"Replay limit is 0, so replay protection is off: a solved challenge is "
+"accepted for as long as it stays valid, however many times it is submitted. "
+"This is the behaviour of releases before 1.29.0."
+msgstr "Limit opakovaného použití je 0, takže ochrana proti němu je vypnutá: vyřešená výzva je přijímána, dokud zůstává platná, bez ohledu na počet odeslání. Tak se chovaly verze před 1.29.0."
+
+#. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
+#: admin/healthcheck.php:211
+#, php-format
+msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
+msgid_plural ""
+"Each solved challenge is accepted up to %1$d times, counted in %2$s."
+msgstr[0] "Každá vyřešená výzva je přijata %1$dkrát a započítána v %2$s."
+msgstr[1] "Každá vyřešená výzva je přijata až %1$dkrát a započítána v %2$s."
+msgstr[2] "Každá vyřešená výzva je přijata až %1$dkrát a započítána v %2$s."
+msgstr[3] "Každá vyřešená výzva je přijata až %1$dkrát a započítána v %2$s."
+
+#: admin/healthcheck.php:219
+msgid "the persistent object cache"
+msgstr "trvalá mezipaměť objektů"
+
+#: admin/healthcheck.php:220
+msgid "the database"
+msgstr "databáze"
+
+#: admin/healthcheck.php:238
 msgid "API mode is Custom but no Challenge URL is configured."
 msgstr "Režim API je Vlastní, ale není nakonfigurována adresa URL výzvy."
 
 #. translators: %s is the connection error message
-#: admin/healthcheck.php:103
+#: admin/healthcheck.php:274
 #, php-format
 msgid "The Challenge URL is unreachable: %s"
 msgstr "Adresa URL výzvy je nedostupná: %s"
 
 #. translators: %d is the HTTP status code returned by the backend
-#: admin/healthcheck.php:114
+#: admin/healthcheck.php:285
 #, php-format
 msgid ""
 "The Challenge URL responded with HTTP %d instead of a challenge. Check the "
@@ -62,7 +124,7 @@ msgstr ""
 "Adresa URL výzvy odpověděla HTTP %d místo výzvy. Zkontrolujte adresu URL "
 "(včetně parametru apiKey) a omezení domény/původu backendu."
 
-#: admin/healthcheck.php:124
+#: admin/healthcheck.php:295
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
@@ -71,12 +133,12 @@ msgstr ""
 "challenge, salt a signature)."
 
 #. translators: %s is the algorithm name reported by the backend
-#: admin/healthcheck.php:133
+#: admin/healthcheck.php:304
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr "Backend vydává výzvy s nepodporovaným algoritmem \"%s\"."
 
-#: admin/healthcheck.php:149
+#: admin/healthcheck.php:320
 msgid ""
 "The shared secret does not match the backend's HMAC secret — every form "
 "submission would fail verification. Copy the backend's HMAC secret into the "
@@ -87,7 +149,7 @@ msgstr ""
 "backendu do pole Tajný klíč podpisu."
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
-#: admin/healthcheck.php:157
+#: admin/healthcheck.php:328
 #, php-format
 msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
@@ -96,14 +158,40 @@ msgstr ""
 "Backend vydává výzvy %1$s, ale nastavení Algoritmu je %2$s — odeslání "
 "formulářů by selhala při ověřování. Nastavte Algoritmus na %1$s."
 
+#: admin/healthcheck.php:342
+msgid ""
+"The backend issues challenges with no expiry (no future \"expires\" "
+"parameter in the salt), so a solved challenge never expires on its own and "
+"only Replay limit bounds how often it is accepted. Enable challenge expiry "
+"on the backend."
+msgstr "Backend vydává výzvy bez platnosti (v soli není budoucí parametr \"expires\"), takže vyřešená výzva sama nevyprší a počet jejích přijetí omezuje pouze limit opakovaného použití. Povolte platnost výzev v backendu."
+
+#: admin/healthcheck.php:348
+msgid ""
+"The backend returned a challenge whose expiry is already in the past. Its "
+"clock may be wrong or it may be serving a cached challenge; correct that "
+"before using Custom mode."
+msgstr "Backend vrátil výzvu, jejíž platnost již uplynula. Jeho hodiny mohou být chybné nebo může poskytovat výzvu z mezipaměti; před použitím vlastního režimu to opravte."
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:167
+#: admin/healthcheck.php:353
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
 "matches."
 msgstr ""
 "Adresa URL výzvy odpovídá platnou výzvou %s a sdílený tajný klíč se shoduje."
+
+#. translators: %s is a duration such as "20 mins"
+#: admin/healthcheck.php:358
+msgid "The backend expires its challenges after about %s."
+msgstr "Backend nastavuje platnost výzev přibližně na %s."
+
+#: admin/healthcheck.php:362
+msgid ""
+"That is short enough to expire before a slow device finishes solving, which "
+"turns legitimate submissions into failures."
+msgstr "Tato doba je dost krátká na to, aby platnost vypršela dříve, než pomalé zařízení dokončí řešení, což způsobí selhání oprávněných odeslání."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -195,30 +283,62 @@ msgstr "Aktivujte OpenPorte pro tyto integrace."
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr "Použijte shortcode %s kdekoli v obsahu integrovaných pluginů."
 
-#: admin/options.php:260 admin/options.php:262 admin/options.php:413
-#: admin/options.php:415
+#: admin/options.php:267 admin/options.php:269 admin/options.php:435
+#: admin/options.php:437
 msgid "Show"
 msgstr "Zobrazit"
 
-#: admin/options.php:261 admin/options.php:414
+#: admin/options.php:268 admin/options.php:436
 msgid "Hide"
 msgstr "Skrýt"
 
-#: admin/options.php:477
+#: admin/options.php:275 admin/options.php:278
+msgid "Copy"
+msgstr "Kopírovat"
+
+#: admin/options.php:276
+msgid "Copied!"
+msgstr "Zkopírováno!"
+
+#: admin/options.php:277
+msgid "Copy failed"
+msgstr "Kopírování selhalo"
+
+#: admin/options.php:284
+msgid "Regenerate"
+msgstr "Znovu vytvořit"
+
+#: admin/options.php:577 includes/settings.php:282
+msgid "Custom"
+msgstr "Vlastní"
+
+#: admin/options.php:607
 msgid "5 minutes"
 msgstr "5 minut"
 
-#: admin/options.php:478
+#: admin/options.php:608
 msgid "30 minutes"
 msgstr "30 minut"
 
-#: admin/options.php:479
+#: admin/options.php:609
 msgid "1 hour"
 msgstr "1 hodina"
 
-#: admin/options.php:493 includes/settings.php:145
-msgid "Custom"
-msgstr "Vlastní"
+#: admin/options.php:638
+msgid "Unlimited (pre-1.29 behaviour)"
+msgstr "Neomezeně (chování před 1.29)"
+
+#: admin/options.php:639
+msgid "Single use (strict)"
+msgstr "Jedno použití (přísné)"
+
+#: admin/options.php:640
+msgid "5 uses (recommended)"
+msgstr "5 použití (doporučeno)"
+
+#: admin/options.php:641
+msgid "10 uses"
+msgstr "10 použití"
 
 #: includes/admin.php:17
 msgid "OpenPorte Anti-spam"
@@ -228,46 +348,62 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Nastavení"
 
-#: includes/core.php:323 integrations/enfold-theme.php:58
+#: includes/core.php:474 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verifikace se nezdařila. Zkuste to později znovu."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:326
+#: includes/core.php:477
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Chráněno pomocí %1$sALTCHA%2$s"
 
-#: includes/core.php:330
+#: includes/core.php:481
 msgid "I'm not a robot"
 msgstr "Nejsem robot"
 
-#: includes/core.php:331
+#: includes/core.php:482
 msgid "Verified"
 msgstr "Ověřeno"
 
-#: includes/core.php:332
+#: includes/core.php:483
 msgid "Verifying..."
 msgstr "Probíhá ověřování..."
 
-#: includes/core.php:333
+#: includes/core.php:484
 msgid "Verifying... please wait."
 msgstr "Probíhá ověřování... prosím, čekejte."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:680
+#: includes/core.php:1311
 msgid "This form requires JavaScript!"
 msgstr "Tento formulář vyžaduje JavaScript!"
 
-#: includes/settings.php:129
+#: includes/settings.php:110
+msgid ""
+"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
+"value is being evaluated for deprecation; the recommended range is 60-14400 "
+"seconds."
+msgstr "Platnost 0 (\"Žádná\") znamená, že vyřešená výzva nikdy nevyprší. Zvažuje se odstranění této hodnoty; doporučený rozsah je 60–14400 sekund."
+
+#. translators: %d is the saved Expiration value, in seconds
+#: includes/settings.php:118
+#, php-format
+msgid ""
+"An Expiration of %d seconds can elapse before a slow device finishes solving "
+"the challenge. Values below 60 seconds are being evaluated for deprecation; "
+"the recommended range is 60-14400 seconds."
+msgstr "Platnost %d sekund může uplynout dříve, než pomalé zařízení dokončí řešení výzvy. Zvažuje se odstranění hodnot nižších než 60 sekund; doporučený rozsah je 60–14400 sekund."
+
+#: includes/settings.php:266
 msgid "General"
 msgstr "Obecné"
 
-#: includes/settings.php:136
+#: includes/settings.php:273
 msgid "API Mode"
 msgstr "Režim API"
 
-#: includes/settings.php:142
+#: includes/settings.php:279
 msgid ""
 "Select the API Mode. Use Self-hosted for the built-in WordPress REST API, or "
 "Custom to point to your own ALTCHA-compatible backend."
@@ -275,15 +411,15 @@ msgstr ""
 "Vyberte režim API. Použijte Self-hosted pro vestavěné REST API WordPressu "
 "nebo Vlastní pro vlastní backend kompatibilní s ALTCHA."
 
-#: includes/settings.php:144
+#: includes/settings.php:281
 msgid "Self-hosted"
 msgstr "Self-hosted"
 
-#: includes/settings.php:154
+#: includes/settings.php:291
 msgid "Challenge URL"
 msgstr "Adresa URL výzvy"
 
-#: includes/settings.php:162
+#: includes/settings.php:299
 msgid ""
 "Only available when API Mode is set to Custom.<br/>The URL is made up of the "
 "domain and path to your <strong>custom ALTCHA-compatible backend</strong>, "
@@ -293,15 +429,15 @@ msgstr ""
 "cesty k vašemu <strong>vlastnímu backendu kompatibilnímu s ALTCHA</strong>, "
 "a volitelně klíči API (začíná <code>gk_</code>)."
 
-#: includes/settings.php:171
+#: includes/settings.php:308
 msgid "Shared secret"
 msgstr "Sdílený tajný klíč"
 
-#: includes/settings.php:177
+#: includes/settings.php:314
 msgid "A secret key used to sign and verify challenges."
 msgstr "Tajný klíč používaný k podpisu a ověřování výzev."
 
-#: includes/settings.php:178
+#: includes/settings.php:317
 msgid ""
 "OpenPorte generates a random secret automatically. Change it only if another "
 "application needs to use the same secret.<br/>In Custom API Mode, this value "
@@ -313,15 +449,24 @@ msgstr ""
 "hodnota <strong>musí přesně odpovídat</strong> sdílenému tajnému klíči "
 "(někdy nazývanému HMAC tajný klíč) nakonfigurovanému ve vašem backendu."
 
-#: includes/settings.php:186 includes/settings.php:192
+#: includes/settings.php:319
+msgid ""
+"Copy places the current secret on the clipboard. Regenerate fills in a fresh "
+"random secret; it only takes effect when you save changes, and challenges "
+"already issued with the old secret then stop verifying. In Custom API Mode, "
+"saving a new secret also breaks verification of new submissions until you "
+"update the secret on your backend to match."
+msgstr "Kopírovat vloží aktuální tajemství do schránky. Znovu vytvořit vyplní nové náhodné tajemství; projeví se až po uložení změn a výzvy již vydané se starým tajemstvím se pak přestanou ověřovat. Ve vlastním režimu API uložení nového tajemství rovněž znemožní ověřování nových odeslání, dokud tajemství v backendu neaktualizujete tak, aby odpovídalo."
+
+#: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
 msgstr "Algoritmus hash pro výzvy."
 
-#: includes/settings.php:186
+#: includes/settings.php:329
 msgid "Algorithm"
 msgstr "Algoritmus"
 
-#: includes/settings.php:193
+#: includes/settings.php:336
 msgid ""
 "In Self-hosted API Mode this is the algorithm used to generate and verify "
 "the proof-of-work challenges.<br/>In Custom API Mode it must match the "
@@ -333,23 +478,27 @@ msgstr ""
 "používanému vaším backendem — většina backendů kompatibilních s ALTCHA má "
 "jako výchozí SHA-256."
 
-#: includes/settings.php:203
+#: includes/settings.php:346
 msgid "Low"
 msgstr "Nízká"
 
-#: includes/settings.php:204
+#: includes/settings.php:347
 msgid "Medium"
 msgstr "Střední"
 
-#: includes/settings.php:205
+#: includes/settings.php:348
 msgid "High"
 msgstr "Vysoká"
 
-#: includes/settings.php:215
+#: includes/settings.php:358
 msgid "Complexity"
 msgstr "Složitost"
 
-#: includes/settings.php:221
+#: includes/settings.php:368
+msgid "Disabled in Custom mode: the backend sets the challenge complexity."
+msgstr "Ve vlastním režimu vypnuto: backend nastavuje složitost výzvy."
+
+#: includes/settings.php:369
 msgid ""
 "Select the PoW complexity for the widget: the higher the complexity, the "
 "longer visitors (and bots) work to solve the challenge.<br/>Even High is "
@@ -361,11 +510,15 @@ msgstr ""
 "jednou vteřinou na novém počítači; na starších telefonech to může trvat "
 "několik sekund. Vysoká představuje přibližně 2–3× práci Nízké."
 
-#: includes/settings.php:228
+#: includes/settings.php:376
 msgid "Expiration"
 msgstr "Vypršení platnosti"
 
-#: includes/settings.php:234
+#: includes/settings.php:387
+msgid "Disabled in Custom mode: the backend sets the challenge expiry."
+msgstr "Ve vlastním režimu vypnuto: backend nastavuje platnost výzvy."
+
+#: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
 "no expiry (None) and 14400 is 4 hours."
@@ -373,39 +526,68 @@ msgstr ""
 "Životnost výzvy. Vlastní přijímá 0 až 14400 sekund, kde 0 znamená žádné "
 "vypršení (Žádné) a 14400 je 4 hodiny."
 
-#: includes/settings.php:243
+#: includes/settings.php:392
+msgid ""
+"Above 300 seconds the window in which a solved challenge can be replayed "
+"grows, though Replay limit still bounds how often one is accepted. Below 60 "
+"seconds a challenge can expire before a slow device finishes solving it, and "
+"0 (None) means it never expires at all — both are discouraged and are being "
+"evaluated for deprecation."
+msgstr "Nad 300 sekund se prodlužuje období, ve kterém lze vyřešenou výzvu opakovaně použít, přestože limit opakovaného použití stále omezuje počet jejích přijetí. Pod 60 sekund může výzva vypršet dříve, než ji pomalé zařízení vyřeší, a 0 (Žádná) znamená, že nikdy nevyprší. Obě nastavení se nedoporučují a zvažuje se jejich odstranění."
+
+#: includes/settings.php:398
+msgid "Replay limit"
+msgstr "Limit opakovaného použití"
+
+#: includes/settings.php:404
+msgid ""
+"How many times one solved challenge may be accepted. This applies in both "
+"API Modes."
+msgstr "Kolikrát lze jednu vyřešenou výzvu přijmout. Platí to pro oba režimy API."
+
+#: includes/settings.php:406
+msgid ""
+"A visitor whose form comes back with an unrelated error (a missing field, a "
+"mistyped password) resubmits the same challenge, so a small allowance keeps "
+"those submissions working; every extra use is also one more replay available "
+"to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
+"long as it is valid — the behaviour of releases before 1.29.0, and not "
+"recommended."
+msgstr "Návštěvník, kterému se formulář vrátí s nesouvisející chybou (chybějící pole, chybně zadané heslo), odešle stejnou výzvu znovu. Malá povolená rezerva taková odeslání zachová funkční, každé další použití však nabízí botu další možnost opakovaného použití. Vlastní režim přijímá hodnoty 0 až 100; 0 přijímá vyřešenou výzvu po celou dobu její platnosti. Jde o nedoporučené chování verzí před 1.29.0."
+
+#: includes/settings.php:415
 msgid "Widget Customisation"
 msgstr "Přizpůsobení widgetu"
 
-#: includes/settings.php:250
+#: includes/settings.php:422
 msgid "Auto verification"
 msgstr "Automatické ověřování"
 
-#: includes/settings.php:256
+#: includes/settings.php:428
 msgid "Select auto-verification behaviour."
 msgstr "Vyberte chování automatického ověřování."
 
-#: includes/settings.php:258
+#: includes/settings.php:430
 msgid "Disabled"
 msgstr "Vypnuto"
 
-#: includes/settings.php:259
+#: includes/settings.php:431
 msgid "On page load"
 msgstr "Při načtení stránky"
 
-#: includes/settings.php:260
+#: includes/settings.php:432
 msgid "On form focus"
 msgstr "Při zaměření na formulář"
 
-#: includes/settings.php:261
+#: includes/settings.php:433
 msgid "On form submit"
 msgstr "Při odeslání formuláře"
 
-#: includes/settings.php:268
+#: includes/settings.php:440
 msgid "Display Mode"
 msgstr "Režim zobrazení"
 
-#: includes/settings.php:274
+#: includes/settings.php:446
 msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
@@ -413,19 +595,19 @@ msgstr ""
 "Vyberte, zda se widget zobrazí inline na stránce nebo plovoucí poblíž "
 "tlačítka odeslání."
 
-#: includes/settings.php:276
+#: includes/settings.php:448
 msgid "Inline"
 msgstr "Inline"
 
-#: includes/settings.php:277
+#: includes/settings.php:449
 msgid "Floating"
 msgstr "Plovoucí"
 
-#: includes/settings.php:284
+#: includes/settings.php:456
 msgid "Verification Delay"
 msgstr "Zpoždění ověřování"
 
-#: includes/settings.php:293
+#: includes/settings.php:465
 msgid ""
 "Some visitors perceive a slower check as more trustworthy, and that is this "
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
@@ -436,16 +618,16 @@ msgstr ""
 "zvýšit nároky na boty, místo toho zvýšte Složitost."
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:296
+#: includes/settings.php:468
 #, php-format
 msgid "Add %s second delay"
 msgstr "Přidat zpoždění o %s sekundy"
 
-#: includes/settings.php:304
+#: includes/settings.php:476
 msgid "Acknowledgement"
 msgstr "Poděkování"
 
-#: includes/settings.php:310
+#: includes/settings.php:482
 msgid ""
 "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is "
 "free, open-source software — we would appreciate you keeping it visible, but "
@@ -455,11 +637,11 @@ msgstr ""
 "open-source software — ocenili bychom, kdybyste jej nechal viditelný, ale "
 "volba je na vás."
 
-#: includes/settings.php:311
+#: includes/settings.php:483
 msgid "Hide the ALTCHA logo"
 msgstr "Skrýt logo ALTCHA"
 
-#: includes/settings.php:326
+#: includes/settings.php:498
 msgid ""
 "This applies to the text shown inside the widget. Same as the logo: keeping "
 "it visible helps credit the project this plugin is built on, but it has no "
@@ -469,168 +651,168 @@ msgstr ""
 "viditelného pomáhá ocenit projekt, na kterém je tento plugin postaven, ale "
 "nemá žádný vliv na fungování OpenPorte."
 
-#: includes/settings.php:327
+#: includes/settings.php:499
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr "Skrýt zápatí \"Chráněno pomocí ALTCHA\""
 
-#: includes/settings.php:336
+#: includes/settings.php:508
 msgid "WordPress"
 msgstr "WordPress"
 
-#: includes/settings.php:345
+#: includes/settings.php:517
 msgid "Register page"
 msgstr "Stránka registrace"
 
-#: includes/settings.php:346
+#: includes/settings.php:518
 msgid "Protect WordPress registration page."
 msgstr "Chraňte registrační stránku WordPressu."
 
-#: includes/settings.php:349
+#: includes/settings.php:521
 msgid "Reset password page"
 msgstr "Stránka resetování hesla"
 
-#: includes/settings.php:350
+#: includes/settings.php:522
 msgid "Protect WordPress password reset page."
 msgstr "Chraňte stránku resetování hesla WordPressu."
 
-#: includes/settings.php:353
+#: includes/settings.php:525
 msgid "Login page"
 msgstr "Přihlašovací stránka"
 
-#: includes/settings.php:354
+#: includes/settings.php:526
 msgid "Protect WordPress login page."
 msgstr "Chraňte přihlašovací stránku WordPressu."
 
-#: includes/settings.php:357
+#: includes/settings.php:529
 msgid "Comments"
 msgstr "Komentáře"
 
-#: includes/settings.php:358
+#: includes/settings.php:530
 msgid "Protect WordPress comments section."
 msgstr "Chraňte sekci komentářů WordPressu."
 
-#: includes/settings.php:385
+#: includes/settings.php:557
 msgid "Integrations"
 msgstr "Integrace"
 
-#: includes/settings.php:401
+#: includes/settings.php:573
 msgid "CoBlocks"
 msgstr "CoBlocks"
 
-#: includes/settings.php:402
+#: includes/settings.php:574
 msgid "Protect CoBlocks forms."
 msgstr "Chraňte formuláře CoBlocks."
 
-#: includes/settings.php:406
+#: includes/settings.php:578
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: includes/settings.php:407
+#: includes/settings.php:579
 msgid "Protect Contact Form 7 forms."
 msgstr "Chraňte formuláře Contact Form 7."
 
-#: includes/settings.php:411
+#: includes/settings.php:583
 msgid "Elementor Pro Forms"
 msgstr "Elementor Pro Forms"
 
-#: includes/settings.php:412
+#: includes/settings.php:584
 msgid "Protect Elementor Pro forms."
 msgstr "Chraňte formuláře Elementor Pro."
 
-#: includes/settings.php:416
+#: includes/settings.php:588
 msgid "Enfold Theme"
 msgstr "Enfold Theme"
 
-#: includes/settings.php:417
+#: includes/settings.php:589
 msgid "Protect Enfold theme forms."
 msgstr "Chraňte formuláře motivu Enfold."
 
-#: includes/settings.php:419
+#: includes/settings.php:591
 msgid "Theme not active."
 msgstr "Motiv není aktivní."
 
-#: includes/settings.php:422
+#: includes/settings.php:594
 msgid "Formidable Forms"
 msgstr "Formidable Forms"
 
-#: includes/settings.php:423
+#: includes/settings.php:595
 msgid "Protect Formidable Forms submissions."
 msgstr "Chraňte formuláře Formidable Forms."
 
-#: includes/settings.php:427
+#: includes/settings.php:599
 msgid "Forminator"
 msgstr "Forminator"
 
-#: includes/settings.php:428
+#: includes/settings.php:600
 msgid "Protect Forminator forms."
 msgstr "Chraňte formuláře Forminator."
 
-#: includes/settings.php:432
+#: includes/settings.php:604
 msgid "Gravity Forms"
 msgstr "Gravity Forms"
 
-#: includes/settings.php:433
+#: includes/settings.php:605
 msgid "Protect Gravity Forms submissions."
 msgstr "Chraňte formuláře Gravity Forms."
 
-#: includes/settings.php:437
+#: includes/settings.php:609
 msgid "HTML Forms"
 msgstr "HTML Forms"
 
-#: includes/settings.php:438
+#: includes/settings.php:610
 msgid "Protect HTML Forms submissions."
 msgstr "Chraňte formuláře HTML Forms."
 
-#: includes/settings.php:442
+#: includes/settings.php:614
 msgid "wpDiscuz"
 msgstr "wpDiscuz"
 
-#: includes/settings.php:443
+#: includes/settings.php:615
 msgid "Protect wpDiscuz comments section."
 msgstr "Chraňte sekci komentářů wpDiscuz."
 
-#: includes/settings.php:447
+#: includes/settings.php:619
 msgid "WPForms"
 msgstr "WPForms"
 
-#: includes/settings.php:448
+#: includes/settings.php:620
 msgid "Protect WPForms submissions."
 msgstr "Chraňte formuláře WPForms."
 
-#: includes/settings.php:452
+#: includes/settings.php:624
 msgid "WooCommerce register page"
 msgstr "Registrační stránka WooCommerce"
 
-#: includes/settings.php:453
+#: includes/settings.php:625
 msgid "Protect the WooCommerce register page."
 msgstr "Chraňte registrační stránku WooCommerce."
 
-#: includes/settings.php:457
+#: includes/settings.php:629
 msgid "WooCommerce reset password page"
 msgstr "Stránka resetování hesla WooCommerce"
 
-#: includes/settings.php:458
+#: includes/settings.php:630
 msgid "Protect the WooCommerce reset password page."
 msgstr "Chraňte stránku resetování hesla WooCommerce."
 
-#: includes/settings.php:462
+#: includes/settings.php:634
 msgid "WooCommerce login page"
 msgstr "Přihlašovací stránka WooCommerce"
 
-#: includes/settings.php:463
+#: includes/settings.php:635
 msgid "Protect the WooCommerce login page."
 msgstr "Chraňte přihlašovací stránku WooCommerce."
 
-#: includes/settings.php:470
+#: includes/settings.php:642
 msgid "Custom HTML"
 msgstr "Custom HTML"
 
-#: includes/settings.php:471
+#: includes/settings.php:643
 msgid "Configure hand-written widget tags."
 msgstr "Konfigurujte ručně psané značky widgetu."
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:475
+#: includes/settings.php:647
 #, php-format
 msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
@@ -639,7 +821,7 @@ msgstr ""
 "%1$sZastaralé%2$s, plánováno k odstranění v další hlavní verzi — místo toho "
 "umístěte shortcode %3$s do svého obsahu."
 
-#: includes/settings.php:496
+#: includes/settings.php:668
 msgid "Plugin not active."
 msgstr "Plugin není aktivní."
 

@@ -1,15 +1,16 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.28.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-07-30T08:00:15+00:00\n"
-"PO-Revision-Date: 2026-07-30 00:00+0000\n"
+"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"PO-Revision-Date: 2026-09-08 00:00+0000\n"
 "Last-Translator: Crush-0.87.0:qwen3.6-27b-mtp - signed-off by J-C Berthon\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Domain: openporte\n"
 
 #. Plugin Name of the plugin
@@ -36,23 +37,96 @@ msgstr "Учасники OpenPorte"
 msgid "https://github.com/openporte/openporte/graphs/contributors"
 msgstr "https://github.com/openporte/openporte/graphs/contributors"
 
-#: admin/healthcheck.php:48
+#: admin/healthcheck.php:93
 msgid "OpenPorte endpoint check:"
 msgstr "Перевірка кінцевої точки OpenPorte:"
 
-#: admin/healthcheck.php:67
-msgid "API mode is Custom but no Challenge URL is configured."
+#: admin/healthcheck.php:121
+msgid "OpenPorte Expiration:"
+msgstr "Термін дії OpenPorte:"
+
+#: admin/healthcheck.php:125
+msgid "OpenPorte replay protection:"
+msgstr "Захист від повторного використання OpenPorte:"
+
+#: admin/healthcheck.php:153
+msgid ""
+"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
+"only Replay limit bounds how often it can be resubmitted. This is strongly "
+"discouraged and is being evaluated for deprecation — set an expiry of 60 "
+"seconds or more."
 msgstr ""
-"Режим API встановлено на Custom, але не налаштовано адресу URL виклику."
+"Термін дії встановлено на 0 («Немає»), тому вирішений виклик ніколи не "
+"протече, а лише обмеження повторного використання визначає, як часто його "
+"можна надіслати знову. Це настійно не рекомендується і оцінюється для "
+"залякування — встановіть термін дії не менше 60 секунд."
+
+#. translators: %d is the configured Expiration value, in seconds
+#: admin/healthcheck.php:161
+#, php-format
+msgid ""
+"Expiration is set to %d seconds, which can elapse before a slow device "
+"finishes solving the challenge and turn legitimate submissions into "
+"failures. Values below 60 seconds are being evaluated for deprecation."
+msgstr ""
+"Термін дії встановлено на %d секунд, що може минути, поки повільний пристрій "
+"завершить розв'язання виклику, перетворивши легальні надсилання на помилки. "
+"Значення нижче 60 секунд оцінюються для залякування."
+
+#. translators: %s is a duration such as "5 mins"
+#: admin/healthcheck.php:194
+#, php-format
+msgid ""
+"Submissions were accepted without being counted in the last %s, because the "
+"reuse counter could not be stored. Protection degrades to accepting valid "
+"challenges unconditionally while that lasts — check the persistent object "
+"cache or the database."
+msgstr ""
+"Надсилання приймалися без підрахунку протягом останніх %s, оскільки "
+"лічильник повторного використання не вдалося зберегти. Захист погіршується до "
+"безумовного прийняття дійсних викликів, поки це триває — перевірте "
+"постійний об'єктний кеш або базу даних."
+
+#: admin/healthcheck.php:203
+msgid ""
+"Replay limit is 0, so replay protection is off: a solved challenge is "
+"accepted for as long as it stays valid, however many times it is submitted. "
+"This is the behaviour of releases before 1.29.0."
+msgstr ""
+"Обмеження повторного використання дорівнює 0, тому захист від повторного "
+"використання вимкнено: вирішений виклик приймається доти, доки він є дійсним, "
+"незалежно від кількості надсилань. Це поведінка випусків до 1.29.0."
+
+#. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
+#: admin/healthcheck.php:211
+#, php-format
+msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
+msgid_plural ""
+"Each solved challenge is accepted up to %1$d times, counted in %2$s."
+msgstr[0] "Кожен вирішений виклик приймається %1$d раз, підрахований у %2$s."
+msgstr[1] "Кожен вирішений виклик приймається до %1$d разів, підрахований у %2$s."
+msgstr[2] "Кожен вирішений виклик приймається до %1$d разів, підрахований у %2$s."
+
+#: admin/healthcheck.php:219
+msgid "the persistent object cache"
+msgstr "постійний об'єктний кеш"
+
+#: admin/healthcheck.php:220
+msgid "the database"
+msgstr "база даних"
+
+#: admin/healthcheck.php:238
+msgid "API mode is Custom but no Challenge URL is configured."
+msgstr "Режим API встановлено на Custom, але не налаштовано адресу URL виклику."
 
 #. translators: %s is the connection error message
-#: admin/healthcheck.php:103
+#: admin/healthcheck.php:274
 #, php-format
 msgid "The Challenge URL is unreachable: %s"
 msgstr "Адреса URL виклику недоступна: %s"
 
 #. translators: %d is the HTTP status code returned by the backend
-#: admin/healthcheck.php:114
+#: admin/healthcheck.php:285
 #, php-format
 msgid ""
 "The Challenge URL responded with HTTP %d instead of a challenge. Check the "
@@ -62,7 +136,7 @@ msgstr ""
 "Адреса URL виклику повернула HTTP %d замість виклику. Перевірте адресу URL "
 "(включно з параметром apiKey) та обмеження домену/походження бекенду."
 
-#: admin/healthcheck.php:124
+#: admin/healthcheck.php:295
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
@@ -71,12 +145,12 @@ msgstr ""
 "algorithm, challenge, salt та signature)."
 
 #. translators: %s is the algorithm name reported by the backend
-#: admin/healthcheck.php:133
+#: admin/healthcheck.php:304
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr "Бекенд видає виклики з непідтримуваним алгоритмом \"%s\"."
 
-#: admin/healthcheck.php:149
+#: admin/healthcheck.php:320
 msgid ""
 "The shared secret does not match the backend's HMAC secret — every form "
 "submission would fail verification. Copy the backend's HMAC secret into the "
@@ -87,7 +161,7 @@ msgstr ""
 "підпису."
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
-#: admin/healthcheck.php:157
+#: admin/healthcheck.php:328
 #, php-format
 msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
@@ -96,8 +170,30 @@ msgstr ""
 "Бекенд видає виклики %1$s, але налаштування Алгоритму встановлено на %2$s — "
 "відправка форм не пройде перевірку. Встановіть Алгоритм на %1$s."
 
+#: admin/healthcheck.php:342
+msgid ""
+"The backend issues challenges with no expiry (no future \"expires\" "
+"parameter in the salt), so a solved challenge never expires on its own and "
+"only Replay limit bounds how often it is accepted. Enable challenge expiry "
+"on the backend."
+msgstr ""
+"Бекенд видає виклики без строку дії (у солі немає майбутнього параметра "
+"\"expires\"), тому вирішений виклик ніколи не протече сам по собі, а лише "
+"обмеження повторного використання визначає, як часто його приймають. Увімкніть "
+"строк дії виклику на бекенді."
+
+#: admin/healthcheck.php:348
+msgid ""
+"The backend returned a challenge whose expiry is already in the past. Its "
+"clock may be wrong or it may be serving a cached challenge; correct that "
+"before using Custom mode."
+msgstr ""
+"Бекенд повернув виклик, термін дії якого вже минув. Його годинник може бути "
+"неправильним або він може подавати закешований виклик; виправте це перед "
+"використанням режиму Custom."
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:167
+#: admin/healthcheck.php:353
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -105,6 +201,20 @@ msgid ""
 msgstr ""
 "Адреса URL виклику відповідає дійсним викликом %s, а спільний секрет "
 "збігається."
+
+#. translators: %s is a duration such as "20 mins"
+#: admin/healthcheck.php:358
+#, php-format
+msgid "The backend expires its challenges after about %s."
+msgstr "Бекенд затримує свої виклики приблизно через %s."
+
+#: admin/healthcheck.php:362
+msgid ""
+"That is short enough to expire before a slow device finishes solving, which "
+"turns legitimate submissions into failures."
+msgstr ""
+"Це достатньо короткий термін, щоб виклик протек до завершення розв'язання на "
+"повільному пристрої, що перетворює легальні надсилання на помилки."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -194,30 +304,62 @@ msgstr "Активувати OpenPorte для цих інтеграцій."
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr "Використовуйте шорткод %s будь-де вмісті інтегрованих плагінів."
 
-#: admin/options.php:260 admin/options.php:262 admin/options.php:413
-#: admin/options.php:415
+#: admin/options.php:267 admin/options.php:269 admin/options.php:435
+#: admin/options.php:437
 msgid "Show"
 msgstr "Показати"
 
-#: admin/options.php:261 admin/options.php:414
+#: admin/options.php:268 admin/options.php:436
 msgid "Hide"
 msgstr "Приховати"
 
-#: admin/options.php:477
+#: admin/options.php:275 admin/options.php:278
+msgid "Copy"
+msgstr "Копіювати"
+
+#: admin/options.php:276
+msgid "Copied!"
+msgstr "Скопійовано!"
+
+#: admin/options.php:277
+msgid "Copy failed"
+msgstr "Помилка копіювання"
+
+#: admin/options.php:284
+msgid "Regenerate"
+msgstr "Перегенерувати"
+
+#: admin/options.php:577 includes/settings.php:282
+msgid "Custom"
+msgstr "Custom"
+
+#: admin/options.php:607
 msgid "5 minutes"
 msgstr "5 хвилин"
 
-#: admin/options.php:478
+#: admin/options.php:608
 msgid "30 minutes"
 msgstr "30 хвилин"
 
-#: admin/options.php:479
+#: admin/options.php:609
 msgid "1 hour"
 msgstr "1 година"
 
-#: admin/options.php:493 includes/settings.php:145
-msgid "Custom"
-msgstr "Custom"
+#: admin/options.php:638
+msgid "Unlimited (pre-1.29 behaviour)"
+msgstr "Без обмежень (поведінка до 1.29)"
+
+#: admin/options.php:639
+msgid "Single use (strict)"
+msgstr "Один раз (суворо)"
+
+#: admin/options.php:640
+msgid "5 uses (recommended)"
+msgstr "5 разів (рекомендовано)"
+
+#: admin/options.php:641
+msgid "10 uses"
+msgstr "10 разів"
 
 #: includes/admin.php:17
 msgid "OpenPorte Anti-spam"
@@ -227,46 +369,68 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Налаштування"
 
-#: includes/core.php:323 integrations/enfold-theme.php:58
+#: includes/core.php:474 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Перевірка не вдалася. Спробуйте ще раз пізніше."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:326
+#: includes/core.php:477
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Захищено %1$sALTCHA%2$s"
 
-#: includes/core.php:330
+#: includes/core.php:481
 msgid "I'm not a robot"
 msgstr "Я не робот"
 
-#: includes/core.php:331
+#: includes/core.php:482
 msgid "Verified"
 msgstr "Перевірено"
 
-#: includes/core.php:332
+#: includes/core.php:483
 msgid "Verifying..."
 msgstr "Перевірка..."
 
-#: includes/core.php:333
+#: includes/core.php:484
 msgid "Verifying... please wait."
 msgstr "Перевірка... будь ласка, зачекайте."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:680
+#: includes/core.php:1311
 msgid "This form requires JavaScript!"
 msgstr "Цій формі потрібен JavaScript!"
 
-#: includes/settings.php:129
+#: includes/settings.php:110
+msgid ""
+"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
+"value is being evaluated for deprecation; the recommended range is 60-14400 "
+"seconds."
+msgstr ""
+"Термін дії 0 («Немає») означає, що вирішений виклик ніколи не протече. Це "
+"значення оцінюється для залякування; рекомендований діапазон — 60-14400 "
+"секунд."
+
+#. translators: %d is the saved Expiration value, in seconds
+#: includes/settings.php:118
+#, php-format
+msgid ""
+"An Expiration of %d seconds can elapse before a slow device finishes solving "
+"the challenge. Values below 60 seconds are being evaluated for deprecation; "
+"the recommended range is 60-14400 seconds."
+msgstr ""
+"Термін дії %d секунд може минути, поки повільний пристрій завершить розв'язання "
+"виклику. Значення нижче 60 секунд оцінюються для залякування; рекомендований "
+"діапазон — 60-14400 секунд."
+
+#: includes/settings.php:266
 msgid "General"
 msgstr "Загальні"
 
-#: includes/settings.php:136
+#: includes/settings.php:273
 msgid "API Mode"
 msgstr "Режим API"
 
-#: includes/settings.php:142
+#: includes/settings.php:279
 msgid ""
 "Select the API Mode. Use Self-hosted for the built-in WordPress REST API, or "
 "Custom to point to your own ALTCHA-compatible backend."
@@ -274,15 +438,15 @@ msgstr ""
 "Виберіть режим API. Використовуйте Self-hosted для вбудованого WordPress "
 "REST API або Custom, щоб вказати власний бекенд, сумісний з ALTCHA."
 
-#: includes/settings.php:144
+#: includes/settings.php:281
 msgid "Self-hosted"
 msgstr "Self-hosted"
 
-#: includes/settings.php:154
+#: includes/settings.php:291
 msgid "Challenge URL"
 msgstr "Адреса URL виклику"
 
-#: includes/settings.php:162
+#: includes/settings.php:299
 msgid ""
 "Only available when API Mode is set to Custom.<br/>The URL is made up of the "
 "domain and path to your <strong>custom ALTCHA-compatible backend</strong>, "
@@ -293,15 +457,15 @@ msgstr ""
 "з ALTCHA</strong>, а також необов'язково ключа API (починається з <code>gk_</"
 "code>)."
 
-#: includes/settings.php:171
+#: includes/settings.php:308
 msgid "Shared secret"
 msgstr "Спільний секрет"
 
-#: includes/settings.php:177
+#: includes/settings.php:314
 msgid "A secret key used to sign and verify challenges."
 msgstr "Секретний ключ, що використовується для підпису та перевірки викликів."
 
-#: includes/settings.php:178
+#: includes/settings.php:317
 msgid ""
 "OpenPorte generates a random secret automatically. Change it only if another "
 "application needs to use the same secret.<br/>In Custom API Mode, this value "
@@ -313,15 +477,29 @@ msgstr ""
 "Custom API це значення <strong>повинно точно збігатися</strong> зі спільним "
 "секретом (іноді називається HMAC-секретом), налаштованим у вашому бекенді."
 
-#: includes/settings.php:186 includes/settings.php:192
+#: includes/settings.php:319
+msgid ""
+"Copy places the current secret on the clipboard. Regenerate fills in a fresh "
+"random secret; it only takes effect when you save changes, and challenges "
+"already issued with the old secret then stop verifying. In Custom API Mode, "
+"saving a new secret also breaks verification of new submissions until you "
+"update the secret on your backend to match."
+msgstr ""
+"Копіювання розміщує поточний секрет у буфер обміну. Перегенерація заповнює "
+"новий випадковий секрет; він набуває чинності лише після збереження змін, а "
+"виклики, вже видані зі старим секретом, припиняють перевірку. У режимі Custom "
+"API збереження нового секрету також порушує перевірку нових надсилань, доки "
+"ви не оновите секрет на бекенді для відповідності."
+
+#: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
 msgstr "Алгоритм хешування для викликів."
 
-#: includes/settings.php:186
+#: includes/settings.php:329
 msgid "Algorithm"
 msgstr "Алгоритм"
 
-#: includes/settings.php:193
+#: includes/settings.php:336
 msgid ""
 "In Self-hosted API Mode this is the algorithm used to generate and verify "
 "the proof-of-work challenges.<br/>In Custom API Mode it must match the "
@@ -333,23 +511,27 @@ msgstr ""
 "збігатися з алгоритмом, який використовує ваш бекенд — більшість бекендів, "
 "сумісних з ALTCHA, за замовчуванням використовують SHA-256."
 
-#: includes/settings.php:203
+#: includes/settings.php:346
 msgid "Low"
 msgstr "Низька"
 
-#: includes/settings.php:204
+#: includes/settings.php:347
 msgid "Medium"
 msgstr "Середня"
 
-#: includes/settings.php:205
+#: includes/settings.php:348
 msgid "High"
 msgstr "Висока"
 
-#: includes/settings.php:215
+#: includes/settings.php:358
 msgid "Complexity"
 msgstr "Складність"
 
-#: includes/settings.php:221
+#: includes/settings.php:368
+msgid "Disabled in Custom mode: the backend sets the challenge complexity."
+msgstr "Вимкнено в режимі Custom: бекенд встановлює складність виклику."
+
+#: includes/settings.php:369
 msgid ""
 "Select the PoW complexity for the widget: the higher the complexity, the "
 "longer visitors (and bots) work to solve the challenge.<br/>Even High is "
@@ -362,11 +544,15 @@ msgstr ""
 "старших телефонах це може зайняти кілька секунд. Висока — це приблизно в 2–3 "
 "рази більше роботи, ніж Низька."
 
-#: includes/settings.php:228
+#: includes/settings.php:376
 msgid "Expiration"
 msgstr "Термін дії"
 
-#: includes/settings.php:234
+#: includes/settings.php:387
+msgid "Disabled in Custom mode: the backend sets the challenge expiry."
+msgstr "Вимкнено в режимі Custom: бекенд встановлює термін дії виклику."
+
+#: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
 "no expiry (None) and 14400 is 4 hours."
@@ -374,39 +560,81 @@ msgstr ""
 "Термін дії виклику. Custom приймає значення від 0 до 14400 секунд, де 0 "
 "означає безстроковий (Немає), а 14400 — 4 години."
 
-#: includes/settings.php:243
+#: includes/settings.php:392
+msgid ""
+"Above 300 seconds the window in which a solved challenge can be replayed "
+"grows, though Replay limit still bounds how often one is accepted. Below 60 "
+"seconds a challenge can expire before a slow device finishes solving it, and "
+"0 (None) means it never expires at all — both are discouraged and are being "
+"evaluated for deprecation."
+msgstr ""
+"Понад 300 секунд вікно, у якому вирішений виклик може бути повторним, "
+"зростає, хоча обмеження повторного використання все ще визначає, як часто "
+"його приймають. Менше 60 секунд виклик може протекнути, поки повільний "
+"пристрій завершить його розв'язання, а 0 (Немає) означає, що він ніколи не "
+"протече — обидва варіанти не рекомендується і оцінюються для залякування."
+
+#: includes/settings.php:398
+msgid "Replay limit"
+msgstr "Обмеження повторного використання"
+
+#: includes/settings.php:404
+msgid ""
+"How many times one solved challenge may be accepted. This applies in both "
+"API Modes."
+msgstr ""
+"Скільки разів один вирішений виклик може бути прийнятий. Це застосовується в "
+"обох режимах API."
+
+#: includes/settings.php:406
+msgid ""
+"A visitor whose form comes back with an unrelated error (a missing field, a "
+"mistyped password) resubmits the same challenge, so a small allowance keeps "
+"those submissions working; every extra use is also one more replay available "
+"to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
+"long as it is valid — the behaviour of releases before 1.29.0, and not "
+"recommended."
+msgstr ""
+"Відвідувач, чию форму повернуто з не пов'язаною помилкою (відсутнє поле, "
+"помилково введений пароль), повторно надсилає той самий виклик, тому невеликий "
+"ліміт зберігає роботу цих надсилань; кожне додаткове використання — це ще один "
+"реплей, доступний для бота. Custom приймає від 0 до 100, де 0 приймає вирішений "
+"виклик доти, доки він є дійсним — поведінка випусків до 1.29.0, і не "
+"рекомендується."
+
+#: includes/settings.php:415
 msgid "Widget Customisation"
 msgstr "Налаштування віджета"
 
-#: includes/settings.php:250
+#: includes/settings.php:422
 msgid "Auto verification"
 msgstr "Автоматична перевірка"
 
-#: includes/settings.php:256
+#: includes/settings.php:428
 msgid "Select auto-verification behaviour."
 msgstr "Виберіть поведінку автоматичної перевірки."
 
-#: includes/settings.php:258
+#: includes/settings.php:430
 msgid "Disabled"
 msgstr "Вимкнено"
 
-#: includes/settings.php:259
+#: includes/settings.php:431
 msgid "On page load"
 msgstr "При завантаженні сторінки"
 
-#: includes/settings.php:260
+#: includes/settings.php:432
 msgid "On form focus"
 msgstr "При фокусі на формі"
 
-#: includes/settings.php:261
+#: includes/settings.php:433
 msgid "On form submit"
 msgstr "При відправці форми"
 
-#: includes/settings.php:268
+#: includes/settings.php:440
 msgid "Display Mode"
 msgstr "Режим відображення"
 
-#: includes/settings.php:274
+#: includes/settings.php:446
 msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
@@ -414,19 +642,19 @@ msgstr ""
 "Виберіть, чи відображати віджет inline на сторінці, чи плаваючим біля кнопки "
 "відправки."
 
-#: includes/settings.php:276
+#: includes/settings.php:448
 msgid "Inline"
 msgstr "Inline"
 
-#: includes/settings.php:277
+#: includes/settings.php:449
 msgid "Floating"
 msgstr "Плаваючий"
 
-#: includes/settings.php:284
+#: includes/settings.php:456
 msgid "Verification Delay"
 msgstr "Затримка перевірки"
 
-#: includes/settings.php:293
+#: includes/settings.php:465
 msgid ""
 "Some visitors perceive a slower check as more trustworthy, and that is this "
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
@@ -437,16 +665,16 @@ msgstr ""
 "підняти планку для ботів, збільште Складність."
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:296
+#: includes/settings.php:468
 #, php-format
 msgid "Add %s second delay"
 msgstr "Додати затримку %s секунди"
 
-#: includes/settings.php:304
+#: includes/settings.php:476
 msgid "Acknowledgement"
-msgstr "Подяка"
+msgstr "Згадка"
 
-#: includes/settings.php:310
+#: includes/settings.php:482
 msgid ""
 "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is "
 "free, open-source software — we would appreciate you keeping it visible, but "
@@ -456,11 +684,11 @@ msgstr ""
 "ALTCHA — безкоштовне програмне забезпечення з відкритим кодом — ми б "
 "подякували, якби ви залишили його видимим, але вибір за вами."
 
-#: includes/settings.php:311
+#: includes/settings.php:483
 msgid "Hide the ALTCHA logo"
 msgstr "Приховати логотип ALTCHA"
 
-#: includes/settings.php:326
+#: includes/settings.php:498
 msgid ""
 "This applies to the text shown inside the widget. Same as the logo: keeping "
 "it visible helps credit the project this plugin is built on, but it has no "
@@ -470,168 +698,168 @@ msgstr ""
 "логотипом: залишення його видимим допомагає віддати шану проєкту, на якому "
 "побудовано цей плагін, але не впливає на роботу OpenPorte."
 
-#: includes/settings.php:327
+#: includes/settings.php:499
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr "Приховати підвал «Захищено ALTCHA»"
 
-#: includes/settings.php:336
+#: includes/settings.php:508
 msgid "WordPress"
 msgstr "WordPress"
 
-#: includes/settings.php:345
+#: includes/settings.php:517
 msgid "Register page"
 msgstr "Сторінка реєстрації"
 
-#: includes/settings.php:346
+#: includes/settings.php:518
 msgid "Protect WordPress registration page."
 msgstr "Захистити сторінку реєстрації WordPress."
 
-#: includes/settings.php:349
+#: includes/settings.php:521
 msgid "Reset password page"
 msgstr "Сторінка скидання пароля"
 
-#: includes/settings.php:350
+#: includes/settings.php:522
 msgid "Protect WordPress password reset page."
 msgstr "Захистити сторінку скидання пароля WordPress."
 
-#: includes/settings.php:353
+#: includes/settings.php:525
 msgid "Login page"
 msgstr "Сторінка входу"
 
-#: includes/settings.php:354
+#: includes/settings.php:526
 msgid "Protect WordPress login page."
 msgstr "Захистити сторінку входу WordPress."
 
-#: includes/settings.php:357
+#: includes/settings.php:529
 msgid "Comments"
 msgstr "Коментарі"
 
-#: includes/settings.php:358
+#: includes/settings.php:530
 msgid "Protect WordPress comments section."
 msgstr "Захистити розділ коментарів WordPress."
 
-#: includes/settings.php:385
+#: includes/settings.php:557
 msgid "Integrations"
 msgstr "Інтеграції"
 
-#: includes/settings.php:401
+#: includes/settings.php:573
 msgid "CoBlocks"
 msgstr "CoBlocks"
 
-#: includes/settings.php:402
+#: includes/settings.php:574
 msgid "Protect CoBlocks forms."
 msgstr "Захистити форми CoBlocks."
 
-#: includes/settings.php:406
+#: includes/settings.php:578
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: includes/settings.php:407
+#: includes/settings.php:579
 msgid "Protect Contact Form 7 forms."
 msgstr "Захистити форми Contact Form 7."
 
-#: includes/settings.php:411
+#: includes/settings.php:583
 msgid "Elementor Pro Forms"
 msgstr "Elementor Pro Forms"
 
-#: includes/settings.php:412
+#: includes/settings.php:584
 msgid "Protect Elementor Pro forms."
 msgstr "Захистити форми Elementor Pro."
 
-#: includes/settings.php:416
+#: includes/settings.php:588
 msgid "Enfold Theme"
 msgstr "Enfold Theme"
 
-#: includes/settings.php:417
+#: includes/settings.php:589
 msgid "Protect Enfold theme forms."
 msgstr "Захистити форми теми Enfold."
 
-#: includes/settings.php:419
+#: includes/settings.php:591
 msgid "Theme not active."
 msgstr "Тема неактивна."
 
-#: includes/settings.php:422
+#: includes/settings.php:594
 msgid "Formidable Forms"
 msgstr "Formidable Forms"
 
-#: includes/settings.php:423
+#: includes/settings.php:595
 msgid "Protect Formidable Forms submissions."
 msgstr "Захистити форми Formidable Forms."
 
-#: includes/settings.php:427
+#: includes/settings.php:599
 msgid "Forminator"
 msgstr "Forminator"
 
-#: includes/settings.php:428
+#: includes/settings.php:600
 msgid "Protect Forminator forms."
 msgstr "Захистити форми Forminator."
 
-#: includes/settings.php:432
+#: includes/settings.php:604
 msgid "Gravity Forms"
 msgstr "Gravity Forms"
 
-#: includes/settings.php:433
+#: includes/settings.php:605
 msgid "Protect Gravity Forms submissions."
 msgstr "Захистити форми Gravity Forms."
 
-#: includes/settings.php:437
+#: includes/settings.php:609
 msgid "HTML Forms"
 msgstr "HTML Forms"
 
-#: includes/settings.php:438
+#: includes/settings.php:610
 msgid "Protect HTML Forms submissions."
 msgstr "Захистити форми HTML Forms."
 
-#: includes/settings.php:442
+#: includes/settings.php:614
 msgid "wpDiscuz"
 msgstr "wpDiscuz"
 
-#: includes/settings.php:443
+#: includes/settings.php:615
 msgid "Protect wpDiscuz comments section."
 msgstr "Захистити розділ коментарів wpDiscuz."
 
-#: includes/settings.php:447
+#: includes/settings.php:619
 msgid "WPForms"
 msgstr "WPForms"
 
-#: includes/settings.php:448
+#: includes/settings.php:620
 msgid "Protect WPForms submissions."
 msgstr "Захистити форми WPForms."
 
-#: includes/settings.php:452
+#: includes/settings.php:624
 msgid "WooCommerce register page"
 msgstr "Сторінка реєстрації WooCommerce"
 
-#: includes/settings.php:453
+#: includes/settings.php:625
 msgid "Protect the WooCommerce register page."
 msgstr "Захистити сторінку реєстрації WooCommerce."
 
-#: includes/settings.php:457
+#: includes/settings.php:629
 msgid "WooCommerce reset password page"
 msgstr "Сторінка скидання пароля WooCommerce"
 
-#: includes/settings.php:458
+#: includes/settings.php:630
 msgid "Protect the WooCommerce reset password page."
 msgstr "Захистити сторінку скидання пароля WooCommerce."
 
-#: includes/settings.php:462
+#: includes/settings.php:634
 msgid "WooCommerce login page"
 msgstr "Сторінка входу WooCommerce"
 
-#: includes/settings.php:463
+#: includes/settings.php:635
 msgid "Protect the WooCommerce login page."
 msgstr "Захистити сторінку входу WooCommerce."
 
-#: includes/settings.php:470
+#: includes/settings.php:642
 msgid "Custom HTML"
 msgstr "Custom HTML"
 
-#: includes/settings.php:471
+#: includes/settings.php:643
 msgid "Configure hand-written widget tags."
 msgstr "Налаштуйте вручну написані теги віджета."
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:475
+#: includes/settings.php:647
 #, php-format
 msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
@@ -640,7 +868,7 @@ msgstr ""
 "%1$sЗастаріле%2$s, заплановано до видалення в наступній основній версії — "
 "місця цього помістіть шорткод %3$s у свій вміст."
 
-#: includes/settings.php:496
+#: includes/settings.php:668
 msgid "Plugin not active."
 msgstr "Плагін неактивний."
 
