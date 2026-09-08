@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-07-23 00:00+0000\n"
 "Last-Translator: Crush-0.87.0:gemma-4-31b-mtp - signed-off by J-C Berthon\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -51,11 +51,14 @@ msgstr "OpenPorte replay-bescherming:"
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
-msgstr "Vervaldatum is ingesteld op 0 (\"Geen\"), dus een opgeloste challenge verloopt nooit en alleen Replay-limiet bepaalt hoe vaak deze opnieuw kan worden ingediend. Dit wordt sterk afgeraden en wordt geëvalueerd voor deprecating — stel een vervaldatum in van 60 seconden of meer."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
+msgstr ""
+"Vervaldatum is ingesteld op 0, dus een opgeloste challenge "
+"verloopt nooit en alleen Replay-limiet bepaalt hoe vaak deze opnieuw kan "
+"worden ingediend. Dit wordt sterk afgeraden en wordt geëvalueerd voor "
+"deprecating — stel een vervaldatum in van 60 seconden of meer."
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -64,7 +67,11 @@ msgid ""
 "Expiration is set to %d seconds, which can elapse before a slow device "
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
-msgstr "Vervaldatum is ingesteld op %d seconden, wat kan verstrijken voordat een traag apparaat de challenge heeft opgelost en legitieme inzendingen in mislukkingen verandert. Waarden onder 60 seconden worden geëvalueerd voor deprecating."
+msgstr ""
+"Vervaldatum is ingesteld op %d seconden, wat kan verstrijken voordat een "
+"traag apparaat de challenge heeft opgelost en legitieme inzendingen in "
+"mislukkingen verandert. Waarden onder 60 seconden worden geëvalueerd voor "
+"deprecating."
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -74,14 +81,21 @@ msgid ""
 "reuse counter could not be stored. Protection degrades to accepting valid "
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
-msgstr "Inzendingen zijn geaccepteerd zonder te worden geteld in de laatste %s, omdat de hergebruik-teller niet kon worden opgeslagen. Bescherming degradeert tot het onvoorwaardelijk accepteren van geldige challenges zolang dit duurt — controleer de persistente objectcache of de database."
+msgstr ""
+"Inzendingen zijn geaccepteerd zonder te worden geteld in de laatste %s, "
+"omdat de hergebruik-teller niet kon worden opgeslagen. Bescherming "
+"degradeert tot het onvoorwaardelijk accepteren van geldige challenges zolang "
+"dit duurt — controleer de persistente objectcache of de database."
 
 #: admin/healthcheck.php:203
 msgid ""
 "Replay limit is 0, so replay protection is off: a solved challenge is "
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
-msgstr "Replay-limiet is 0, dus replay-bescherming is uitgeschakeld: een opgeloste challenge wordt geaccepteerd zolang deze geldig blijft, hoe vaak hij ook wordt ingediend. Dit is het gedrag van releases vóór 1.29.0."
+msgstr ""
+"Replay-limiet is 0, dus replay-bescherming is uitgeschakeld: een opgeloste "
+"challenge wordt geaccepteerd zolang deze geldig blijft, hoe vaak hij ook "
+"wordt ingediend. Dit is het gedrag van releases vóór 1.29.0."
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -89,8 +103,11 @@ msgstr "Replay-limiet is 0, dus replay-bescherming is uitgeschakeld: een opgelos
 msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
 msgid_plural ""
 "Each solved challenge is accepted up to %1$d times, counted in %2$s."
-msgstr[0] "Elke opgeloste challenge wordt %1$d keer geaccepteerd, geteld in %2$s."
-msgstr[1] "Elke opgeloste challenge wordt maximaal %1$d keer geaccepteerd, geteld in %2$s."
+msgstr[0] ""
+"Elke opgeloste challenge wordt %1$d keer geaccepteerd, geteld in %2$s."
+msgstr[1] ""
+"Elke opgeloste challenge wordt maximaal %1$d keer geaccepteerd, geteld in "
+"%2$s."
 
 #: admin/healthcheck.php:219
 msgid "the persistent object cache"
@@ -166,14 +183,21 @@ msgid ""
 "parameter in the salt), so a solved challenge never expires on its own and "
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
-msgstr "De backend geeft challenges uit zonder vervaldatum (geen toekomstige \"expires\"-parameter in de salt), dus een opgeloste challenge verloopt nooit vanzelf en alleen Replay-limiet bepaalt hoe vaak hij wordt geaccepteerd. Schakel challenge-vervaldatum in op de backend."
+msgstr ""
+"De backend geeft challenges uit zonder vervaldatum (geen toekomstige "
+"\"expires\"-parameter in de salt), dus een opgeloste challenge verloopt "
+"nooit vanzelf en alleen Replay-limiet bepaalt hoe vaak hij wordt "
+"geaccepteerd. Schakel challenge-vervaldatum in op de backend."
 
 #: admin/healthcheck.php:348
 msgid ""
 "The backend returned a challenge whose expiry is already in the past. Its "
 "clock may be wrong or it may be serving a cached challenge; correct that "
 "before using Custom mode."
-msgstr "De backend heeft een challenge geretourneerd waarvan de vervaldatum al in het verleden ligt. De klok kan verkeerd staan of hij kan een gecachete challenge aanbieden; corrigeer dit voordat u de Aangepaste modus gebruikt."
+msgstr ""
+"De backend heeft een challenge geretourneerd waarvan de vervaldatum al in "
+"het verleden ligt. De klok kan verkeerd staan of hij kan een gecachete "
+"challenge aanbieden; corrigeer dit voordat u de Aangepaste modus gebruikt."
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -195,7 +219,9 @@ msgstr "De backend laat zijn challenges na ongeveer %s verlopen."
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
-msgstr "Dat is kort genoeg om te verlopen voordat een traag apparaat de oplossing heeft voltooid, wat legitieme inzendingen in mislukkingen verandert."
+msgstr ""
+"Dat is kort genoeg om te verlopen voordat een traag apparaat de oplossing "
+"heeft voltooid, wat legitieme inzendingen in mislukkingen verandert."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -384,10 +410,12 @@ msgstr "Dit formulier vereist JavaScript!"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
-msgstr "Een vervaldatum van 0 (\"Geen\") betekent dat een opgeloste challenge nooit verloopt. Deze waarde wordt geëvalueerd voor deprecating; het aanbevolen bereik is 60-14400 seconden."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
+msgstr ""
+"Een vervaldatum van 0 betekent dat een opgeloste challenge nooit "
+"verloopt. Deze waarde wordt geëvalueerd voor deprecating; het aanbevolen "
+"bereik is 60-14400 seconden."
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -396,7 +424,10 @@ msgid ""
 "An Expiration of %d seconds can elapse before a slow device finishes solving "
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
-msgstr "Een vervaldatum van %d seconden kan verstrijken voordat een traag apparaat de challenge heeft opgelost. Waarden onder 60 seconden worden geëvalueerd voor deprecating; het aanbevolen bereik is 60-14400 seconden."
+msgstr ""
+"Een vervaldatum van %d seconden kan verstrijken voordat een traag apparaat "
+"de challenge heeft opgelost. Waarden onder 60 seconden worden geëvalueerd "
+"voor deprecating; het aanbevolen bereik is 60-14400 seconden."
 
 #: includes/settings.php:266
 msgid "General"
@@ -463,7 +494,13 @@ msgid ""
 "already issued with the old secret then stop verifying. In Custom API Mode, "
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
-msgstr "Kopiëren plaatst het huidige geheim op het klembord. Opnieuw genereren vult een nieuw willekeurig geheim in; het wordt alleen actief wanneer u wijzigingen opslaat, en challenges die al zijn uitgegeven met het oude geheim stoppen dan met verifiëren. In de Aangepaste API-modus breekt het opslaan van een nieuw geheim ook de verificatie van nieuwe inzendingen totdat u het geheim op uw backend bijwerkt om overeen te komen."
+msgstr ""
+"Kopiëren plaatst het huidige geheim op het klembord. Opnieuw genereren vult "
+"een nieuw willekeurig geheim in; het wordt alleen actief wanneer u "
+"wijzigingen opslaat, en challenges die al zijn uitgegeven met het oude "
+"geheim stoppen dan met verifiëren. In de Aangepaste API-modus breekt het "
+"opslaan van een nieuw geheim ook de verificatie van nieuwe inzendingen "
+"totdat u het geheim op uw backend bijwerkt om overeen te komen."
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -503,7 +540,9 @@ msgstr "Complexiteit"
 
 #: includes/settings.php:368
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
-msgstr "Uitgeschakeld in Aangepaste modus: de backend stelt de challenge-complexiteit in."
+msgstr ""
+"Uitgeschakeld in Aangepaste modus: de backend stelt de challenge-"
+"complexiteit in."
 
 #: includes/settings.php:369
 msgid ""
@@ -524,24 +563,32 @@ msgstr "Vervaldatum"
 
 #: includes/settings.php:387
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
-msgstr "Uitgeschakeld in Aangepaste modus: de backend stelt de challenge-vervaldatum in."
+msgstr ""
+"Uitgeschakeld in Aangepaste modus: de backend stelt de challenge-vervaldatum "
+"in."
 
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 "Levensduur van een challenge. Aangepast accepteert 0 tot 14400 seconden, "
-"waarbij 0 geen vervaldatum betekent (Geen) en 14400 gelijk is aan 4 uur."
+"waarbij 0 geen vervaldatum betekent en 14400 gelijk is aan 4 uur."
 
 #: includes/settings.php:392
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
-msgstr "Boven 300 seconden wordt het venster waarin een opgeloste challenge kan worden herhaald groter, hoewel Replay-limiet nog steeds bepaalt hoe vaak één wordt geaccepteerd. Onder 60 seconden kan een challenge verlopen voordat een traag apparaat de oplossing heeft voltooid, en 0 (Geen) betekent dat hij nooit verloopt — beide worden afgeraden en worden geëvalueerd voor deprecating."
+msgstr ""
+"Boven 300 seconden wordt het venster waarin een opgeloste challenge kan "
+"worden herhaald groter, hoewel Replay-limiet nog steeds bepaalt hoe vaak één "
+"wordt geaccepteerd. Onder 60 seconden kan een challenge verlopen voordat een "
+"traag apparaat de oplossing heeft voltooid, en 0 betekent dat hij "
+"nooit verloopt — beide worden afgeraden en worden geëvalueerd voor "
+"deprecating."
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -551,7 +598,9 @@ msgstr "Replay-limiet"
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
-msgstr "Hoe vaak één opgeloste challenge mag worden geaccepteerd. Dit geldt in beide API-modi."
+msgstr ""
+"Hoe vaak één opgeloste challenge mag worden geaccepteerd. Dit geldt in beide "
+"API-modi."
 
 #: includes/settings.php:406
 msgid ""
@@ -561,7 +610,13 @@ msgid ""
 "to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
-msgstr "Een bezoeker wiens formulier terugkomt met een ongerelateerde fout (een ontbrekend veld, een verkeerd getypte wachtwoord) dient dezelfde challenge opnieuw in, dus een kleine marge houdt die inzendingen werkend; elk extra gebruik is ook één extra herhaling beschikbaar voor een bot. Aangepast accepteert 0 tot 100, waarbij 0 een opgeloste challenge accepteert zolang deze geldig is — het gedrag van releases vóór 1.29.0, en niet aanbevolen."
+msgstr ""
+"Een bezoeker wiens formulier terugkomt met een ongerelateerde fout (een "
+"ontbrekend veld, een verkeerd getypte wachtwoord) dient dezelfde challenge "
+"opnieuw in, dus een kleine marge houdt die inzendingen werkend; elk extra "
+"gebruik is ook één extra herhaling beschikbaar voor een bot. Aangepast "
+"accepteert 0 tot 100, waarbij 0 een opgeloste challenge accepteert zolang "
+"deze geldig is — het gedrag van releases vóór 1.29.0, en niet aanbevolen."
 
 #: includes/settings.php:415
 msgid "Widget Customisation"

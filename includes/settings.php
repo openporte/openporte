@@ -107,7 +107,7 @@ function openporte_warn_expires( $expires ) {
   if ( 'error' === $level ) {
     _doing_it_wrong(
       'openporte_expires',
-      esc_html__( 'An Expiration of 0 ("None") means a solved challenge never expires. This value is being evaluated for deprecation; the recommended range is 60-14400 seconds.', 'openporte' ),
+      esc_html__( 'An Expiration of 0 means a solved challenge never expires. This value is being evaluated for deprecation; the recommended range is 60-14400 seconds.', 'openporte' ),
       '1.29.0'
     );
   } elseif ( 'warning' === $level ) {
@@ -387,9 +387,9 @@ if (is_admin()) {
         'disabled_note' => __('Disabled in Custom mode: the backend sets the challenge expiry.', 'openporte'),
         // Two concatenated strings so the long-standing first sentence keeps
         // its existing translations; only the guidance is new.
-        "hint" => __('Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means no expiry (None) and 14400 is 4 hours.', 'openporte')
+        "hint" => __('Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means no expiry and 14400 is 4 hours.', 'openporte')
           . '<br/>'
-          . __('Above 300 seconds the window in which a solved challenge can be replayed grows, though Replay limit still bounds how often one is accepted. Below 60 seconds a challenge can expire before a slow device finishes solving it, and 0 (None) means it never expires at all — both are discouraged and are being evaluated for deprecation.', 'openporte'),
+          . __('Above 300 seconds the window in which a solved challenge can be replayed grows, though Replay limit still bounds how often one is accepted. Below 60 seconds a challenge can expire before a slow device finishes solving it, and 0 means it never expires at all — both are discouraged and are being evaluated for deprecation.', 'openporte'),
       )
     );
 

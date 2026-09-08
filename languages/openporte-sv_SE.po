@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
@@ -49,10 +49,9 @@ msgstr ""
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
 
 #. translators: %d is the configured Expiration value, in seconds
@@ -360,9 +359,8 @@ msgstr ""
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
 
 #. translators: %d is the saved Expiration value, in seconds
@@ -483,7 +481,7 @@ msgstr ""
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 
 #: includes/settings.php:392
@@ -491,7 +489,7 @@ msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
 msgstr ""
 

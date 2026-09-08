@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-09-07 00:00+0000\n"
 "Last-Translator: Codex-GPT-5:gpt-5 - signed-off by J-C Berthon\n"
 "Language-Team: German <de@li.org>\n"
@@ -51,11 +51,14 @@ msgstr "OpenPorte-Schutz vor Wiederverwendung:"
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
-msgstr "Die Ablaufzeit ist auf 0 (\"Keine\") gesetzt. Eine gelöste Aufforderung läuft daher nie ab, und nur das Wiederverwendungslimit begrenzt erneute Übermittlungen. Dies wird dringend nicht empfohlen und für eine zukünftige Entfernung geprüft. Setzen Sie eine Ablaufzeit von mindestens 60 Sekunden."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
+msgstr ""
+"Die Ablaufzeit ist auf 0 gesetzt. Eine gelöste Aufforderung "
+"läuft daher nie ab, und nur das Wiederverwendungslimit begrenzt erneute "
+"Übermittlungen. Dies wird dringend nicht empfohlen und für eine zukünftige "
+"Entfernung geprüft. Setzen Sie eine Ablaufzeit von mindestens 60 Sekunden."
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -64,7 +67,11 @@ msgid ""
 "Expiration is set to %d seconds, which can elapse before a slow device "
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
-msgstr "Die Ablaufzeit ist auf %d Sekunden gesetzt. Sie kann verstreichen, bevor ein langsames Gerät die Aufforderung löst, wodurch legitime Übermittlungen fehlschlagen können. Werte unter 60 Sekunden werden für eine zukünftige Entfernung geprüft."
+msgstr ""
+"Die Ablaufzeit ist auf %d Sekunden gesetzt. Sie kann verstreichen, bevor ein "
+"langsames Gerät die Aufforderung löst, wodurch legitime Übermittlungen "
+"fehlschlagen können. Werte unter 60 Sekunden werden für eine zukünftige "
+"Entfernung geprüft."
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -74,14 +81,22 @@ msgid ""
 "reuse counter could not be stored. Protection degrades to accepting valid "
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
-msgstr "Übermittlungen wurden in den letzten %s angenommen, ohne gezählt zu werden, weil der Wiederverwendungszähler nicht gespeichert werden konnte. Der Schutz nimmt gültige Aufforderungen dann bedingungslos an. Prüfen Sie den persistenten Objekt-Cache oder die Datenbank."
+msgstr ""
+"Übermittlungen wurden in den letzten %s angenommen, ohne gezählt zu werden, "
+"weil der Wiederverwendungszähler nicht gespeichert werden konnte. Der Schutz "
+"nimmt gültige Aufforderungen dann bedingungslos an. Prüfen Sie den "
+"persistenten Objekt-Cache oder die Datenbank."
 
 #: admin/healthcheck.php:203
 msgid ""
 "Replay limit is 0, so replay protection is off: a solved challenge is "
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
-msgstr "Das Wiederverwendungslimit ist 0, daher ist der Schutz vor Wiederverwendung deaktiviert: Eine gelöste Aufforderung wird angenommen, solange sie gültig bleibt, unabhängig von der Anzahl der Übermittlungen. Dies entspricht dem Verhalten von Versionen vor 1.29.0."
+msgstr ""
+"Das Wiederverwendungslimit ist 0, daher ist der Schutz vor Wiederverwendung "
+"deaktiviert: Eine gelöste Aufforderung wird angenommen, solange sie gültig "
+"bleibt, unabhängig von der Anzahl der Übermittlungen. Dies entspricht dem "
+"Verhalten von Versionen vor 1.29.0."
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -89,8 +104,11 @@ msgstr "Das Wiederverwendungslimit ist 0, daher ist der Schutz vor Wiederverwend
 msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
 msgid_plural ""
 "Each solved challenge is accepted up to %1$d times, counted in %2$s."
-msgstr[0] "Jede gelöste Aufforderung wird %1$d Mal angenommen und in %2$s gezählt."
-msgstr[1] "Jede gelöste Aufforderung wird bis zu %1$d Mal angenommen und in %2$s gezählt."
+msgstr[0] ""
+"Jede gelöste Aufforderung wird %1$d Mal angenommen und in %2$s gezählt."
+msgstr[1] ""
+"Jede gelöste Aufforderung wird bis zu %1$d Mal angenommen und in %2$s "
+"gezählt."
 
 #: admin/healthcheck.php:219
 msgid "the persistent object cache"
@@ -168,14 +186,22 @@ msgid ""
 "parameter in the salt), so a solved challenge never expires on its own and "
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
-msgstr "Das Backend gibt Aufforderungen ohne Ablaufzeit aus (kein zukünftiger Parameter \"expires\" im Salt). Eine gelöste Aufforderung läuft daher nicht selbst ab, und nur das Wiederverwendungslimit begrenzt ihre Annahme. Aktivieren Sie die Ablaufzeit für Aufforderungen im Backend."
+msgstr ""
+"Das Backend gibt Aufforderungen ohne Ablaufzeit aus (kein zukünftiger "
+"Parameter \"expires\" im Salt). Eine gelöste Aufforderung läuft daher nicht "
+"selbst ab, und nur das Wiederverwendungslimit begrenzt ihre Annahme. "
+"Aktivieren Sie die Ablaufzeit für Aufforderungen im Backend."
 
 #: admin/healthcheck.php:348
 msgid ""
 "The backend returned a challenge whose expiry is already in the past. Its "
 "clock may be wrong or it may be serving a cached challenge; correct that "
 "before using Custom mode."
-msgstr "Das Backend hat eine Aufforderung zurückgegeben, deren Ablaufzeit bereits vergangen ist. Seine Uhr ist möglicherweise falsch oder es liefert eine zwischengespeicherte Aufforderung. Korrigieren Sie dies, bevor Sie den benutzerdefinierten Modus verwenden."
+msgstr ""
+"Das Backend hat eine Aufforderung zurückgegeben, deren Ablaufzeit bereits "
+"vergangen ist. Seine Uhr ist möglicherweise falsch oder es liefert eine "
+"zwischengespeicherte Aufforderung. Korrigieren Sie dies, bevor Sie den "
+"benutzerdefinierten Modus verwenden."
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -189,6 +215,7 @@ msgstr ""
 
 #. translators: %s is a duration such as "20 mins"
 #: admin/healthcheck.php:358
+#, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "Das Backend lässt seine Aufforderungen nach etwa %s ablaufen."
 
@@ -196,7 +223,9 @@ msgstr "Das Backend lässt seine Aufforderungen nach etwa %s ablaufen."
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
-msgstr "Das ist kurz genug, um abzulaufen, bevor ein langsames Gerät die Aufforderung löst, wodurch legitime Übermittlungen fehlschlagen."
+msgstr ""
+"Das ist kurz genug, um abzulaufen, bevor ein langsames Gerät die "
+"Aufforderung löst, wodurch legitime Übermittlungen fehlschlagen."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -389,10 +418,12 @@ msgstr "Dieses Formular erfordert JavaScript!"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
-msgstr "Eine Ablaufzeit von 0 (\"Keine\") bedeutet, dass eine gelöste Aufforderung nie abläuft. Dieser Wert wird für eine zukünftige Entfernung geprüft; der empfohlene Bereich beträgt 60 bis 14400 Sekunden."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
+msgstr ""
+"Eine Ablaufzeit von 0 bedeutet, dass eine gelöste Aufforderung "
+"nie abläuft. Dieser Wert wird für eine zukünftige Entfernung geprüft; der "
+"empfohlene Bereich beträgt 60 bis 14400 Sekunden."
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -401,7 +432,10 @@ msgid ""
 "An Expiration of %d seconds can elapse before a slow device finishes solving "
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
-msgstr "Eine Ablaufzeit von %d Sekunden kann verstreichen, bevor ein langsames Gerät die Aufforderung löst. Werte unter 60 Sekunden werden für eine zukünftige Entfernung geprüft; der empfohlene Bereich beträgt 60 bis 14400 Sekunden."
+msgstr ""
+"Eine Ablaufzeit von %d Sekunden kann verstreichen, bevor ein langsames Gerät "
+"die Aufforderung löst. Werte unter 60 Sekunden werden für eine zukünftige "
+"Entfernung geprüft; der empfohlene Bereich beträgt 60 bis 14400 Sekunden."
 
 #: includes/settings.php:266
 msgid "General"
@@ -467,7 +501,14 @@ msgid ""
 "already issued with the old secret then stop verifying. In Custom API Mode, "
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
-msgstr "Kopieren legt das aktuelle Geheimnis in die Zwischenablage. Neu erzeugen trägt ein neues zufälliges Geheimnis ein; es wird erst beim Speichern der Änderungen wirksam, und bereits mit dem alten Geheimnis ausgestellte Aufforderungen können dann nicht mehr verifiziert werden. Im benutzerdefinierten API-Modus verhindert das Speichern eines neuen Geheimnisses auch die Verifizierung neuer Übermittlungen, bis Sie das Geheimnis im Backend entsprechend aktualisieren."
+msgstr ""
+"Kopieren legt das aktuelle Geheimnis in die Zwischenablage. Neu erzeugen "
+"trägt ein neues zufälliges Geheimnis ein; es wird erst beim Speichern der "
+"Änderungen wirksam, und bereits mit dem alten Geheimnis ausgestellte "
+"Aufforderungen können dann nicht mehr verifiziert werden. Im "
+"benutzerdefinierten API-Modus verhindert das Speichern eines neuen "
+"Geheimnisses auch die Verifizierung neuer Übermittlungen, bis Sie das "
+"Geheimnis im Backend entsprechend aktualisieren."
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -508,7 +549,9 @@ msgstr "Komplexität"
 
 #: includes/settings.php:368
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
-msgstr "Im benutzerdefinierten Modus deaktiviert: Das Backend legt die Komplexität der Aufforderung fest."
+msgstr ""
+"Im benutzerdefinierten Modus deaktiviert: Das Backend legt die Komplexität "
+"der Aufforderung fest."
 
 #: includes/settings.php:369
 msgid ""
@@ -529,24 +572,31 @@ msgstr "Ablauf"
 
 #: includes/settings.php:387
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
-msgstr "Im benutzerdefinierten Modus deaktiviert: Das Backend legt die Ablaufzeit der Aufforderung fest."
+msgstr ""
+"Im benutzerdefinierten Modus deaktiviert: Das Backend legt die Ablaufzeit "
+"der Aufforderung fest."
 
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 "Lebensdauer eine Aufforderung. Benutzerdefiniert akzeptiert 0 bis 14400 "
-"Sekunden, wobei 0 kein Ablauf bedeutet (Keine) und 14400 vier Stunden."
+"Sekunden, wobei 0 kein Ablauf bedeutet und 14400 vier Stunden."
 
 #: includes/settings.php:392
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
-msgstr "Über 300 Sekunden wächst das Zeitfenster, in dem eine gelöste Aufforderung wiederverwendet werden kann, obwohl das Wiederverwendungslimit ihre Annahme weiterhin begrenzt. Unter 60 Sekunden kann eine Aufforderung ablaufen, bevor ein langsames Gerät sie löst, und 0 (Keine) bedeutet, dass sie nie abläuft. Beides wird nicht empfohlen und für eine zukünftige Entfernung geprüft."
+msgstr ""
+"Über 300 Sekunden wächst das Zeitfenster, in dem eine gelöste Aufforderung "
+"wiederverwendet werden kann, obwohl das Wiederverwendungslimit ihre Annahme "
+"weiterhin begrenzt. Unter 60 Sekunden kann eine Aufforderung ablaufen, bevor "
+"ein langsames Gerät sie löst, und 0 bedeutet, dass sie nie abläuft. "
+"Beides wird nicht empfohlen und für eine zukünftige Entfernung geprüft."
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -556,7 +606,9 @@ msgstr "Wiederverwendungslimit"
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
-msgstr "Wie oft eine gelöste Aufforderung angenommen werden darf. Dies gilt in beiden API-Modi."
+msgstr ""
+"Wie oft eine gelöste Aufforderung angenommen werden darf. Dies gilt in "
+"beiden API-Modi."
 
 #: includes/settings.php:406
 msgid ""
@@ -566,7 +618,14 @@ msgid ""
 "to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
-msgstr "Ein Besucher, dessen Formular mit einem anderen Fehler zurückkommt (ein fehlendes Feld, ein falsch eingegebenes Passwort), übermittelt dieselbe Aufforderung erneut. Eine kleine Anzahl erlaubter Wiederverwendungen hält diese Übermittlungen funktionsfähig, doch jede zusätzliche Verwendung bietet auch einem Bot eine weitere Wiederverwendung. Benutzerdefiniert akzeptiert 0 bis 100; bei 0 wird eine gelöste Aufforderung angenommen, solange sie gültig ist. Das entspricht dem nicht empfohlenen Verhalten vor 1.29.0."
+msgstr ""
+"Ein Besucher, dessen Formular mit einem anderen Fehler zurückkommt (ein "
+"fehlendes Feld, ein falsch eingegebenes Passwort), übermittelt dieselbe "
+"Aufforderung erneut. Eine kleine Anzahl erlaubter Wiederverwendungen hält "
+"diese Übermittlungen funktionsfähig, doch jede zusätzliche Verwendung bietet "
+"auch einem Bot eine weitere Wiederverwendung. Benutzerdefiniert akzeptiert 0 "
+"bis 100; bei 0 wird eine gelöste Aufforderung angenommen, solange sie gültig "
+"ist. Das entspricht dem nicht empfohlenen Verhalten vor 1.29.0."
 
 #: includes/settings.php:415
 msgid "Widget Customisation"

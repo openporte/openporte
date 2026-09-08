@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-09-08 00:00+0000\n"
 "Last-Translator: Crush:qwen3.6-27b - signed-off by J-C Berthon\n"
 "Language-Team: Chinese (simplified)\n"
@@ -24,8 +24,8 @@ msgid ""
 "Stop spam without CAPTCHAs. Proof-of-Work protection for your site. Open-"
 "source, self-hosted, privacy-first."
 msgstr ""
-"无需 CAPTCHA 即可阻止垃圾信息。Proof-of-Work 保护您的网站。开源、自托管、"
-"隐私优先。"
+"无需 CAPTCHA 即可阻止垃圾信息。Proof-of-Work 保护您的网站。开源、自托管、隐私"
+"优先。"
 
 #. Author of the plugin
 #: openporte.php
@@ -51,12 +51,13 @@ msgstr "OpenPorte 重放保护："
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
-"过期时间设为 0（\"无\"），因此已解决的 challenge 永不过期，仅重放限制约束其可被重新提交的次数。强烈不推荐此设置，且正在评估将其弃用——请将过期时间设为 60 秒或更长。"
+"过期时间设为 0，因此已解决的 challenge 永不过期，仅重放限制约束其可"
+"被重新提交的次数。强烈不推荐此设置，且正在评估将其弃用——请将过期时间设为 60 "
+"秒或更长。"
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -66,7 +67,8 @@ msgid ""
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
 msgstr ""
-"过期时间设为 %d 秒，这一时长可能在较慢设备完成 challenge 之前就耗尽，使合法提交变成失败。低于 60 秒的值正在评估弃用。"
+"过期时间设为 %d 秒，这一时长可能在较慢设备完成 challenge 之前就耗尽，使合法提"
+"交变成失败。低于 60 秒的值正在评估弃用。"
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -77,7 +79,8 @@ msgid ""
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
 msgstr ""
-"在过去 %s 内，由于重用计数器无法存储，提交在未计入的情况下被接受。在此期间，保护降级为无条件接受有效的 challenge——请检查持久对象缓存或数据库。"
+"在过去 %s 内，由于重用计数器无法存储，提交在未计入的情况下被接受。在此期间，"
+"保护降级为无条件接受有效的 challenge——请检查持久对象缓存或数据库。"
 
 #: admin/healthcheck.php:203
 msgid ""
@@ -85,7 +88,8 @@ msgid ""
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
 msgstr ""
-"重放限制为 0，因此重放保护已关闭：已解决的 challenge 在其有效期内无论提交多少次都会被接受。这是 1.29.0 之前版本的行为。"
+"重放限制为 0，因此重放保护已关闭：已解决的 challenge 在其有效期内无论提交多少"
+"次都会被接受。这是 1.29.0 之前版本的行为。"
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -164,7 +168,9 @@ msgid ""
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
 msgstr ""
-"后端发出的 challenge 没有过期时间（salt 中没有未来的 \"expires\" 参数），因此已解决的 challenge 不会自行过期，仅重放限制约束其被接受的次数。请在后端启用 challenge 过期。"
+"后端发出的 challenge 没有过期时间（salt 中没有未来的 \"expires\" 参数），因此"
+"已解决的 challenge 不会自行过期，仅重放限制约束其被接受的次数。请在后端启用 "
+"challenge 过期。"
 
 #: admin/healthcheck.php:348
 msgid ""
@@ -172,7 +178,8 @@ msgid ""
 "clock may be wrong or it may be serving a cached challenge; correct that "
 "before using Custom mode."
 msgstr ""
-"后端返回的 challenge 的过期时间已过去。其时钟可能不准，也可能在提供缓存的 challenge；在使用自定义模式之前请修正该问题。"
+"后端返回的 challenge 的过期时间已过去。其时钟可能不准，也可能在提供缓存的 "
+"challenge；在使用自定义模式之前请修正该问题。"
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -192,8 +199,7 @@ msgstr "后端的 challenge 会在约 %s 后过期。"
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
-msgstr ""
-"这一时长太短，可能在较慢设备完成解题前就已到期，使合法提交变成失败。"
+msgstr "这一时长太短，可能在较慢设备完成解题前就已到期，使合法提交变成失败。"
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -218,8 +224,7 @@ msgid ""
 "OpenPorte Spam Protection for WordPress, plugin version %1$s, ALTCHA widget "
 "version %2$s"
 msgstr ""
-"WordPress 的 OpenPorte Spam Protection，插件版本 %1$s，ALTCHA 小工具版本 "
-"%2$s"
+"WordPress 的 OpenPorte Spam Protection，插件版本 %1$s，ALTCHA 小工具版本 %2$s"
 
 #. translators: the placeholders are opening and closing tags for a link (<a> tag)
 #: admin/options.php:77
@@ -378,11 +383,11 @@ msgstr "此表单需要 JavaScript！"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
-"过期时间为 0（\"无\"）表示已解决的 challenge 永不过期。此值正在评估弃用；推荐范围为 60-14400 秒。"
+"过期时间为 0 表示已解决的 challenge 永不过期。此值正在评估弃用；推荐"
+"范围为 60-14400 秒。"
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -392,7 +397,8 @@ msgid ""
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
 msgstr ""
-"过期时间为 %d 秒时，这一时长可能在较慢设备完成 challenge 之前就耗尽。低于 60 秒的值正在评估弃用；推荐范围为 60-14400 秒。"
+"过期时间为 %d 秒时，这一时长可能在较慢设备完成 challenge 之前就耗尽。低于 60 "
+"秒的值正在评估弃用；推荐范围为 60-14400 秒。"
 
 #: includes/settings.php:266
 msgid "General"
@@ -455,7 +461,9 @@ msgid ""
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
 msgstr ""
-"复制会将当前密钥放到剪贴板。重新生成会填入一个新的随机密钥；它仅在保存更改时生效，且用旧密钥签发的 challenge 此后将无法通过验证。在自定义 API 模式下，保存新密钥后，新提交的验证也会失败，直到您将后端的密钥更新为一致。"
+"复制会将当前密钥放到剪贴板。重新生成会填入一个新的随机密钥；它仅在保存更改时"
+"生效，且用旧密钥签发的 challenge 此后将无法通过验证。在自定义 API 模式下，保"
+"存新密钥后，新提交的验证也会失败，直到您将后端的密钥更新为一致。"
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -503,9 +511,9 @@ msgid ""
 "usually solved in under a second on a recent computer; on older phones it "
 "can take a few seconds. High is roughly 2–3× the work of Low."
 msgstr ""
-"选择小工具的 PoW 复杂度：复杂度越高，访问者（和机器人）解决 challenge 所需"
-"的时间越长。<br/>即使在最新计算机上，高复杂度通常也能在一秒内解决；在旧手机上"
-"可能需要几秒钟。高的工作量大约是低的 2-3 倍。"
+"选择小工具的 PoW 复杂度：复杂度越高，访问者（和机器人）解决 challenge 所需的"
+"时间越长。<br/>即使在最新计算机上，高复杂度通常也能在一秒内解决；在旧手机上可"
+"能需要几秒钟。高的工作量大约是低的 2-3 倍。"
 
 #: includes/settings.php:376
 msgid "Expiration"
@@ -518,9 +526,9 @@ msgstr "在自定义模式下禁用：由后端设置 challenge 过期时间。"
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
-"challenge 的有效期。自定义接受 0 到 14400 秒，其中 0 表示永不过期（无），"
+"challenge 的有效期。自定义接受 0 到 14400 秒，其中 0 表示永不过期，"
 "14400 为 4 小时。"
 
 #: includes/settings.php:392
@@ -528,10 +536,12 @@ msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
 msgstr ""
-"超过 300 秒，已解决的 challenge 可被重放的窗口会变长，尽管重放限制仍约束其被接受的次数。低于 60 秒时，challenge 可能在较慢设备完成解题前就已过期；而 0（无）表示它永不过期——两者均不推荐，且正在评估弃用。"
+"超过 300 秒，已解决的 challenge 可被重放的窗口会变长，尽管重放限制仍约束其被"
+"接受的次数。低于 60 秒时，challenge 可能在较慢设备完成解题前就已过期；而 0"
+"表示它永不过期——两者均不推荐，且正在评估弃用。"
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -541,8 +551,7 @@ msgstr "重放限制"
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
-msgstr ""
-"一个已解决的 challenge 最多可被接受多少次。此设置适用于两种 API 模式。"
+msgstr "一个已解决的 challenge 最多可被接受多少次。此设置适用于两种 API 模式。"
 
 #: includes/settings.php:406
 msgid ""
@@ -553,7 +562,10 @@ msgid ""
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
 msgstr ""
-"当访问者的表单因无关错误（如缺少字段、密码输入错误）返回时，他们会重新提交同一个 challenge，因此保留少量额度可使这些提交保持可用；但每多一次使用，也给机器人多一次重放机会。自定义接受 0 到 100，其中 0 表示在 challenge 有效期间一直接受——这是 1.29.0 之前版本的行为，不推荐。"
+"当访问者的表单因无关错误（如缺少字段、密码输入错误）返回时，他们会重新提交同"
+"一个 challenge，因此保留少量额度可使这些提交保持可用；但每多一次使用，也给机"
+"器人多一次重放机会。自定义接受 0 到 100，其中 0 表示在 challenge 有效期间一直"
+"接受——这是 1.29.0 之前版本的行为，不推荐。"
 
 #: includes/settings.php:415
 msgid "Widget Customisation"
@@ -630,8 +642,8 @@ msgid ""
 "free, open-source software — we would appreciate you keeping it visible, but "
 "the choice is yours."
 msgstr ""
-"这适用于小工具内显示的小型 ALTCHA logo。ALTCHA 是免费、开源的软件——我们希望"
-"您保留它的可见性，但选择权在您。"
+"这适用于小工具内显示的小型 ALTCHA logo。ALTCHA 是免费、开源的软件——我们希望您"
+"保留它的可见性，但选择权在您。"
 
 #: includes/settings.php:483
 msgid "Hide the ALTCHA logo"
@@ -643,8 +655,8 @@ msgid ""
 "it visible helps credit the project this plugin is built on, but it has no "
 "effect on how OpenPorte works."
 msgstr ""
-"这适用于小工具内显示的文本。与 logo 一样：保留可见性有助于为本站插件所基于"
-"的项目致谢，但它不影响 OpenPorte 的工作方式。"
+"这适用于小工具内显示的文本。与 logo 一样：保留可见性有助于为本站插件所基于的"
+"项目致谢，但它不影响 OpenPorte 的工作方式。"
 
 #: includes/settings.php:499
 msgid "Hide the \"Protected by ALTCHA\" footer"

@@ -2,9 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-09-08 00:00+0000\n"
-"Last-Translator: Crush-1.0:Muse-Glimmer-30B-4bit - signed-off by J-C Berthon\n"
+"Last-Translator: Crush-1.0:Muse-Glimmer-30B-4bit - signed-off by J-C "
+"Berthon\n"
 "Language-Team: Spanish <es@li.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -51,15 +52,15 @@ msgstr "Protección contra reutilización de OpenPorte:"
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
-"La expiración está establecida en 0 (\"Ninguna\"), por lo que un desafío resuelto nunca expira y "
-"solo el límite de Replay limita con qué frecuencia se puede volver a enviar. Esto está fuertemente "
-"desaconsejado y se está evaluando para su deprecación — establece un vencimiento de 60 "
-"segundos o más."
+"La expiración está establecida en 0, por lo que un desafío "
+"resuelto nunca expira y solo el límite de Replay limita con qué frecuencia "
+"se puede volver a enviar. Esto está fuertemente desaconsejado y se está "
+"evaluando para su deprecación — establece un vencimiento de 60 segundos o "
+"más."
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -69,9 +70,10 @@ msgid ""
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
 msgstr ""
-"La expiración está establecida en %d segundos, lo que puede transcurrir antes de que un dispositivo lento "
-"termine de resolver el desafío y convierta envíos legítimos en "
-"fallos. Los valores inferiores a 60 segundos se están evaluando para su deprecación."
+"La expiración está establecida en %d segundos, lo que puede transcurrir "
+"antes de que un dispositivo lento termine de resolver el desafío y convierta "
+"envíos legítimos en fallos. Los valores inferiores a 60 segundos se están "
+"evaluando para su deprecación."
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -82,8 +84,10 @@ msgid ""
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
 msgstr ""
-"Los envíos se aceptaron sin contarlos en los últimos %s, porque el contador de reutilización no se pudo almacenar. La protección se degrada a aceptar desafíos válidos incondicionalmente mientras dure — revisa la caché de objetos persistente "
-"o la base de datos."
+"Los envíos se aceptaron sin contarlos en los últimos %s, porque el contador "
+"de reutilización no se pudo almacenar. La protección se degrada a aceptar "
+"desafíos válidos incondicionalmente mientras dure — revisa la caché de "
+"objetos persistente o la base de datos."
 
 #: admin/healthcheck.php:203
 msgid ""
@@ -91,8 +95,10 @@ msgid ""
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
 msgstr ""
-"El límite de Replay es 0, por lo que la protección contra reutilización está desactivada: un desafío resuelto se acepta mientras siga siendo válido, por muchas veces que se envíe. "
-"Este es el comportamiento de las versiones anteriores a 1.29.0."
+"El límite de Replay es 0, por lo que la protección contra reutilización está "
+"desactivada: un desafío resuelto se acepta mientras siga siendo válido, por "
+"muchas veces que se envíe. Este es el comportamiento de las versiones "
+"anteriores a 1.29.0."
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -176,7 +182,10 @@ msgid ""
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
 msgstr ""
-"El backend emite desafíos sin vencimiento (sin parámetro \"expires\" futuro en la sal), por lo que un desafío resuelto nunca expira por sí mismo y solo el límite de Replay limita con qué frecuencia se acepta. Habilita el vencimiento de desafíos en el backend."
+"El backend emite desafíos sin vencimiento (sin parámetro \"expires\" futuro "
+"en la sal), por lo que un desafío resuelto nunca expira por sí mismo y solo "
+"el límite de Replay limita con qué frecuencia se acepta. Habilita el "
+"vencimiento de desafíos en el backend."
 
 #: admin/healthcheck.php:348
 msgid ""
@@ -184,7 +193,9 @@ msgid ""
 "clock may be wrong or it may be serving a cached challenge; correct that "
 "before using Custom mode."
 msgstr ""
-"El backend devolvió un desafío cuyo vencimiento ya está en el pasado. Su reloj puede estar mal o puede estar sirviendo un desafío en caché; corrige eso antes de usar el modo Personalizado."
+"El backend devolvió un desafío cuyo vencimiento ya está en el pasado. Su "
+"reloj puede estar mal o puede estar sirviendo un desafío en caché; corrige "
+"eso antes de usar el modo Personalizado."
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -198,6 +209,7 @@ msgstr ""
 
 #. translators: %s is a duration such as "20 mins"
 #: admin/healthcheck.php:358
+#, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "El backend hace caducar sus desafíos después de aproximadamente %s."
 
@@ -206,7 +218,9 @@ msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
 msgstr ""
-"Eso es lo suficientemente corto como para expirar antes de que un dispositivo lento termine de resolver, lo que convierte envíos legítimos en fallos."
+"Eso es lo suficientemente corto como para expirar antes de que un "
+"dispositivo lento termine de resolver, lo que convierte envíos legítimos en "
+"fallos."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -400,13 +414,12 @@ msgstr "¡Este formulario requiere JavaScript!"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
-"Una expiración de 0 (\"Ninguna\") significa que un desafío resuelto nunca expira. Este "
-"valor se está evaluando para su deprecación; el rango recomendado es 60-14400 "
-"segundos."
+"Una expiración de 0 significa que un desafío resuelto nunca "
+"expira. Este valor se está evaluando para su deprecación; el rango "
+"recomendado es 60-14400 segundos."
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -416,9 +429,10 @@ msgid ""
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
 msgstr ""
-"Una expiración de %d segundos puede transcurrir antes de que un dispositivo lento termine de resolver "
-"el desafío. Los valores inferiores a 60 segundos se están evaluando para su deprecación; "
-"el rango recomendado es 60-14400 segundos."
+"Una expiración de %d segundos puede transcurrir antes de que un dispositivo "
+"lento termine de resolver el desafío. Los valores inferiores a 60 segundos "
+"se están evaluando para su deprecación; el rango recomendado es 60-14400 "
+"segundos."
 
 #: includes/settings.php:266
 msgid "General"
@@ -484,8 +498,12 @@ msgid ""
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
 msgstr ""
-"Copiar coloca el secreto actual en el portapapeles. Regenerar rellena un secreto aleatorio nuevo; solo surte efecto cuando guardas los cambios, y los desafíos ya emitidos con el secreto antiguo dejan de verificarse. En modo API Personalizado, "
-"guardar un nuevo secreto también rompe la verificación de nuevos envíos hasta que actualices el secreto en tu backend para que coincida."
+"Copiar coloca el secreto actual en el portapapeles. Regenerar rellena un "
+"secreto aleatorio nuevo; solo surte efecto cuando guardas los cambios, y los "
+"desafíos ya emitidos con el secreto antiguo dejan de verificarse. En modo "
+"API Personalizado, guardar un nuevo secreto también rompe la verificación de "
+"nuevos envíos hasta que actualices el secreto en tu backend para que "
+"coincida."
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -525,7 +543,9 @@ msgstr "Complejidad"
 
 #: includes/settings.php:368
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
-msgstr "Desactivado en modo Personalizado: el backend establece la complejidad del desafío."
+msgstr ""
+"Desactivado en modo Personalizado: el backend establece la complejidad del "
+"desafío."
 
 #: includes/settings.php:369
 msgid ""
@@ -546,26 +566,32 @@ msgstr "Expiración"
 
 #: includes/settings.php:387
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
-msgstr "Desactivado en modo Personalizado: el backend establece el vencimiento del desafío."
+msgstr ""
+"Desactivado en modo Personalizado: el backend establece el vencimiento del "
+"desafío."
 
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 "Duración de un desafío. Personalizado acepta de 0 a 14400 segundos, donde 0 "
-"significa sin expiración (Ninguna) y 14400 son 4 horas."
+"significa sin expiración y 14400 son 4 horas."
 
 #: includes/settings.php:392
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
 msgstr ""
-"Por encima de 300 segundos la ventana en la que se puede repetir un desafío resuelto crece, aunque el límite de Replay sigue limitando con qué frecuencia se acepta uno. Por debajo de 60 "
-"segundos un desafío puede expirar antes de que un dispositivo lento termine de resolverlo, y 0 (Ninguna) significa que nunca expira en absoluto — ambos están desaconsejados y se están evaluando para su deprecación."
+"Por encima de 300 segundos la ventana en la que se puede repetir un desafío "
+"resuelto crece, aunque el límite de Replay sigue limitando con qué "
+"frecuencia se acepta uno. Por debajo de 60 segundos un desafío puede expirar "
+"antes de que un dispositivo lento termine de resolverlo, y 0 "
+"significa que nunca expira en absoluto — ambos están desaconsejados y se "
+"están evaluando para su deprecación."
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -576,7 +602,8 @@ msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
 msgstr ""
-"Cuántas veces puede aceptarse un desafío resuelto. Esto se aplica en ambos modos API."
+"Cuántas veces puede aceptarse un desafío resuelto. Esto se aplica en ambos "
+"modos API."
 
 #: includes/settings.php:406
 msgid ""
@@ -587,7 +614,13 @@ msgid ""
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
 msgstr ""
-"Un visitante cuyo formulario vuelve con un error no relacionado (un campo faltante, una contraseña mal escrita) vuelve a enviar el mismo desafío, por lo que una pequeña tolerancia mantiene esos envíos funcionando; cada uso adicional también es una repetición más disponible para un bot. Personalizado acepta de 0 a 100, donde 0 acepta un desafío resuelto mientras sea válido — el comportamiento de las versiones anteriores a 1.29.0, y no recomendado."
+"Un visitante cuyo formulario vuelve con un error no relacionado (un campo "
+"faltante, una contraseña mal escrita) vuelve a enviar el mismo desafío, por "
+"lo que una pequeña tolerancia mantiene esos envíos funcionando; cada uso "
+"adicional también es una repetición más disponible para un bot. "
+"Personalizado acepta de 0 a 100, donde 0 acepta un desafío resuelto mientras "
+"sea válido — el comportamiento de las versiones anteriores a 1.29.0, y no "
+"recomendado."
 
 #: includes/settings.php:415
 msgid "Widget Customisation"

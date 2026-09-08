@@ -150,7 +150,7 @@ function openporte_evaluate_expires_setting($expires)
   if ($level === 'error') {
     return array(
       'level' => 'error',
-      'message' => __('Expiration is set to 0 ("None"), so a solved challenge never expires and only Replay limit bounds how often it can be resubmitted. This is strongly discouraged and is being evaluated for deprecation — set an expiry of 60 seconds or more.', 'openporte'),
+      'message' => __('Expiration is set to 0, so a solved challenge never expires and only Replay limit bounds how often it can be resubmitted. This is strongly discouraged and is being evaluated for deprecation — set an expiry of 60 seconds or more.', 'openporte'),
     );
   }
   if ($level === 'warning') {

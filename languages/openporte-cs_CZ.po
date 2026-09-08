@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-09-07 00:00+0000\n"
 "Last-Translator: Codex-GPT-5:gpt-5 - signed-off by J-C Berthon\n"
 "Language-Team: Czech\n"
@@ -52,11 +52,14 @@ msgstr "Ochrana OpenPorte proti opětovnému použití:"
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
-msgstr "Platnost je nastavena na 0 (\"Žádná\"), takže vyřešená výzva nikdy nevyprší a počet jejích opětovných odeslání omezuje pouze limit opakovaného použití. Toto nastavení se důrazně nedoporučuje a zvažuje se jeho odstranění; nastavte platnost alespoň na 60 sekund."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
+msgstr ""
+"Platnost je nastavena na 0, takže vyřešená výzva nikdy nevyprší "
+"a počet jejích opětovných odeslání omezuje pouze limit opakovaného použití. "
+"Toto nastavení se důrazně nedoporučuje a zvažuje se jeho odstranění; "
+"nastavte platnost alespoň na 60 sekund."
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -65,7 +68,10 @@ msgid ""
 "Expiration is set to %d seconds, which can elapse before a slow device "
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
-msgstr "Platnost je nastavena na %d sekund. Tato doba může uplynout dříve, než pomalé zařízení dokončí řešení výzvy, a způsobit selhání oprávněných odeslání. Zvažuje se odstranění hodnot nižších než 60 sekund."
+msgstr ""
+"Platnost je nastavena na %d sekund. Tato doba může uplynout dříve, než "
+"pomalé zařízení dokončí řešení výzvy, a způsobit selhání oprávněných "
+"odeslání. Zvažuje se odstranění hodnot nižších než 60 sekund."
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -75,14 +81,21 @@ msgid ""
 "reuse counter could not be stored. Protection degrades to accepting valid "
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
-msgstr "Odeslání byla během posledních %s přijímána bez započítání, protože se nepodařilo uložit čítač opětovného použití. Ochrana se po tuto dobu omezí na bezpodmínečné přijímání platných výzev; zkontrolujte trvalou mezipaměť objektů nebo databázi."
+msgstr ""
+"Odeslání byla během posledních %s přijímána bez započítání, protože se "
+"nepodařilo uložit čítač opětovného použití. Ochrana se po tuto dobu omezí na "
+"bezpodmínečné přijímání platných výzev; zkontrolujte trvalou mezipaměť "
+"objektů nebo databázi."
 
 #: admin/healthcheck.php:203
 msgid ""
 "Replay limit is 0, so replay protection is off: a solved challenge is "
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
-msgstr "Limit opakovaného použití je 0, takže ochrana proti němu je vypnutá: vyřešená výzva je přijímána, dokud zůstává platná, bez ohledu na počet odeslání. Tak se chovaly verze před 1.29.0."
+msgstr ""
+"Limit opakovaného použití je 0, takže ochrana proti němu je vypnutá: "
+"vyřešená výzva je přijímána, dokud zůstává platná, bez ohledu na počet "
+"odeslání. Tak se chovaly verze před 1.29.0."
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -164,14 +177,20 @@ msgid ""
 "parameter in the salt), so a solved challenge never expires on its own and "
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
-msgstr "Backend vydává výzvy bez platnosti (v soli není budoucí parametr \"expires\"), takže vyřešená výzva sama nevyprší a počet jejích přijetí omezuje pouze limit opakovaného použití. Povolte platnost výzev v backendu."
+msgstr ""
+"Backend vydává výzvy bez platnosti (v soli není budoucí parametr "
+"\"expires\"), takže vyřešená výzva sama nevyprší a počet jejích přijetí "
+"omezuje pouze limit opakovaného použití. Povolte platnost výzev v backendu."
 
 #: admin/healthcheck.php:348
 msgid ""
 "The backend returned a challenge whose expiry is already in the past. Its "
 "clock may be wrong or it may be serving a cached challenge; correct that "
 "before using Custom mode."
-msgstr "Backend vrátil výzvu, jejíž platnost již uplynula. Jeho hodiny mohou být chybné nebo může poskytovat výzvu z mezipaměti; před použitím vlastního režimu to opravte."
+msgstr ""
+"Backend vrátil výzvu, jejíž platnost již uplynula. Jeho hodiny mohou být "
+"chybné nebo může poskytovat výzvu z mezipaměti; před použitím vlastního "
+"režimu to opravte."
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -184,6 +203,7 @@ msgstr ""
 
 #. translators: %s is a duration such as "20 mins"
 #: admin/healthcheck.php:358
+#, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "Backend nastavuje platnost výzev přibližně na %s."
 
@@ -191,7 +211,9 @@ msgstr "Backend nastavuje platnost výzev přibližně na %s."
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
-msgstr "Tato doba je dost krátká na to, aby platnost vypršela dříve, než pomalé zařízení dokončí řešení, což způsobí selhání oprávněných odeslání."
+msgstr ""
+"Tato doba je dost krátká na to, aby platnost vypršela dříve, než pomalé "
+"zařízení dokončí řešení, což způsobí selhání oprávněných odeslání."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -381,10 +403,11 @@ msgstr "Tento formulář vyžaduje JavaScript!"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
-msgstr "Platnost 0 (\"Žádná\") znamená, že vyřešená výzva nikdy nevyprší. Zvažuje se odstranění této hodnoty; doporučený rozsah je 60–14400 sekund."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
+msgstr ""
+"Platnost 0 znamená, že vyřešená výzva nikdy nevyprší. Zvažuje se "
+"odstranění této hodnoty; doporučený rozsah je 60–14400 sekund."
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -393,7 +416,10 @@ msgid ""
 "An Expiration of %d seconds can elapse before a slow device finishes solving "
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
-msgstr "Platnost %d sekund může uplynout dříve, než pomalé zařízení dokončí řešení výzvy. Zvažuje se odstranění hodnot nižších než 60 sekund; doporučený rozsah je 60–14400 sekund."
+msgstr ""
+"Platnost %d sekund může uplynout dříve, než pomalé zařízení dokončí řešení "
+"výzvy. Zvažuje se odstranění hodnot nižších než 60 sekund; doporučený rozsah "
+"je 60–14400 sekund."
 
 #: includes/settings.php:266
 msgid "General"
@@ -456,7 +482,12 @@ msgid ""
 "already issued with the old secret then stop verifying. In Custom API Mode, "
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
-msgstr "Kopírovat vloží aktuální tajemství do schránky. Znovu vytvořit vyplní nové náhodné tajemství; projeví se až po uložení změn a výzvy již vydané se starým tajemstvím se pak přestanou ověřovat. Ve vlastním režimu API uložení nového tajemství rovněž znemožní ověřování nových odeslání, dokud tajemství v backendu neaktualizujete tak, aby odpovídalo."
+msgstr ""
+"Kopírovat vloží aktuální tajemství do schránky. Znovu vytvořit vyplní nové "
+"náhodné tajemství; projeví se až po uložení změn a výzvy již vydané se "
+"starým tajemstvím se pak přestanou ověřovat. Ve vlastním režimu API uložení "
+"nového tajemství rovněž znemožní ověřování nových odeslání, dokud tajemství "
+"v backendu neaktualizujete tak, aby odpovídalo."
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -521,19 +552,24 @@ msgstr "Ve vlastním režimu vypnuto: backend nastavuje platnost výzvy."
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 "Životnost výzvy. Vlastní přijímá 0 až 14400 sekund, kde 0 znamená žádné "
-"vypršení (Žádné) a 14400 je 4 hodiny."
+"vypršení a 14400 je 4 hodiny."
 
 #: includes/settings.php:392
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
-msgstr "Nad 300 sekund se prodlužuje období, ve kterém lze vyřešenou výzvu opakovaně použít, přestože limit opakovaného použití stále omezuje počet jejích přijetí. Pod 60 sekund může výzva vypršet dříve, než ji pomalé zařízení vyřeší, a 0 (Žádná) znamená, že nikdy nevyprší. Obě nastavení se nedoporučují a zvažuje se jejich odstranění."
+msgstr ""
+"Nad 300 sekund se prodlužuje období, ve kterém lze vyřešenou výzvu opakovaně "
+"použít, přestože limit opakovaného použití stále omezuje počet jejích "
+"přijetí. Pod 60 sekund může výzva vypršet dříve, než ji pomalé zařízení "
+"vyřeší, a 0 znamená, že nikdy nevyprší. Obě nastavení se "
+"nedoporučují a zvažuje se jejich odstranění."
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -543,7 +579,8 @@ msgstr "Limit opakovaného použití"
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
-msgstr "Kolikrát lze jednu vyřešenou výzvu přijmout. Platí to pro oba režimy API."
+msgstr ""
+"Kolikrát lze jednu vyřešenou výzvu přijmout. Platí to pro oba režimy API."
 
 #: includes/settings.php:406
 msgid ""
@@ -553,7 +590,13 @@ msgid ""
 "to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
-msgstr "Návštěvník, kterému se formulář vrátí s nesouvisející chybou (chybějící pole, chybně zadané heslo), odešle stejnou výzvu znovu. Malá povolená rezerva taková odeslání zachová funkční, každé další použití však nabízí botu další možnost opakovaného použití. Vlastní režim přijímá hodnoty 0 až 100; 0 přijímá vyřešenou výzvu po celou dobu její platnosti. Jde o nedoporučené chování verzí před 1.29.0."
+msgstr ""
+"Návštěvník, kterému se formulář vrátí s nesouvisející chybou (chybějící "
+"pole, chybně zadané heslo), odešle stejnou výzvu znovu. Malá povolená "
+"rezerva taková odeslání zachová funkční, každé další použití však nabízí "
+"botu další možnost opakovaného použití. Vlastní režim přijímá hodnoty 0 až "
+"100; 0 přijímá vyřešenou výzvu po celou dobu její platnosti. Jde o "
+"nedoporučené chování verzí před 1.29.0."
 
 #: includes/settings.php:415
 msgid "Widget Customisation"

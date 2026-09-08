@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-03T14:46:22+00:00\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
 "PO-Revision-Date: 2026-09-07 00:00+0000\n"
 "Last-Translator: Crush-0.87.0:qwen3.6-27b-mtp - signed-off by J-C Berthon\n"
 "Language-Team: Japanese\n"
@@ -51,14 +51,13 @@ msgstr "OpenPorte リプレイ保護:"
 
 #: admin/healthcheck.php:153
 msgid ""
-"Expiration is set to 0 (\"None\"), so a solved challenge never expires and "
-"only Replay limit bounds how often it can be resubmitted. This is strongly "
-"discouraged and is being evaluated for deprecation — set an expiry of 60 "
-"seconds or more."
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
-"有効期限が 0（「なし」）に設定されているため、解決した challenge は期限切れにならず、"
-"再送信回数は Replay limit によってのみ制限されます。この設定は強く推奨されず、"
-"非推奨化を検討中です——有効期限を 60 秒以上に設定してください。"
+"有効期限が 0 に設定されているため、解決した challenge は期限切れに"
+"ならず、再送信回数は Replay limit によってのみ制限されます。この設定は強く推"
+"奨されず、非推奨化を検討中です——有効期限を 60 秒以上に設定してください。"
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -68,9 +67,9 @@ msgid ""
 "finishes solving the challenge and turn legitimate submissions into "
 "failures. Values below 60 seconds are being evaluated for deprecation."
 msgstr ""
-"有効期限が %d 秒に設定されていますが、これは低速デバイスが challenge を解決し終える前に"
-"経過してしまう可能性があり、正当な送信が失敗に変わる原因となります。60 秒未満の値は"
-"非推奨化を検討中です。"
+"有効期限が %d 秒に設定されていますが、これは低速デバイスが challenge を解決し"
+"終える前に経過してしまう可能性があり、正当な送信が失敗に変わる原因となりま"
+"す。60 秒未満の値は非推奨化を検討中です。"
 
 #. translators: %s is a duration such as "5 mins"
 #: admin/healthcheck.php:194
@@ -81,9 +80,10 @@ msgid ""
 "challenges unconditionally while that lasts — check the persistent object "
 "cache or the database."
 msgstr ""
-"再利用カウンターを保存できなかったため、過去 %s の間に送信がカウントされずに受け入れられ"
-"ています。その間、保護は有効な challenge を無条件に受け入れるレベルに低下します——"
-"永続オブジェクトキャッシュまたはデータベースを確認してください。"
+"再利用カウンターを保存できなかったため、過去 %s の間に送信がカウントされずに"
+"受け入れられています。その間、保護は有効な challenge を無条件に受け入れるレベ"
+"ルに低下します——永続オブジェクトキャッシュまたはデータベースを確認してくださ"
+"い。"
 
 #: admin/healthcheck.php:203
 msgid ""
@@ -91,8 +91,9 @@ msgid ""
 "accepted for as long as it stays valid, however many times it is submitted. "
 "This is the behaviour of releases before 1.29.0."
 msgstr ""
-"Replay limit が 0 であるため、リプレイ保護が無効です：解決した challenge は有効である限り、"
-"何度送信されても受け入れられます。これは 1.29.0 以前のリリースの動作です。"
+"Replay limit が 0 であるため、リプレイ保護が無効です：解決した challenge は有"
+"効である限り、何度送信されても受け入れられます。これは 1.29.0 以前のリリース"
+"の動作です。"
 
 #. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
 #: admin/healthcheck.php:211
@@ -101,7 +102,8 @@ msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
 msgid_plural ""
 "Each solved challenge is accepted up to %1$d times, counted in %2$s."
 msgstr[0] ""
-"各解決済み challenge は %2$s でカウントされ、最大 %1$d 回まで受け入れられます。"
+"各解決済み challenge は %2$s でカウントされ、最大 %1$d 回まで受け入れられま"
+"す。"
 
 #: admin/healthcheck.php:219
 msgid "the persistent object cache"
@@ -114,7 +116,8 @@ msgstr "データベース"
 #: admin/healthcheck.php:238
 msgid "API mode is Custom but no Challenge URL is configured."
 msgstr ""
-"API モードがカスタムに設定されていますが、Challenge URL が設定されていません。"
+"API モードがカスタムに設定されていますが、Challenge URL が設定されていませ"
+"ん。"
 
 #. translators: %s is the connection error message
 #: admin/healthcheck.php:274
@@ -130,23 +133,24 @@ msgid ""
 "URL (including any apiKey parameter) and the backend's domain/origin "
 "restrictions."
 msgstr ""
-"Challenge URL が challenge ではなく HTTP %d で応答しました。URL（apiKey パラメータを含"
-"む）およびバックエンドのドメイン/オリジン制限を確認してください。"
+"Challenge URL が challenge ではなく HTTP %d で応答しました。URL（apiKey パラ"
+"メータを含む）およびバックエンドのドメイン/オリジン制限を確認してください。"
 
 #: admin/healthcheck.php:295
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
 msgstr ""
-"Challenge URL が ALTCHA challenge を返していません（algorithm、challenge、salt、"
-"signature フィールドを含む JSON が期待されます）。"
+"Challenge URL が ALTCHA challenge を返していません（algorithm、challenge、"
+"salt、signature フィールドを含む JSON が期待されます）。"
 
 #. translators: %s is the algorithm name reported by the backend
 #: admin/healthcheck.php:304
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr ""
-"バックエンドがサポートされていないアルゴリズム \"%s\" で challenge を発行しています。"
+"バックエンドがサポートされていないアルゴリズム \"%s\" で challenge を発行して"
+"います。"
 
 #: admin/healthcheck.php:320
 msgid ""
@@ -154,9 +158,9 @@ msgid ""
 "submission would fail verification. Copy the backend's HMAC secret into the "
 "Signing secret field."
 msgstr ""
-"共有シークレットがバックエンドの HMAC シークレットと一致しません——すべてのフォーム"
-"送信で検証に失敗します。バックエンドの HMAC シークレットを署名シークレットフィールドに"
-"コピーしてください。"
+"共有シークレットがバックエンドの HMAC シークレットと一致しません——すべての"
+"フォーム送信で検証に失敗します。バックエンドの HMAC シークレットを署名シーク"
+"レットフィールドにコピーしてください。"
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
 #: admin/healthcheck.php:328
@@ -165,8 +169,8 @@ msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
 "submissions would fail verification. Set Algorithm to %1$s."
 msgstr ""
-"バックエンドが %1$s challenge を発行していますが、アルゴリズム設定が %2$s です——"
-"フォーム送信で検証に失敗します。アルゴリズムを %1$s に設定してください。"
+"バックエンドが %1$s challenge を発行していますが、アルゴリズム設定が %2$s で"
+"す——フォーム送信で検証に失敗します。アルゴリズムを %1$s に設定してください。"
 
 #: admin/healthcheck.php:342
 msgid ""
@@ -175,10 +179,10 @@ msgid ""
 "only Replay limit bounds how often it is accepted. Enable challenge expiry "
 "on the backend."
 msgstr ""
-"バックエンドが有効期限なしの challenge を発行しています（salt に将来の \"expires\" "
-"パラメータがありません）。そのため、解決した challenge は自発的に期限切れにならず、"
-"Replay limit によってのみ受け入れ回数が制限されます。バックエンドで challenge の有効期限"
-"を有効にしてください。"
+"バックエンドが有効期限なしの challenge を発行しています（salt に将来の "
+"\"expires\" パラメータがありません）。そのため、解決した challenge は自発的に"
+"期限切れにならず、Replay limit によってのみ受け入れ回数が制限されます。バック"
+"エンドで challenge の有効期限を有効にしてください。"
 
 #: admin/healthcheck.php:348
 msgid ""
@@ -187,8 +191,8 @@ msgid ""
 "before using Custom mode."
 msgstr ""
 "バックエンドがすでに期限切れの challenge を返しました。時計がずれているか、"
-"キャッシュされた challenge を提供している可能性があります。Custom モードを使用する前に"
-"修正してください。"
+"キャッシュされた challenge を提供している可能性があります。Custom モードを使"
+"用する前に修正してください。"
 
 #. translators: %s is the algorithm confirmed with the backend
 #: admin/healthcheck.php:353
@@ -197,7 +201,8 @@ msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
 "matches."
 msgstr ""
-"Challenge URL が有効な %s challenge で応答し、共有シークレットが一致しています。"
+"Challenge URL が有効な %s challenge で応答し、共有シークレットが一致していま"
+"す。"
 
 #. translators: %s is a duration such as "20 mins"
 #: admin/healthcheck.php:358
@@ -210,8 +215,8 @@ msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
 msgstr ""
-"これは低速デバイスが解決し終える前に期限切れになるほど短く、正当な送信が失敗に変わる原因"
-"となります。"
+"これは低速デバイスが解決し終える前に期限切れになるほど短く、正当な送信が失敗"
+"に変わる原因となります。"
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -249,7 +254,8 @@ msgstr "OpenPorte を WordPress.org で評価して、広めるお手伝いを�
 #, php-format
 msgid "Powered by the %1$sALTCHA%2$s proof-of-work open-source project."
 msgstr ""
-"%1$sALTCHA%2$s proof-of-work オープンソース プロジェクトによって提供されています。"
+"%1$sALTCHA%2$s proof-of-work オープンソース プロジェクトによって提供されてい"
+"ます。"
 
 #: admin/options.php:97
 msgid "Star OpenPorte on GitHub!"
@@ -301,7 +307,8 @@ msgstr "以下のインテグレーションで OpenPorte を有効にする："
 #, php-format
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr ""
-"インテグレーションされたプラグインの内容のどこでも %s ショートコードを使用できます。"
+"インテグレーションされたプラグインの内容のどこでも %s ショートコードを使用で"
+"きます。"
 
 #: admin/options.php:267 admin/options.php:269 admin/options.php:435
 #: admin/options.php:437
@@ -401,12 +408,11 @@ msgstr "このフォームには JavaScript が必要です！"
 
 #: includes/settings.php:110
 msgid ""
-"An Expiration of 0 (\"None\") means a solved challenge never expires. This "
-"value is being evaluated for deprecation; the recommended range is 60-14400 "
-"seconds."
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
-"有効期限を 0（「なし」）に設定すると、解決した challenge は期限切れになりません。"
-"この値は非推奨化を検討中です；推奨範囲は 60〜14400 秒です。"
+"有効期限を 0 に設定すると、解決した challenge は期限切れになりませ"
+"ん。この値は非推奨化を検討中です；推奨範囲は 60〜14400 秒です。"
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -416,8 +422,9 @@ msgid ""
 "the challenge. Values below 60 seconds are being evaluated for deprecation; "
 "the recommended range is 60-14400 seconds."
 msgstr ""
-"有効期限を %d 秒に設定すると、低速デバイスが challenge を解決し終える前に経過してしまう"
-"可能性があります。60 秒未満の値は非推奨化を検討中です；推奨範囲は 60〜14400 秒です。"
+"有効期限を %d 秒に設定すると、低速デバイスが challenge を解決し終える前に経過"
+"してしまう可能性があります。60 秒未満の値は非推奨化を検討中です；推奨範囲は "
+"60〜14400 秒です。"
 
 #: includes/settings.php:266
 msgid "General"
@@ -433,8 +440,8 @@ msgid ""
 "Custom to point to your own ALTCHA-compatible backend."
 msgstr ""
 "API モードを選択してください。組み込みの WordPress REST API を使用する場合は "
-"Self-hosted を、独自の ALTCHA 対応バックエンドに接続する場合は Custom を選択してく"
-"ださい。"
+"Self-hosted を、独自の ALTCHA 対応バックエンドに接続する場合は Custom を選択"
+"してください。"
 
 #: includes/settings.php:281
 msgid "Self-hosted"
@@ -451,8 +458,9 @@ msgid ""
 "and optionally an API key (it starts with <code>gk_</code>)."
 msgstr ""
 "API モードがカスタムに設定されている場合にのみ利用可能です。<br/>URL は、"
-"<strong>カスタムの ALTCHA 対応バックエンド</strong>のドメインとパスで構成され、"
-"オプションで API キー（<code>gk_</code> で始まる）を含めることができます。"
+"<strong>カスタムの ALTCHA 対応バックエンド</strong>のドメインとパスで構成さ"
+"れ、オプションで API キー（<code>gk_</code> で始まる）を含めることができま"
+"す。"
 
 #: includes/settings.php:308
 msgid "Shared secret"
@@ -469,10 +477,11 @@ msgid ""
 "<strong>must exactly match</strong> the shared secret (sometimes called the "
 "HMAC secret) configured in your backend."
 msgstr ""
-"OpenPorte は自動的にランダムなシークレットを生成します。他のアプリケーションが同じ"
-"シークレットを使用する必要がある場合のみ変更してください。<br/>カスタム API モードでは、"
-"この値はバックエンドで設定された共有シークレット（HMAC シークレットとも呼ばれます）と"
-"<strong>完全に一致している必要があります</strong>。"
+"OpenPorte は自動的にランダムなシークレットを生成します。他のアプリケーション"
+"が同じシークレットを使用する必要がある場合のみ変更してください。<br/>カスタ"
+"ム API モードでは、この値はバックエンドで設定された共有シークレット（HMAC "
+"シークレットとも呼ばれます）と<strong>完全に一致している必要があります</"
+"strong>。"
 
 #: includes/settings.php:319
 msgid ""
@@ -482,10 +491,11 @@ msgid ""
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
 msgstr ""
-"コピーは現在のシークレットをクリップボードにコピーします。再生成は新しいランダムな"
-"シークレットを生成します；変更を保存したときにのみ有効になり、古いシークレットで発行さ"
-"れた challenge の検証は停止します。カスタム API モードでは、新しいシークレットを保存すると"
-"バックエンドのシークレットを一致させるまで、新しい送信の検証も失敗します。"
+"コピーは現在のシークレットをクリップボードにコピーします。再生成は新しいラン"
+"ダムなシークレットを生成します；変更を保存したときにのみ有効になり、古いシー"
+"クレットで発行された challenge の検証は停止します。カスタム API モードでは、"
+"新しいシークレットを保存するとバックエンドのシークレットを一致させるまで、新"
+"しい送信の検証も失敗します。"
 
 #: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
@@ -502,9 +512,10 @@ msgid ""
 "algorithm your backend uses — most ALTCHA-compatible backends default to "
 "SHA-256."
 msgstr ""
-"Self-hosted API モードでは、PoW challenge の生成と検証に使用するアルゴリズムです。<br/>"
-"カスタム API モードでは、バックエンドが使用するアルゴリズムと一致している必要があり"
-"ます——ほとんどの ALTCHA 対応バックエンドは SHA-256 がデフォルトです。"
+"Self-hosted API モードでは、PoW challenge の生成と検証に使用するアルゴリズム"
+"です。<br/>カスタム API モードでは、バックエンドが使用するアルゴリズムと一致"
+"している必要があります——ほとんどの ALTCHA 対応バックエンドは SHA-256 がデフォ"
+"ルトです。"
 
 #: includes/settings.php:346
 msgid "Low"
@@ -524,7 +535,8 @@ msgstr "複雑さ"
 
 #: includes/settings.php:368
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
-msgstr "カスタム モードでは無効です：バックエンドが challenge の複雑さを設定します。"
+msgstr ""
+"カスタム モードでは無効です：バックエンドが challenge の複雑さを設定します。"
 
 #: includes/settings.php:369
 msgid ""
@@ -533,10 +545,10 @@ msgid ""
 "usually solved in under a second on a recent computer; on older phones it "
 "can take a few seconds. High is roughly 2–3× the work of Low."
 msgstr ""
-"ウィジェットの PoW 複雑さを選択してください：複雑さが高くなるほど、訪問者（およびボット）"
-"が challenge を解決するのにかかる時間が長くなります。<br/>最新のコンピュータでは、高でも"
-"通常 1 秒以内に解決されます。古いスマートフォンでは数秒かかる場合があります。高は低の約 "
-"2〜3 倍の作業量です。"
+"ウィジェットの PoW 複雑さを選択してください：複雑さが高くなるほど、訪問者（お"
+"よびボット）が challenge を解決するのにかかる時間が長くなります。<br/>最新の"
+"コンピュータでは、高でも通常 1 秒以内に解決されます。古いスマートフォンでは数"
+"秒かかる場合があります。高は低の約 2〜3 倍の作業量です。"
 
 #: includes/settings.php:376
 msgid "Expiration"
@@ -544,28 +556,31 @@ msgstr "有効期限"
 
 #: includes/settings.php:387
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
-msgstr "カスタム モードでは無効です：バックエンドが challenge の有効期限を設定します。"
+msgstr ""
+"カスタム モードでは無効です：バックエンドが challenge の有効期限を設定しま"
+"す。"
 
 #: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
-"challenge の有効期間。カスタムでは 0 から 14400 秒まで指定でき、0 は期限なし（なし）、"
-"14400 は 4 時間を意味します。"
+"challenge の有効期間。カスタムでは 0 から 14400 秒まで指定でき、0 は期限なし"
+"、14400 は 4 時間を意味します。"
 
 #: includes/settings.php:392
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
 "seconds a challenge can expire before a slow device finishes solving it, and "
-"0 (None) means it never expires at all — both are discouraged and are being "
+"0 means it never expires at all — both are discouraged and are being "
 "evaluated for deprecation."
 msgstr ""
-"300 秒を超えると、解決した challenge をリプレイできるウィンドウが拡大しますが、"
-"Replay limit は依然として受け入れ回数を制限します。60 秒未満では、低速デバイスが"
-"challenge を解決し終える前に期限切れになる可能性があります。また、0（なし）は完全に期限"
-"切れにならないことを意味します——どちらも推奨されず、非推奨化を検討中です。"
+"300 秒を超えると、解決した challenge をリプレイできるウィンドウが拡大します"
+"が、Replay limit は依然として受け入れ回数を制限します。60 秒未満では、低速デ"
+"バイスがchallenge を解決し終える前に期限切れになる可能性があります。また、0"
+" は完全に期限切れにならないことを意味します——どちらも推奨されず、非推"
+"奨化を検討中です。"
 
 #: includes/settings.php:398
 msgid "Replay limit"
@@ -576,8 +591,8 @@ msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
 msgstr ""
-"1 つの解決済み challenge を何回まで受け入れるかを設定します。これは両方の API モードに"
-"適用されます。"
+"1 つの解決済み challenge を何回まで受け入れるかを設定します。これは両方の "
+"API モードに適用されます。"
 
 #: includes/settings.php:406
 msgid ""
@@ -588,11 +603,12 @@ msgid ""
 "long as it is valid — the behaviour of releases before 1.29.0, and not "
 "recommended."
 msgstr ""
-"訪問者のフォームに無関係なエラー（必須フィールドの欠落、パスワードの入力ミスなど）が"
-"発生すると、同じ challenge が再送信されるため、少し余裕を持たせることでその送信が"
-"機能し続けます。ただし、余計な使用回数はボットにも 1 回分のリプレイを付与します。"
-"カスタムでは 0 から 100 まで指定でき、0 は challenge が有効である限り受け入れ続ける"
-"——これは 1.29.0 以前のリリースの動作で、推奨されません。"
+"訪問者のフォームに無関係なエラー（必須フィールドの欠落、パスワードの入力ミス"
+"など）が発生すると、同じ challenge が再送信されるため、少し余裕を持たせること"
+"でその送信が機能し続けます。ただし、余計な使用回数はボットにも 1 回分のリプレ"
+"イを付与します。カスタムでは 0 から 100 まで指定でき、0 は challenge が有効で"
+"ある限り受け入れ続ける——これは 1.29.0 以前のリリースの動作で、推奨されませ"
+"ん。"
 
 #: includes/settings.php:415
 msgid "Widget Customisation"
@@ -631,8 +647,8 @@ msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
 msgstr ""
-"ウィジェットをページ内にインラインで配置するか、送信ボタンの近くに浮動表示するかを"
-"選択します。"
+"ウィジェットをページ内にインラインで配置するか、送信ボタンの近くに浮動表示す"
+"るかを選択します。"
 
 #: includes/settings.php:448
 msgid "Inline"
@@ -652,9 +668,9 @@ msgid ""
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
 "the bar for bots, increase Complexity instead."
 msgstr ""
-"一部の訪問者は、遅いチェックをより信頼性が高いと受け取ります。これがこの一時停止の唯一"
-"の効果です。スパム ブロッキングを強化するものではありません。ボットへのハードルを上げたい"
-"場合は、複雑さを増やしてください。"
+"一部の訪問者は、遅いチェックをより信頼性が高いと受け取ります。これがこの一時"
+"停止の唯一の効果です。スパム ブロッキングを強化するものではありません。ボット"
+"へのハードルを上げたい場合は、複雑さを増やしてください。"
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
 #: includes/settings.php:468
@@ -672,9 +688,9 @@ msgid ""
 "free, open-source software — we would appreciate you keeping it visible, but "
 "the choice is yours."
 msgstr ""
-"これはウィジェット内に表示される小さな ALTCHA ロゴに適用されます。ALTCHA は無料の"
-"オープンソース ソフトウェアです——表示されたままにしておくことを感謝しますが、選択は"
-"あなた次第です。"
+"これはウィジェット内に表示される小さな ALTCHA ロゴに適用されます。ALTCHA は無"
+"料のオープンソース ソフトウェアです——表示されたままにしておくことを感謝します"
+"が、選択はあなた次第です。"
 
 #: includes/settings.php:483
 msgid "Hide the ALTCHA logo"
@@ -686,9 +702,9 @@ msgid ""
 "it visible helps credit the project this plugin is built on, but it has no "
 "effect on how OpenPorte works."
 msgstr ""
-"これはウィジェット内に表示されるテキストに適用されます。ロゴと同様に：表示されたままに"
-"しておくことで、このプラグインが構築されているプロジェクトにクレジットできますが、"
-"OpenPorte の動作には影響しません。"
+"これはウィジェット内に表示されるテキストに適用されます。ロゴと同様に：表示さ"
+"れたままにしておくことで、このプラグインが構築されているプロジェクトにクレ"
+"ジットできますが、OpenPorte の動作には影響しません。"
 
 #: includes/settings.php:499
 msgid "Hide the \"Protected by ALTCHA\" footer"
@@ -857,8 +873,8 @@ msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
 "place the %3$s shortcode in your content instead."
 msgstr ""
-"%1$s非推奨%2$s であり、次のメジャーリリースで削除予定——代わりに %3$s ショートコードを"
-"コンテンツに配置してください。"
+"%1$s非推奨%2$s であり、次のメジャーリリースで削除予定——代わりに %3$s ショート"
+"コードをコンテンツに配置してください。"
 
 #: includes/settings.php:668
 msgid "Plugin not active."
@@ -872,9 +888,9 @@ msgstr "検証に失敗しました。"
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:78
 #: integrations/html-forms.php:48 integrations/woocommerce.php:28
 #: integrations/woocommerce.php:75 integrations/woocommerce.php:116
-#: integrations/woocommerce.php:163 integrations/wordpress.php:28
-#: integrations/wordpress.php:72 integrations/wordpress.php:111
-#: integrations/wordpress.php:163 integrations/wpforms.php:27
+#: integrations/wordpress.php:28 integrations/wordpress.php:72
+#: integrations/wordpress.php:111 integrations/wordpress.php:163
+#: integrations/wpforms.php:27
 msgid "Could not verify you are not a robot."
 msgstr "ロボットではないことを確認できませんでした。"
 
@@ -900,9 +916,10 @@ msgid ""
 "deactivate \"ALTCHA Spam Protection\" first, then activate OpenPorte. See "
 "the %s for details."
 msgstr ""
-"OpenPorte は ALTCHA Spam Protection のフォークであり、元の ALTCHA プラグインが有効な"
-"間は動作できません（両者は内部コードを共有しています）。まず \"ALTCHA Spam Protection\" "
-"を無効化し、次に OpenPorte を有効化してください。詳細は %s を参照してください。"
+"OpenPorte は ALTCHA Spam Protection のフォークであり、元の ALTCHA プラグイン"
+"が有効な間は動作できません（両者は内部コードを共有しています）。まず "
+"\"ALTCHA Spam Protection\" を無効化し、次に OpenPorte を有効化してください。"
+"詳細は %s を参照してください。"
 
 #: openporte.php:66
 msgid "OpenPorte cannot be activated"
@@ -916,8 +933,8 @@ msgstr "プラグインページへ進む"
 #~ "OpenPorte is an open-source anti-spam plugin that protects sites from "
 #~ "bots using a lightweight Proof-of-Work challenge instead of CAPTCHAs."
 #~ msgstr ""
-#~ "OpenPorte はオープンソースのアンチスパムプラグインで、CAPTCHA の代わりに軽量な "
-#~ "Proof-of-Work チャレンジを使用してサイトボットから保護します。"
+#~ "OpenPorte はオープンソースのアンチスパムプラグインで、CAPTCHA の代わりに軽"
+#~ "量な Proof-of-Work チャレンジを使用してサイトボットから保護します。"
 
 #~ msgid ""
 #~ "OpenPorte is a free, open-source CAPTCHA alternative that offers robust "
@@ -926,9 +943,9 @@ msgstr "プラグインページへ進む"
 #~ "Protection plugin (v1)."
 #~ msgstr ""
 #~ "OpenPorte は、クッキーを使用せずに強力なスパムおよびボット対策を提供する、"
-#~ "無料のオープンソース CAPTCHA 代替手段です。設計段階から GDPR に完全準拠してい"
-#~ "ます。ALTCHA Spam Protection プラグイン (v1) のコミュニティ保守によるフォーク"
-#~ "です。"
+#~ "無料のオープンソース CAPTCHA 代替手段です。設計段階から GDPR に完全準拠し"
+#~ "ています。ALTCHA Spam Protection プラグイン (v1) のコミュニティ保守による"
+#~ "フォークです。"
 
 #, php-format
 #~ msgid ""
@@ -946,9 +963,9 @@ msgstr "プラグインページへ進む"
 #~ "backend. It has no effect in %3$sSelf-hosted%4$s mode, which uses proof-"
 #~ "of-work only."
 #~ msgstr ""
-#~ "Spam Filter は %1$sCustom%2$s バックエンドから返される分類に基づいて動作しま"
-#~ "す。PoW (proof-of-work) のみを使用する %3$sSelf-hosted%4$s モードには影響し"
-#~ "ません。"
+#~ "Spam Filter は %1$sCustom%2$s バックエンドから返される分類に基づいて動作し"
+#~ "ます。PoW (proof-of-work) のみを使用する %3$sSelf-hosted%4$s モードには影"
+#~ "響しません。"
 
 #~ msgid "Configure your custom Challenge URL."
 #~ msgstr "カスタム Challenge URL を設定します。"
