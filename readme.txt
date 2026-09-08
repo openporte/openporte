@@ -1,9 +1,9 @@
 === OpenPorte Spam Protection ===
 Tags: captcha, spam, anti-spam, anti-bot, altcha
-Stable tag: 1.28.1
+Stable tag: 1.29.0
 Requires at least: 5.6
 Requires PHP: 8.0
-Tested up to: 7.0
+Tested up to: 7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Contributors: huygens-25
@@ -215,7 +215,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 
 == Changelog ==
 
-= 1.29.0 (unreleased) =
+= 1.29.0 =
 
 * Security: a solved challenge can no longer be replayed without limit. Until now a valid token was accepted on every submission until it expired — and with Expiration set to "None", forever — so a bot could solve one proof-of-work and reuse it indefinitely. Each solved challenge is now accepted a bounded number of times, counted server-side.
 * New "Replay limit" setting (General), default 5. Presets: Unlimited (pre-1.29 behaviour), Single use (strict), 5 uses (recommended), 10 uses, or a custom value from 0 to 100. It applies in both API Modes.

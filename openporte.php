@@ -7,11 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Description: Stop spam without CAPTCHAs. Proof-of-Work protection for your site. Open-source, self-hosted, privacy-first.
  * Author: OpenPorte Contributors
  * Author URI: https://github.com/openporte/openporte/graphs/contributors
- * Version: 1.28.1
- * Stable tag: 1.28.1
+ * Version: 1.29.0
+ * Stable tag: 1.29.0
  * Requires at least: 5.6
  * Requires PHP: 8.0
- * Tested up to: 7.0
+ * Tested up to: 7.1
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: openporte
@@ -87,7 +87,7 @@ if ( defined( 'ALTCHA_VERSION' ) || function_exists( 'altcha_plugin_active' ) ||
 	return;
 }
 
-define('OPENPORTE_VERSION', '1.28.1');
+define('OPENPORTE_VERSION', '1.29.0');
 // Authoritative version of the vendored widget. The string embedded in
 // public/altcha.min.js can lag (2.3.0 ships a bundle reporting 2.2.4 — upstream
 // did not rebuild dist/); see docs/agents/altcha-upstream.md.
