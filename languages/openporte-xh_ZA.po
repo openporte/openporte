@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.28.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-07-30T08:00:15+00:00\n"
-"PO-Revision-Date: 2026-07-30 00:00+0000\n"
-"Last-Translator: Crush-0.87.0:qwen3.6-27b-mtp - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
+"PO-Revision-Date: 2026-07-23 00:00+0000\n"
+"Last-Translator: Crush-0.87.0:gemma-4-31b-mtp - signed-off by J-C Berthon\n"
 "Language-Team: Xhosa\n"
 "Language: xh_ZA\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: openporte\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Plugin Name of the plugin
 #: openporte.php includes/admin.php:16
@@ -37,22 +37,94 @@ msgstr "Abanikazi be-OpenPorte"
 msgid "https://github.com/openporte/openporte/graphs/contributors"
 msgstr "https://github.com/openporte/openporte/graphs/contributors"
 
-#: admin/healthcheck.php:48
+#: admin/healthcheck.php:93
 msgid "OpenPorte endpoint check:"
 msgstr "Ukuhlola i-endpoint ye-OpenPorte:"
 
-#: admin/healthcheck.php:67
+#: admin/healthcheck.php:121
+msgid "OpenPorte Expiration:"
+msgstr "Ukuphela kwexesha kwe-OpenPorte:"
+
+#: admin/healthcheck.php:125
+msgid "OpenPorte replay protection:"
+msgstr "Ukhuseleko lwe-replay lwe-OpenPorte:"
+
+#: admin/healthcheck.php:153
+msgid ""
+"Expiration is set to 0, so a solved challenge never expires and only Replay "
+"limit bounds how often it can be resubmitted. This is strongly discouraged "
+"and is being evaluated for deprecation — set an expiry of 60 seconds or more."
+msgstr ""
+"Ukuphela kwexesha kusetwe kwisibalo 0, ngoko ke umbuzo osombululiweyo awupheli "
+"xesha kwaye i-Replay limit kuphela eyona nto iyakhetha ukuba zingezimbalwa "
+"ezizithodileyo. Oku akuchazeki kwaye kuhlolwa ukuba kusutshwe — beka ixesha "
+"lokuphela le-60 zee-sekondi okanye ngaphezulu."
+
+#. translators: %d is the configured Expiration value, in seconds
+#: admin/healthcheck.php:161
+#, php-format
+msgid ""
+"Expiration is set to %d seconds, which can elapse before a slow device "
+"finishes solving the challenge and turn legitimate submissions into "
+"failures. Values below 60 seconds are being evaluated for deprecation."
+msgstr ""
+"Ukuphela kwexesha kusetwe kwi-%d zee-sekondi, ezingadlula phambi kokuba "
+"isixhobo esicothayo sigqibe ukusombulula umbuzo kwaye zenze izicelo ezisemthethweni "
+"zibe ziiputha. Amanani angaphantsi kwe-60 zee-sekondi ahlolwa ukuba asutshwe."
+
+#. translators: %s is a duration such as "5 mins"
+#: admin/healthcheck.php:194
+#, php-format
+msgid ""
+"Submissions were accepted without being counted in the last %s, because the "
+"reuse counter could not be stored. Protection degrades to accepting valid "
+"challenges unconditionally while that lasts — check the persistent object "
+"cache or the database."
+msgstr ""
+"Izicelo zamkelwe ngaphandle kokubalwa kwi-%s yokugqibela, ngenxa yokuba "
+"isibalo sokusebenzisa kwakhona asikwazanga ukugcinwa. Ukhuseleko luhla ngokwamkela "
+"imibuzo esemthethweni ngaphandle kweemeko ngelixa oku kusebenza — hlola i-cache "
+"ye-object ehlalayo okanye i-database."
+
+#: admin/healthcheck.php:203
+msgid ""
+"Replay limit is 0, so replay protection is off: a solved challenge is "
+"accepted for as long as it stays valid, however many times it is submitted. "
+"This is the behaviour of releases before 1.29.0."
+msgstr ""
+"I-Replay limit yi-0, ngoko ke ukhuseleko lwe-replay lucinyiwe: umbuzo "
+"osombululiweyo uyamakelwa ngethuba lisebenza, nokuba uthumelwe kangaphi na. "
+"Oku kukuphatha kwe-releases phambi kwe-1.29.0."
+
+#. translators: %1$d is the configured Replay limit, %2$s names where the counter is stored
+#: admin/healthcheck.php:211
+#, php-format
+msgid "Each solved challenge is accepted %1$d time, counted in %2$s."
+msgid_plural ""
+"Each solved challenge is accepted up to %1$d times, counted in %2$s."
+msgstr[0] "Omnye ngamnye wombuzo osombululiweyo uyamakelwa kanye kanye kanye %1$d ixesha, kubalwa kwi-%2$s."
+msgstr[1] "Omnye ngamnye wombuzo osombululiweyo uyamakelwa ukuya kwi-%1$d zizikhathi, kubalwa kwi-%2$s."
+
+#: admin/healthcheck.php:219
+msgid "the persistent object cache"
+msgstr "i-cache ye-object ehlalayo"
+
+#: admin/healthcheck.php:220
+msgid "the database"
+msgstr "i-database"
+
+#: admin/healthcheck.php:238
 msgid "API mode is Custom but no Challenge URL is configured."
 msgstr "Imo ye-API yi-Custom kodwa akukho URL yombuzo esicwangcisiweyo."
 
 #. translators: %s is the connection error message
-#: admin/healthcheck.php:103
+#: admin/healthcheck.php:274
 #, php-format
 msgid "The Challenge URL is unreachable: %s"
 msgstr "I-URL yombuzo ayifikeleleki: %s"
 
 #. translators: %d is the HTTP status code returned by the backend
-#: admin/healthcheck.php:114
+#: admin/healthcheck.php:285
 #, php-format
 msgid ""
 "The Challenge URL responded with HTTP %d instead of a challenge. Check the "
@@ -63,7 +135,7 @@ msgstr ""
 "nayiphi na i-parameter ye-apiKey) kunye nemingcele ye-domain/origin ye-"
 "backend."
 
-#: admin/healthcheck.php:124
+#: admin/healthcheck.php:295
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
@@ -72,12 +144,12 @@ msgstr ""
 "ze-algorithm, challenge, salt kunye ne-signature)."
 
 #. translators: %s is the algorithm name reported by the backend
-#: admin/healthcheck.php:133
+#: admin/healthcheck.php:304
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr "I-backend ikhupha imibuzo nge-algorithm engaxhaswanga \"%s\"."
 
-#: admin/healthcheck.php:149
+#: admin/healthcheck.php:320
 msgid ""
 "The shared secret does not match the backend's HMAC secret — every form "
 "submission would fail verification. Copy the backend's HMAC secret into the "
@@ -88,7 +160,7 @@ msgstr ""
 "backend kwi-field ye-Signing secret."
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
-#: admin/healthcheck.php:157
+#: admin/healthcheck.php:328
 #, php-format
 msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
@@ -97,8 +169,30 @@ msgstr ""
 "I-backend ikhupha imibuzo ye-%1$s kodwa isetingi ye-Algorithm yi-%2$s — "
 "izicelo zeefomu ziya kungahambi kakuhle ekubukeni. Beka i-Algorithm ku-%1$s."
 
+#: admin/healthcheck.php:342
+msgid ""
+"The backend issues challenges with no expiry (no future \"expires\" "
+"parameter in the salt), so a solved challenge never expires on its own and "
+"only Replay limit bounds how often it is accepted. Enable challenge expiry "
+"on the backend."
+msgstr ""
+"I-backend ikhupha imibuzo engenawo uxolo lokuphela (akukho parameter \"expires\" "
+"kwisalt), ngoko ke umbuzo osombululiweyo awupheli ngokwawo kwaye i-Replay "
+"limit kuphela eyona nto iyakhetha ukuba zingezimbalwa ezizithodileyo. Vula "
+"ukuphela kwexesha lombuzo kwi-backend."
+
+#: admin/healthcheck.php:348
+msgid ""
+"The backend returned a challenge whose expiry is already in the past. Its "
+"clock may be wrong or it may be serving a cached challenge; correct that "
+"before using Custom mode."
+msgstr ""
+"I-backend ibuyise umbuzo oxolo lwakhe lokuphela lusemandla. Ixesha layo "
+"lingaba lilonakele okanye isebenzisa umbuzo ogcinwe kwi-cache; lungisa oko "
+"phambi kokusebenzisa imo ye-Custom."
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:167
+#: admin/healthcheck.php:353
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -106,6 +200,20 @@ msgid ""
 msgstr ""
 "I-URL yombuzo iphendula ngombuzo we-%s osebenzayo kwaye isimfihlo esabelwana "
 "siyahambelana."
+
+#. translators: %s is a duration such as "20 mins"
+#: admin/healthcheck.php:358
+#, php-format
+msgid "The backend expires its challenges after about %s."
+msgstr "I-backend iphelisa imibuzo yayo emva kwe-%s malunga."
+
+#: admin/healthcheck.php:362
+msgid ""
+"That is short enough to expire before a slow device finishes solving, which "
+"turns legitimate submissions into failures."
+msgstr ""
+"Oku kumfutshane ngokwaneleyo ukuba kuphele phambi kokuba isixhobo esicothayo "
+"sigqibe ukusombulula, nto leyo eyenza izicelo ezisemthethweni zibe ziiputha."
 
 #: admin/options.php:35 integrations/elementor/field.php:18
 msgid "OpenPorte"
@@ -200,30 +308,62 @@ msgstr ""
 "Sebenzisa i-shortcode ye-%s kuyo yonke i-content ye-plugins zakho "
 "eququzelelweyo."
 
-#: admin/options.php:260 admin/options.php:262 admin/options.php:413
-#: admin/options.php:415
+#: admin/options.php:267 admin/options.php:269 admin/options.php:435
+#: admin/options.php:437
 msgid "Show"
 msgstr "Bonisa"
 
-#: admin/options.php:261 admin/options.php:414
+#: admin/options.php:268 admin/options.php:436
 msgid "Hide"
 msgstr "Fihla"
 
-#: admin/options.php:477
+#: admin/options.php:275 admin/options.php:278
+msgid "Copy"
+msgstr "Kopa"
+
+#: admin/options.php:276
+msgid "Copied!"
+msgstr "Kopiwe!"
+
+#: admin/options.php:277
+msgid "Copy failed"
+msgstr "Ukukopa kunqwenywe"
+
+#: admin/options.php:284
+msgid "Regenerate"
+msgstr "Vuselela"
+
+#: admin/options.php:577 includes/settings.php:282
+msgid "Custom"
+msgstr "Custom"
+
+#: admin/options.php:607
 msgid "5 minutes"
 msgstr "Imizuzu emihlanu"
 
-#: admin/options.php:478
+#: admin/options.php:608
 msgid "30 minutes"
 msgstr "Imizuzu amashumi amathathu"
 
-#: admin/options.php:479
+#: admin/options.php:609
 msgid "1 hour"
 msgstr "Iyure enye"
 
-#: admin/options.php:493 includes/settings.php:145
-msgid "Custom"
-msgstr "Custom"
+#: admin/options.php:638
+msgid "Unlimited (pre-1.29 behaviour)"
+msgstr "Onbeperkt (ukuziphatha phambi kwe-1.29)"
+
+#: admin/options.php:639
+msgid "Single use (strict)"
+msgstr "Ukusebenzisa kanye (okungqongqo)"
+
+#: admin/options.php:640
+msgid "5 uses (recommended)"
+msgstr "Ukusebenzisa kaxhithi (kucetyhiswa)"
+
+#: admin/options.php:641
+msgid "10 uses"
+msgstr "Ukusebenzisa kaxhithi"
 
 #: includes/admin.php:17
 msgid "OpenPorte Anti-spam"
@@ -233,46 +373,66 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Izicwangciso"
 
-#: includes/core.php:323 integrations/enfold-theme.php:58
+#: includes/core.php:474 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Ukuqinisekisa akusebenzi. Zama futhi kamva."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:326
+#: includes/core.php:477
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Ikhuselekile nge-%1$sALTCHA%2$s"
 
-#: includes/core.php:330
+#: includes/core.php:481
 msgid "I'm not a robot"
 msgstr "Andiyi roboto"
 
-#: includes/core.php:331
+#: includes/core.php:482
 msgid "Verified"
 msgstr "Iqinisekisiwe"
 
-#: includes/core.php:332
+#: includes/core.php:483
 msgid "Verifying..."
 msgstr "Iqinisekiswa..."
 
-#: includes/core.php:333
+#: includes/core.php:484
 msgid "Verifying... please wait."
 msgstr "Iqinisekiswa... nceda ulinde."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:680
+#: includes/core.php:1311
 msgid "This form requires JavaScript!"
 msgstr "Le fomu idinga i-JavaScript!"
 
-#: includes/settings.php:129
+#: includes/settings.php:110
+msgid ""
+"An Expiration of 0 means a solved challenge never expires. This value is "
+"being evaluated for deprecation; the recommended range is 60-14400 seconds."
+msgstr ""
+"Ukuphela kwexesha kuse-0 kuthetha ukuba umbuzo osombululiweyo awupheli xesha. "
+"Eli xabiso lihlola ukuba lisutshwe; i-range ecetyhiswayo yi-60-14400 zee-sekondi."
+
+#. translators: %d is the saved Expiration value, in seconds
+#: includes/settings.php:118
+#, php-format
+msgid ""
+"An Expiration of %d seconds can elapse before a slow device finishes solving "
+"the challenge. Values below 60 seconds are being evaluated for deprecation; "
+"the recommended range is 60-14400 seconds."
+msgstr ""
+"Ukuphela kwexesha kwe-%d zee-sekondi kungadlula phambi kokuba isixhobo "
+"esicothayo sigqibe ukusombulula umbuzo. Amanani angaphantsi kwe-60 zee-sekondi "
+"ahlolwa ukuba asutshwe; i-range ecetyhiswayo yi-60-14400 zee-sekondi."
+
+#: includes/settings.php:266
 msgid "General"
 msgstr "Jikelele"
 
-#: includes/settings.php:136
+#: includes/settings.php:273
 msgid "API Mode"
 msgstr "Imo ye-API"
 
-#: includes/settings.php:142
+#: includes/settings.php:279
 msgid ""
 "Select the API Mode. Use Self-hosted for the built-in WordPress REST API, or "
 "Custom to point to your own ALTCHA-compatible backend."
@@ -281,15 +441,15 @@ msgstr ""
 "API ekhoyo, okanye i-Custom ukuze ukhokelele kwi-backend yakho ehambelanayo "
 "ne-ALTCHA."
 
-#: includes/settings.php:144
+#: includes/settings.php:281
 msgid "Self-hosted"
 msgstr "Self-hosted"
 
-#: includes/settings.php:154
+#: includes/settings.php:291
 msgid "Challenge URL"
 msgstr "I-URL yombuzo"
 
-#: includes/settings.php:162
+#: includes/settings.php:299
 msgid ""
 "Only available when API Mode is set to Custom.<br/>The URL is made up of the "
 "domain and path to your <strong>custom ALTCHA-compatible backend</strong>, "
@@ -299,15 +459,15 @@ msgstr ""
 "nge-domain kunye ne-path ye-<strong>backend yakho ehambelanayo ne-ALTCHA</"
 "strong>, kwaye ngokukhetha i-API key (iqala nge-<code>gk_</code>)."
 
-#: includes/settings.php:171
+#: includes/settings.php:308
 msgid "Shared secret"
 msgstr "Isimfihlo esabelwana"
 
-#: includes/settings.php:177
+#: includes/settings.php:314
 msgid "A secret key used to sign and verify challenges."
 msgstr "Ikhodi yimfihlo esetyenziswa ukutshatisa nokuqinisekisa imibuzo."
 
-#: includes/settings.php:178
+#: includes/settings.php:317
 msgid ""
 "OpenPorte generates a random secret automatically. Change it only if another "
 "application needs to use the same secret.<br/>In Custom API Mode, this value "
@@ -320,15 +480,29 @@ msgstr ""
 "nesimfihlo esabelwana (ngamanye amaxesha sibizwa ngokuba sisimfihlo se-HMAC) "
 "esicwangcisiweyo kwi-backend yakho."
 
-#: includes/settings.php:186 includes/settings.php:192
+#: includes/settings.php:319
+msgid ""
+"Copy places the current secret on the clipboard. Regenerate fills in a fresh "
+"random secret; it only takes effect when you save changes, and challenges "
+"already issued with the old secret then stop verifying. In Custom API Mode, "
+"saving a new secret also breaks verification of new submissions until you "
+"update the secret on your backend to match."
+msgstr ""
+"UKopa kubeka isimfihlo samanje kwi-clipboard. UVuselelo lufaka isimfihlo "
+"esingaqikeleleki esitsha; lusebenza kuphela xa ugcina utshintsho, kwaye imibuzo "
+"esele ikhuphelwe ngesimfihlo esidala iyayeka ukuqinisekiswa. Kwi-Custom API "
+"Mode, ukugcina isimfihlo esitsha kuphazamisa ukuqinisekisa izicelo ezintsha "
+"de ube uvuselele isimfihlo kwi-backend yakho ukuze sihambelane."
+
+#: includes/settings.php:329 includes/settings.php:335
 msgid "Hash algorithm for the challenges."
 msgstr "I-algorithm ye-hash yemibuzo."
 
-#: includes/settings.php:186
+#: includes/settings.php:329
 msgid "Algorithm"
 msgstr "I-Algorithm"
 
-#: includes/settings.php:193
+#: includes/settings.php:336
 msgid ""
 "In Self-hosted API Mode this is the algorithm used to generate and verify "
 "the proof-of-work challenges.<br/>In Custom API Mode it must match the "
@@ -340,23 +514,27 @@ msgstr ""
 "ihambelane ne-algorithm e-backend yakho esiyisebenzisayo — i-backends "
 "ezininzi ehambelanayo ne-ALTCHA zisebenzisa i-SHA-256 ngokwemveli."
 
-#: includes/settings.php:203
+#: includes/settings.php:346
 msgid "Low"
 msgstr "Ephantsi"
 
-#: includes/settings.php:204
+#: includes/settings.php:347
 msgid "Medium"
 msgstr "Epakathi"
 
-#: includes/settings.php:205
+#: includes/settings.php:348
 msgid "High"
 msgstr "Ephezulu"
 
-#: includes/settings.php:215
+#: includes/settings.php:358
 msgid "Complexity"
 msgstr "Ubunzima"
 
-#: includes/settings.php:221
+#: includes/settings.php:368
+msgid "Disabled in Custom mode: the backend sets the challenge complexity."
+msgstr "Icinyiwe kwi-Custom mode: i-backend isetinga ubunzima bombuzo."
+
+#: includes/settings.php:369
 msgid ""
 "Select the PoW complexity for the widget: the higher the complexity, the "
 "longer visitors (and bots) work to solve the challenge.<br/>Even High is "
@@ -369,52 +547,98 @@ msgstr ""
 "ezindala kungathatha iisekondi ezimbalwa. I-High yimalunga ne-2–3× "
 "yomsebenzi we-Low."
 
-#: includes/settings.php:228
+#: includes/settings.php:376
 msgid "Expiration"
 msgstr "Ukuphela kwexesha"
 
-#: includes/settings.php:234
+#: includes/settings.php:387
+msgid "Disabled in Custom mode: the backend sets the challenge expiry."
+msgstr "Icinyiwe kwi-Custom mode: i-backend isetinga uxolo lokuphela lombuzo."
+
+#: includes/settings.php:390
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
-"no expiry (None) and 14400 is 4 hours."
+"no expiry and 14400 is 4 hours."
 msgstr ""
 "Ixesha lokuphila lombuzo. I-Custom yamkela 0 ukuya ku-14400 zee-sekondi, "
-"apho 0 kuthetha ukuba akukho kuphela kwexesha (None) kwaye 14400 yiiyure "
-"ezine."
+"apho 0 kuthetha ukuba akukho kuphela kwexesha kwaye 14400 yiiyure ezine."
 
-#: includes/settings.php:243
+#: includes/settings.php:392
+msgid ""
+"Above 300 seconds the window in which a solved challenge can be replayed "
+"grows, though Replay limit still bounds how often one is accepted. Below 60 "
+"seconds a challenge can expire before a slow device finishes solving it, and "
+"0 means it never expires at all — both are discouraged and are being "
+"evaluated for deprecation."
+msgstr ""
+"Ngaphaya kwe-300 zee-sekondi, ifestile apho umbuzo osombululiweyo unga-"
+"sebenziswa kwakhona iyanda, nangona i-Replay limit isabala ukuba zingezimbalwa "
+"ezizithodileyo. Ngaphantsi kwe-60 zee-sekondi, umbuzo ungaphela phambi kokuba "
+"isixhobo esicothayo sigqibe ukusombulula, kwaye 0 kuthetha ukuba awupheli "
+"konke — zombini azicetyhiswa kwaye zihlola ukuba zisutshwe."
+
+#: includes/settings.php:398
+msgid "Replay limit"
+msgstr "I-Replay limit"
+
+#: includes/settings.php:404
+msgid ""
+"How many times one solved challenge may be accepted. This applies in both "
+"API Modes."
+msgstr ""
+"Mangaki amaxesha umbuzo omnye osombululiweyo ungaqatshelwa. Oku kusebenza "
+"kwi-API Modes zombini."
+
+#: includes/settings.php:406
+msgid ""
+"A visitor whose form comes back with an unrelated error (a missing field, a "
+"mistyped password) resubmits the same challenge, so a small allowance keeps "
+"those submissions working; every extra use is also one more replay available "
+"to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as "
+"long as it is valid — the behaviour of releases before 1.29.0, and not "
+"recommended."
+msgstr ""
+"Umvakasheli osefomu lwakhe libuyela naye ne-error engahambelani (i-field "
+"engekhoyo, i-password ebhalwe ngempazamo) uthumela kwakhona umbuzo ofanayo, "
+"ngoko ke uvumelelo oluncinci lugcina izicelo ezo zisebenza; ukusebenzisa "
+"okongezelelwe kukuphatha okanye ukunika i-bot elinye i-replay. I-Custom "
+"yamkela 0 ukuya ku-100, apho 0 yamkela umbuzo osombululiweyo ngethuba "
+"lisebenza — oku kukuphatha kwe-releases phambi kwe-1.29.0, kwaye "
+"akucetyhiswa."
+
+#: includes/settings.php:415
 msgid "Widget Customisation"
 msgstr "Ukulungisa i-Widget"
 
-#: includes/settings.php:250
+#: includes/settings.php:422
 msgid "Auto verification"
 msgstr "Ukuqinisekiswa okuzenzekelayo"
 
-#: includes/settings.php:256
+#: includes/settings.php:428
 msgid "Select auto-verification behaviour."
 msgstr "Khetha indlela yokuqinisekisa okuzenzekelayo."
 
-#: includes/settings.php:258
+#: includes/settings.php:430
 msgid "Disabled"
 msgstr "Icinyiwe"
 
-#: includes/settings.php:259
+#: includes/settings.php:431
 msgid "On page load"
 msgstr "Xa i-page ivuliwe"
 
-#: includes/settings.php:260
+#: includes/settings.php:432
 msgid "On form focus"
 msgstr "Xa kufokuselelwa kwifomu"
 
-#: includes/settings.php:261
+#: includes/settings.php:433
 msgid "On form submit"
 msgstr "Xa uthumela ifomu"
 
-#: includes/settings.php:268
+#: includes/settings.php:440
 msgid "Display Mode"
 msgstr "Imo yoBoniso"
 
-#: includes/settings.php:274
+#: includes/settings.php:446
 msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
@@ -422,19 +646,19 @@ msgstr ""
 "Khetha ukuba i-widget ihlala i-inline kwi-page okanye i-float kufuphi ne-"
 "button yokuthuma."
 
-#: includes/settings.php:276
+#: includes/settings.php:448
 msgid "Inline"
 msgstr "Inline"
 
-#: includes/settings.php:277
+#: includes/settings.php:449
 msgid "Floating"
 msgstr "Floating"
 
-#: includes/settings.php:284
+#: includes/settings.php:456
 msgid "Verification Delay"
 msgstr "Ukulindeleka koQinisekiso"
 
-#: includes/settings.php:293
+#: includes/settings.php:465
 msgid ""
 "Some visitors perceive a slower check as more trustworthy, and that is this "
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
@@ -446,16 +670,16 @@ msgstr ""
 "uBunzima endaweni yoko."
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:296
+#: includes/settings.php:468
 #, php-format
 msgid "Add %s second delay"
 msgstr "Faka ukulindeleka kwe-sekondi %s"
 
-#: includes/settings.php:304
+#: includes/settings.php:476
 msgid "Acknowledgement"
 msgstr "Ukuthetha ngokuthembisa"
 
-#: includes/settings.php:310
+#: includes/settings.php:482
 msgid ""
 "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is "
 "free, open-source software — we would appreciate you keeping it visible, but "
@@ -465,11 +689,11 @@ msgstr ""
 "ALTCHA yisoftware yasimahla, evulekileyo — singakuvuyela ukuba uyigcina "
 "ibonakala, kodwa isigqibo sisezandleni zakho."
 
-#: includes/settings.php:311
+#: includes/settings.php:483
 msgid "Hide the ALTCHA logo"
 msgstr "Fihla i-logo ye-ALTCHA"
 
-#: includes/settings.php:326
+#: includes/settings.php:498
 msgid ""
 "This applies to the text shown inside the widget. Same as the logo: keeping "
 "it visible helps credit the project this plugin is built on, but it has no "
@@ -479,168 +703,168 @@ msgstr ""
 "ukuyigcina ibonakala kunceda ekunikeni isibonelelo leprojekthi le plugin "
 "eyakhiwe kuyo, kodwa ayinasiphumo kwindlela i-OpenPorte esebenza ngayo."
 
-#: includes/settings.php:327
+#: includes/settings.php:499
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr "Fihla i-footer ethi \"Protected by ALTCHA\""
 
-#: includes/settings.php:336
+#: includes/settings.php:508
 msgid "WordPress"
 msgstr "WordPress"
 
-#: includes/settings.php:345
+#: includes/settings.php:517
 msgid "Register page"
 msgstr "Ipage yokubhalisa"
 
-#: includes/settings.php:346
+#: includes/settings.php:518
 msgid "Protect WordPress registration page."
 msgstr "Khusela ipage yokubhalisa ye-WordPress."
 
-#: includes/settings.php:349
+#: includes/settings.php:521
 msgid "Reset password page"
 msgstr "Ipage yokubuyisela i-password"
 
-#: includes/settings.php:350
+#: includes/settings.php:522
 msgid "Protect WordPress password reset page."
 msgstr "Khusela ipage yokubuyisela i-password ye-WordPress."
 
-#: includes/settings.php:353
+#: includes/settings.php:525
 msgid "Login page"
 msgstr "Ipage yokungena"
 
-#: includes/settings.php:354
+#: includes/settings.php:526
 msgid "Protect WordPress login page."
 msgstr "Khusela ipage yokungena ye-WordPress."
 
-#: includes/settings.php:357
+#: includes/settings.php:529
 msgid "Comments"
 msgstr "Izimvo"
 
-#: includes/settings.php:358
+#: includes/settings.php:530
 msgid "Protect WordPress comments section."
 msgstr "Khusela isection yezimvo ze-WordPress."
 
-#: includes/settings.php:385
+#: includes/settings.php:557
 msgid "Integrations"
 msgstr "Uluquzelelo"
 
-#: includes/settings.php:401
+#: includes/settings.php:573
 msgid "CoBlocks"
 msgstr "CoBlocks"
 
-#: includes/settings.php:402
+#: includes/settings.php:574
 msgid "Protect CoBlocks forms."
 msgstr "Khusela iifomu ze-CoBlocks."
 
-#: includes/settings.php:406
+#: includes/settings.php:578
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: includes/settings.php:407
+#: includes/settings.php:579
 msgid "Protect Contact Form 7 forms."
 msgstr "Khusela iifomu ze-Contact Form 7."
 
-#: includes/settings.php:411
+#: includes/settings.php:583
 msgid "Elementor Pro Forms"
 msgstr "Elementor Pro Forms"
 
-#: includes/settings.php:412
+#: includes/settings.php:584
 msgid "Protect Elementor Pro forms."
 msgstr "Khusela iifomu ze-Elementor Pro."
 
-#: includes/settings.php:416
+#: includes/settings.php:588
 msgid "Enfold Theme"
 msgstr "Enfold Theme"
 
-#: includes/settings.php:417
+#: includes/settings.php:589
 msgid "Protect Enfold theme forms."
 msgstr "Khusela iifomu ze-Enfold theme."
 
-#: includes/settings.php:419
+#: includes/settings.php:591
 msgid "Theme not active."
 msgstr "I-Theme ayisebenzi."
 
-#: includes/settings.php:422
+#: includes/settings.php:594
 msgid "Formidable Forms"
 msgstr "Formidable Forms"
 
-#: includes/settings.php:423
+#: includes/settings.php:595
 msgid "Protect Formidable Forms submissions."
 msgstr "Khusela izicelo ze-Formidable Forms."
 
-#: includes/settings.php:427
+#: includes/settings.php:599
 msgid "Forminator"
 msgstr "Forminator"
 
-#: includes/settings.php:428
+#: includes/settings.php:600
 msgid "Protect Forminator forms."
 msgstr "Khusela iifomu ze-Forminator."
 
-#: includes/settings.php:432
+#: includes/settings.php:604
 msgid "Gravity Forms"
 msgstr "Gravity Forms"
 
-#: includes/settings.php:433
+#: includes/settings.php:605
 msgid "Protect Gravity Forms submissions."
 msgstr "Khusela izicelo ze-Gravity Forms."
 
-#: includes/settings.php:437
+#: includes/settings.php:609
 msgid "HTML Forms"
 msgstr "HTML Forms"
 
-#: includes/settings.php:438
+#: includes/settings.php:610
 msgid "Protect HTML Forms submissions."
 msgstr "Khusela izicelo ze-HTML Forms."
 
-#: includes/settings.php:442
+#: includes/settings.php:614
 msgid "wpDiscuz"
 msgstr "wpDiscuz"
 
-#: includes/settings.php:443
+#: includes/settings.php:615
 msgid "Protect wpDiscuz comments section."
 msgstr "Khusela isection yezimvo ze-wpDiscuz."
 
-#: includes/settings.php:447
+#: includes/settings.php:619
 msgid "WPForms"
 msgstr "WPForms"
 
-#: includes/settings.php:448
+#: includes/settings.php:620
 msgid "Protect WPForms submissions."
 msgstr "Khusela izicelo ze-WPForms."
 
-#: includes/settings.php:452
+#: includes/settings.php:624
 msgid "WooCommerce register page"
 msgstr "Ipage ye-WooCommerce yokubhalisa"
 
-#: includes/settings.php:453
+#: includes/settings.php:625
 msgid "Protect the WooCommerce register page."
 msgstr "Khusela ipage yokubhalisa ye-WooCommerce."
 
-#: includes/settings.php:457
+#: includes/settings.php:629
 msgid "WooCommerce reset password page"
 msgstr "Ipage ye-WooCommerce yokubuyisela i-password"
 
-#: includes/settings.php:458
+#: includes/settings.php:630
 msgid "Protect the WooCommerce reset password page."
 msgstr "Khusela ipage yokubuyisela i-password ye-WooCommerce."
 
-#: includes/settings.php:462
+#: includes/settings.php:634
 msgid "WooCommerce login page"
 msgstr "Ipage ye-WooCommerce yokungena"
 
-#: includes/settings.php:463
+#: includes/settings.php:635
 msgid "Protect the WooCommerce login page."
 msgstr "Khusela ipage yokungena ye-WooCommerce."
 
-#: includes/settings.php:470
+#: includes/settings.php:642
 msgid "Custom HTML"
 msgstr "Custom HTML"
 
-#: includes/settings.php:471
+#: includes/settings.php:643
 msgid "Configure hand-written widget tags."
 msgstr "Lungisa iitages ze-widget ezibhalwe ngesandla."
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:475
+#: includes/settings.php:647
 #, php-format
 msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
@@ -649,7 +873,7 @@ msgstr ""
 "%1$sEgwetshiweyo%2$s, kwaye kucwangciselwe ukususwa kwi-release elandelayo "
 "ekhulu — beka i-shortcode ye-%3$s kwi-content yakho endaweni yoko."
 
-#: includes/settings.php:496
+#: includes/settings.php:668
 msgid "Plugin not active."
 msgstr "I-Plugin ayisebenzi."
 
@@ -701,100 +925,3 @@ msgstr "I-OpenPorte ayinakuvulwa"
 #: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Yiya kwi-page ye-Plugins"
-
-#~ msgid ""
-#~ "OpenPorte is an open-source anti-spam plugin that protects sites from "
-#~ "bots using a lightweight Proof-of-Work challenge instead of CAPTCHAs."
-#~ msgstr ""
-#~ "I-OpenPorte yi-plugin ye-anti-spam ene-open-source eziqonda iindawo "
-#~ "ukusuka kwi-bots ngokusebenzisa umngeni we-Proof-of-Work olula endaweni "
-#~ "ye-CAPTCHAs."
-
-#~ msgid ""
-#~ "OpenPorte is a free, open-source CAPTCHA alternative that offers robust "
-#~ "spam and bot protection without using cookies, ensuring full GDPR "
-#~ "compliance by design. A community-maintained fork of the ALTCHA Spam "
-#~ "Protection plugin (v1)."
-#~ msgstr ""
-#~ "I-OpenPorte yindlela yasimahla, evulekileyo yokutshintsha i-CAPTCHA enika "
-#~ "ukhuseleko olomeleleyo lwe-spam kunye ne-bot ngaphandle kokusebenzisa ii-"
-#~ "cookies, iqinisekisa ukulungiselela i-GDPR ngokwenkcazo. Le yifork "
-#~ "yomphakathi ye-ALTCHA Spam Protection plugin (v1)."
-
-#, php-format
-#~ msgid ""
-#~ "Both modes run without any external paid service. %1$sSelf-hosted%2$s "
-#~ "generates challenges via the WordPress REST API. %3$sCustom%4$s lets you "
-#~ "point to your own ALTCHA-compatible backend."
-#~ msgstr ""
-#~ "Zombini iindlela zisebenza ngaphandle kweenkonzo ezihlawulwayo "
-#~ "zangaphandle. %1$sSelf-hosted%2$s ikhiqiza imibuzo nge-WordPress REST "
-#~ "API. %3$sCustom%4$s ikuvumela ukuba uxhase kwi-backend yakho ehambelanayo "
-#~ "ne-ALTCHA."
-
-#, php-format
-#~ msgid ""
-#~ "The Spam Filter acts on the classification returned by a %1$sCustom%2$s "
-#~ "backend. It has no effect in %3$sSelf-hosted%4$s mode, which uses proof-"
-#~ "of-work only."
-#~ msgstr ""
-#~ "I-Spam Filter isebenza kwisigqibo esibuyiselwe yi-backend ye-"
-#~ "%1$sCustom%2$s. Ayinanto kwi-mo ye-%3$sSelf-hosted%4$s, esisebenzisa i-"
-#~ "proof-of-work kuphela."
-
-#~ msgid "Configure your custom Challenge URL."
-#~ msgstr "Lungisa i-URL yakho yombuzo."
-
-#~ msgid "Signing secret"
-#~ msgstr "Isimfihlo sokutshatisa"
-
-#~ msgid "Configure your HMAC signing secret."
-#~ msgstr "Lungisa isimfihlo sakho sokutshatisa i-HMAC."
-
-#~ msgid "Select the PoW complexity for the widget."
-#~ msgstr "Khetha ubunzima be-PoW be-widget."
-
-#~ msgid "Select the life-span of the challenge."
-#~ msgstr "Khetha ixesha lokuphila kombuzo."
-
-#~ msgid "4 hours"
-#~ msgstr "Amahora amane"
-
-#~ msgid "None"
-#~ msgstr "Ayikho"
-
-#~ msgid "Spam Filter"
-#~ msgstr "I-Spam Filter"
-
-#~ msgid "Yes"
-#~ msgstr "Ewe"
-
-#~ msgid ""
-#~ "Don't allow form submissions if the Spam Filter detects potential spam."
-#~ msgstr ""
-#~ "Ungavumeli izicelo zeefomu ukuba i-Spam Filter iqaphela i-spam enokuba "
-#~ "khona."
-
-#~ msgid "Enable Floating UI."
-#~ msgstr "Vula i-Floating UI."
-
-#~ msgid "Delay"
-#~ msgstr "Ukulindeleka"
-
-#~ msgid "Add a delay of 1.5 seconds to verification."
-#~ msgstr "Faka ukulindeleka okusebenzisa iisekondi ezi-1.5 ekubukeni."
-
-#~ msgid "Hide footer"
-#~ msgstr "Fihla i-footer"
-
-#~ msgid "Disable"
-#~ msgstr "Cinyiwa"
-
-#~ msgid "Captcha"
-#~ msgstr "Captcha"
-
-#~ msgid "Captcha + Spam Filter"
-#~ msgstr "Captcha + Spam Filter"
-
-#~ msgid "Shortcode"
-#~ msgstr "Shortcode"
