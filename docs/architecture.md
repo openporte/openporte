@@ -107,7 +107,10 @@ accepted. It is filterable via **`openporte_replay_limit`**, which receives the
 current hook name as context so a site can be stricter on login than on comments
 without touching any call site; the return value is re-clamped, so a filter that
 returns nonsense cannot silently switch protection off. Enforcement lives in
-`verify()` — see "Stateless primitives, stateful wrapper" below.
+`verify()` — see "Stateless primitives, stateful wrapper" below, and
+[`docs/replay-protection.md`](replay-protection.md) for the full design: the
+reasoning behind the mechanism, the residuals it accepts, the alternatives that
+were rejected, and how much of it has been proven.
 
 **Verification Delay is not part of this, and is not a security control.** The
 `openporte_delay` setting is emitted only as a client-side widget attribute; the
@@ -213,8 +216,8 @@ public/
   index.php                Silence-is-golden guard.
 languages/                 29 locales (.po/.mo) + openporte.pot. Workflow: docs/agents/i18n.md.
 docs/                      Maintainer docs: architecture.md, security-audit.md,
-                           maintenance-testing.md, release-preparation.md, agents/,
-                           acceptance/.
+                           replay-protection.md, maintenance-testing.md,
+                           release-preparation.md, agents/, acceptance/.
 bin/release/               Release tooling (npm run release:*): version, check, dist,
                            tag, i18n, WordPress.org asset sync, plus altcha-update.sh /
                            altcha-verify.sh for re-vendoring the widget.
@@ -307,6 +310,10 @@ cryptographic success, so junk and forged tokens never create any and the open
 REST challenge endpoint stays stateless. A store that cannot count **fails
 open** (the submission is accepted) but fires
 `openporte_replay_store_unavailable` and is reported on the settings page.
+
+The reasoning behind each of these choices — including the ones that look
+arbitrary until you know what they are guarding against — is written up in
+[`docs/replay-protection.md`](replay-protection.md).
 
 **Invariant — CVE-2025-68113.** The counter's lifetime derives from `expires`,
 so `expires` must remain bound by the signature. It is: the signature covers the
