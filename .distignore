@@ -18,6 +18,7 @@
 .gitattributes
 .gitignore
 .markdownlint.yaml
+.phpunit.result.cache
 .shellcheckrc
 .wp-env.conf
 .wp-env.json
