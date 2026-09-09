@@ -163,6 +163,35 @@ Run all of the above with `npm run release:check`.
 
 ## Phase 5 — Validation (manual acceptance)
 
+### Prerequisite
+
+Start a clean bench using the required environment for testing. Notice that
+the bench start does not activate OpenPorte plugin. This is to test the migration
+path from ALTCHA Spam Protection plugin.
+
+```console
+./wp-env.sh cleanup --force   # clean up the environment
+./wp-env.sh start             # from the repo root — provisions the bench first
+```
+
+If you need a specific environment, you can replace the last command by (example
+using WordPress 7.1 and PHP 8.5):
+
+```console
+./wp-env.sh -p "8.5" -w "7.1" -v start
+```
+
+And if you need to have OpenPorte activated, you can do it in the Admin interface
+or via command line:
+
+```console
+./wp-env.sh run cli -- wp plugin activate openporte # activate the plugin
+```
+
+To access the web server locally, you might need to create an SSH tunnel.
+
+### Validation steps
+
 Two automated suites carry part of this, and neither is a substitute for the
 bench: the unit suite from Phase 4, and the browser E2E suite
 (`cd tests/e2e && npm test` against a running bench — see
@@ -178,7 +207,7 @@ release's acceptance record in `docs/acceptance/`.
 2. **Upgrade scenario (d).** Exercise the ALTCHA → OpenPorte migration and the
    legacy-value graceful degradation (see `tests/README.md`).
 3. **Compatibility matrix (e).** Spot-check the supported PHP/WordPress floor and
-   ceiling (currently **PHP 8.0 / WP 5.6** up to **PHP 8.5 / WP 7.0** — see
+   ceiling (currently **PHP 8.0 / WP 5.6** up to **PHP 8.5 / WP 7.1** — see
    `docs/maintenance-testing.md`).
 4. **Per-release feature checks.** The remaining lettered sections of the
    acceptance record cover what this release added, plus the previous release's

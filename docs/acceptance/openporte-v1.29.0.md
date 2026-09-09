@@ -89,7 +89,7 @@ Tests **(a)**, **(b)** and **(c)** are our regression tests.
        WP version with PHP 8.0 support)
 2. [ ] Test with PHP 8.3 and WordPress 6.8 — oldest maintained PHP version, the WP major
        before current stable
-3. [ ] Test with PHP 8.5 and WordPress 7.0 — newest PHP version, newest WP version available
+3. [ ] Test with PHP 8.5 and WordPress 7.1 — newest PHP version, newest WP version available
 
 (The deprecated PHP 7.3 / WP 5.0 combo from the v1.27.0 run is retired: the
 supported floor has been PHP 8.0 / WP 5.6 since the v1.27.0 acceptance run

@@ -209,6 +209,14 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   Check if an integration by `$name` is active.  
   **Returns:** `bool`
 
+* `apply_filters('openporte_replay_limit', $limit, $context)`  
+  Override how many times one solved token may be accepted. `$context` is the
+  hook currently running (e.g. `wp_authenticate`), or `''` outside any hook, so
+  a site can be stricter on login than on comments. The return value is
+  re-clamped to the 0–100 range, so a filter cannot switch protection off with
+  an out-of-range value. Since 1.29.0.  
+  **Returns:** `int`
+
 * `apply_filters('openporte_widget_attrs', $attrs, $mode, $language, $name)`  
   Override widget attributes.  
   **Returns:** `array<string, mixed>`
@@ -231,6 +239,18 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   The former `OpenPortePlugin::$instance->spamfilter_result` property was
   removed together with the spam-filter feature in 1.28 (see issue #6); the
   action now only carries the boolean result.
+
+* `do_action('openporte_replay_store_unavailable', $key, $limit, $ttl)`  
+  Triggered when the replay counter cannot be read or written (object cache or
+  database unreachable). The submission is still accepted — replay protection
+  fails open rather than locking visitors out — but this fires so a site can
+  observe the degradation.
+
+  * `$key`: `string` the replay counter's storage key.
+  * `$limit`: `int` the Replay limit that could not be enforced.
+  * `$ttl`: `int` the counter lifetime, in seconds, that would have been used.
+
+  Since 1.29.0.
 
 ## Acknowledgements
 

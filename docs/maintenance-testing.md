@@ -22,7 +22,7 @@ in sync with them.
 
 **✅ Latest tested**
 
-- WordPress: 7.0.2 (the `Tested up to` header stays `7.0` — major.minor only,
+- WordPress: 7.1 (the `Tested up to` header is `7.1` — major.minor only,
   a Plugin Check requirement)
 - PHP: 8.5
 
@@ -283,7 +283,7 @@ For comprehensive plugin testing, consider this matrix:
 |-------------|-------------------|-------|
 | 8.0 | 5.6 | Minimum supported floor |
 | 8.3 | 6.8 | Recommended baseline |
-| 8.5 | 7.0 | Latest tested (PHP + WP ceiling) |
+| 8.5 | 7.1 | Latest tested (PHP + WP ceiling) |
 | 8.4 | trunk | Bleeding-edge WordPress |
 
 Example test commands:
@@ -292,8 +292,8 @@ Example test commands:
 # Test the supported floor: PHP 8.0 with WP 5.6
 ./wp-env.sh -p 8.0 -w 5.6 start
 
-# Test the ceiling: PHP 8.5 with WP 7.0
-./wp-env.sh -p 8.5 -w 7.0 start
+# Test the ceiling: PHP 8.5 with WP 7.1
+./wp-env.sh -p 8.5 -w 7.1 start
 
 # Test against bleeding-edge WordPress
 ./wp-env.sh -p 8.4 -w WordPress/WordPress#trunk start
@@ -391,6 +391,7 @@ for real (no mocks), so it also catches timing regressions such as the wpDiscuz
 
 ```bash
 ./wp-env.sh start          # from the repo root — provisions the bench first
+./wp-env.sh run cli -- wp plugin activate openporte # activate the plugin
 cd tests/e2e && npm install && npm test
 ```
 
@@ -450,7 +451,7 @@ security issue is found in the widget, the policy is to upgrade to a fixed
 upstream release.
 
 **Integration testing after a re-vendor.** Run these (browser + `wp-env logs`),
-at least on the floor (PHP 8.0 / WP 5.6) and ceiling (PHP 8.5 / WP 7.0) benches:
+at least on the floor (PHP 8.0 / WP 5.6) and ceiling (PHP 8.5 / WP 7.1) benches:
 
 1. The widget renders on a protected form (the `[openporte]` shortcode on
    **Test Page**, plus at least one form integration such as Contact Form 7).
