@@ -39,7 +39,7 @@ function openporte_options_page_html()
     <div>
       <div style="margin-bottom: 0.3rem;"><b><?php echo esc_html__('Do you like OpenPorte?', 'openporte'); ?></b></div>
       <div style="display:flex;gap: 0.5rem;">
-        <a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" style="display: inline-flex; gap: 0.5rem;">
+        <a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.5rem;">
           <span><?php echo esc_html__('Review it!', 'openporte'); ?></span>
         </a>
       </div>
@@ -79,7 +79,7 @@ function openporte_options_page_html()
             'Please rate OpenPorte on WordPress.org to help us get the word out.',
             'openporte',
           ),
-          '<a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank">',
+          '<a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" rel="noopener noreferrer">',
           '</a>',
         ); ?>
       </p>
@@ -88,12 +88,12 @@ function openporte_options_page_html()
         echo sprintf(
           /* translators: %1$s and %2$s are the opening and closing tags of a link to the ALTCHA project. */
           esc_html__('Powered by the %1$sALTCHA%2$s proof-of-work open-source project.', 'openporte'),
-          '<a href="https://github.com/altcha-org/altcha" target="_blank">',
+          '<a href="https://github.com/altcha-org/altcha" target="_blank" rel="noopener noreferrer">',
           '</a>',
         ); ?>
       </p>
       <p>
-        <a href="https://github.com/openporte/openporte" target="_blank" style="display: inline-flex; gap: 0.3rem;">
+        <a href="https://github.com/openporte/openporte" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.3rem;">
           <span><?php echo esc_html__('Star OpenPorte on GitHub!', 'openporte'); ?></span>
         </a>
       </p>
