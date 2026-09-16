@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.29.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
+"POT-Creation-Date: 2026-09-16T12:00:39+00:00\n"
 "PO-Revision-Date: 2026-09-07 00:00+0000\n"
 "Last-Translator: Codex-GPT-5:gpt-5 - signed-off by J-C Berthon\n"
 "Language-Team: German <de@li.org>\n"
@@ -55,10 +55,10 @@ msgid ""
 "limit bounds how often it can be resubmitted. This is strongly discouraged "
 "and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
-"Die Ablaufzeit ist auf 0 gesetzt. Eine gelöste Aufforderung "
-"läuft daher nie ab, und nur das Wiederverwendungslimit begrenzt erneute "
-"Übermittlungen. Dies wird dringend nicht empfohlen und für eine zukünftige "
-"Entfernung geprüft. Setzen Sie eine Ablaufzeit von mindestens 60 Sekunden."
+"Die Ablaufzeit ist auf 0 gesetzt. Eine gelöste Aufforderung läuft daher nie "
+"ab, und nur das Wiederverwendungslimit begrenzt erneute Übermittlungen. Dies "
+"wird dringend nicht empfohlen und für eine zukünftige Entfernung geprüft. "
+"Setzen Sie eine Ablaufzeit von mindestens 60 Sekunden."
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -125,13 +125,13 @@ msgstr ""
 "URL ist konfiguriert."
 
 #. translators: %s is the connection error message
-#: admin/healthcheck.php:274
+#: admin/healthcheck.php:280
 #, php-format
 msgid "The Challenge URL is unreachable: %s"
 msgstr "Die Aufforderungs-URL ist nicht erreichbar: %s"
 
 #. translators: %d is the HTTP status code returned by the backend
-#: admin/healthcheck.php:285
+#: admin/healthcheck.php:291
 #, php-format
 msgid ""
 "The Challenge URL responded with HTTP %d instead of a challenge. Check the "
@@ -142,7 +142,7 @@ msgstr ""
 "challenge). Überprüfen Sie die URL (einschließlich eines apiKey-Parameters) "
 "und die Domain-/Origin-Einschränkungen des Backends."
 
-#: admin/healthcheck.php:295
+#: admin/healthcheck.php:301
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
@@ -151,14 +151,14 @@ msgstr ""
 "den Feldern algorithm, challenge, salt und signature erwartet)."
 
 #. translators: %s is the algorithm name reported by the backend
-#: admin/healthcheck.php:304
+#: admin/healthcheck.php:310
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr ""
 "Das Backend gibt Aufforderungen mit dem nicht unterstützten Algorithmus "
 "\"%s\" aus."
 
-#: admin/healthcheck.php:320
+#: admin/healthcheck.php:326
 msgid ""
 "The shared secret does not match the backend's HMAC secret — every form "
 "submission would fail verification. Copy the backend's HMAC secret into the "
@@ -170,7 +170,7 @@ msgstr ""
 "Signaturgeheimnis."
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
-#: admin/healthcheck.php:328
+#: admin/healthcheck.php:334
 #, php-format
 msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
@@ -180,7 +180,7 @@ msgstr ""
 "ist auf %2$s gesetzt — Formularübermittlungen würden die Überprüfung nicht "
 "bestehen. Setzen Sie den Algorithmus auf %1$s."
 
-#: admin/healthcheck.php:342
+#: admin/healthcheck.php:348
 msgid ""
 "The backend issues challenges with no expiry (no future \"expires\" "
 "parameter in the salt), so a solved challenge never expires on its own and "
@@ -192,7 +192,7 @@ msgstr ""
 "selbst ab, und nur das Wiederverwendungslimit begrenzt ihre Annahme. "
 "Aktivieren Sie die Ablaufzeit für Aufforderungen im Backend."
 
-#: admin/healthcheck.php:348
+#: admin/healthcheck.php:354
 msgid ""
 "The backend returned a challenge whose expiry is already in the past. Its "
 "clock may be wrong or it may be serving a cached challenge; correct that "
@@ -204,7 +204,7 @@ msgstr ""
 "benutzerdefinierten Modus verwenden."
 
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:353
+#: admin/healthcheck.php:359
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -214,12 +214,12 @@ msgstr ""
 "gemeinsam genutzte Geheimnis stimmt überein."
 
 #. translators: %s is a duration such as "20 mins"
-#: admin/healthcheck.php:358
+#: admin/healthcheck.php:364
 #, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "Das Backend lässt seine Aufforderungen nach etwa %s ablaufen."
 
-#: admin/healthcheck.php:362
+#: admin/healthcheck.php:368
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
@@ -239,6 +239,10 @@ msgstr "Eine datenschutzfreundliche CAPTCHA-Alternative."
 msgid "Do you like OpenPorte?"
 msgstr "Gefällt Ihnen OpenPorte?"
 
+#: admin/options.php:42
+msgid "Review OpenPorte on WordPress.org"
+msgstr ""
+
 #: admin/options.php:43
 msgid "Review it!"
 msgstr "Bewerten Sie es!"
@@ -255,7 +259,10 @@ msgstr ""
 
 #. translators: the placeholders are opening and closing tags for a link (<a> tag)
 #: admin/options.php:77
-msgid "Please rate OpenPorte on WordPress.org to help us get the word out."
+#, fuzzy, php-format
+#| msgid "Please rate OpenPorte on WordPress.org to help us get the word out."
+msgid ""
+"Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out."
 msgstr ""
 "Bitte bewerten Sie OpenPorte auf WordPress.org, um uns bekannt zu machen."
 
@@ -265,8 +272,10 @@ msgstr ""
 msgid "Powered by the %1$sALTCHA%2$s proof-of-work open-source project."
 msgstr "Betrieben durch das %1$sALTCHA%2$s-Proof-of-Work-Open-Source-Projekt."
 
-#: admin/options.php:97
-msgid "Star OpenPorte on GitHub!"
+#: admin/options.php:96 admin/options.php:97
+#, fuzzy
+#| msgid "Star OpenPorte on GitHub!"
+msgid "Check OpenPorte on GitHub!"
 msgstr "Geben Sie OpenPorte auf GitHub einen Stern!"
 
 #: admin/options.php:109
@@ -412,7 +421,7 @@ msgid "Verifying... please wait."
 msgstr "Überprüfung läuft... bitte warten."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1311
+#: includes/core.php:1315
 msgid "This form requires JavaScript!"
 msgstr "Dieses Formular erfordert JavaScript!"
 
@@ -421,9 +430,9 @@ msgid ""
 "An Expiration of 0 means a solved challenge never expires. This value is "
 "being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
-"Eine Ablaufzeit von 0 bedeutet, dass eine gelöste Aufforderung "
-"nie abläuft. Dieser Wert wird für eine zukünftige Entfernung geprüft; der "
-"empfohlene Bereich beträgt 60 bis 14400 Sekunden."
+"Eine Ablaufzeit von 0 bedeutet, dass eine gelöste Aufforderung nie abläuft. "
+"Dieser Wert wird für eine zukünftige Entfernung geprüft; der empfohlene "
+"Bereich beträgt 60 bis 14400 Sekunden."
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -595,8 +604,8 @@ msgstr ""
 "Über 300 Sekunden wächst das Zeitfenster, in dem eine gelöste Aufforderung "
 "wiederverwendet werden kann, obwohl das Wiederverwendungslimit ihre Annahme "
 "weiterhin begrenzt. Unter 60 Sekunden kann eine Aufforderung ablaufen, bevor "
-"ein langsames Gerät sie löst, und 0 bedeutet, dass sie nie abläuft. "
-"Beides wird nicht empfohlen und für eine zukünftige Entfernung geprüft."
+"ein langsames Gerät sie löst, und 0 bedeutet, dass sie nie abläuft. Beides "
+"wird nicht empfohlen und für eine zukünftige Entfernung geprüft."
 
 #: includes/settings.php:398
 msgid "Replay limit"

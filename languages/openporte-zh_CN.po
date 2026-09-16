@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.29.0\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.29.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-08T21:46:09+00:00\n"
+"POT-Creation-Date: 2026-09-16T12:00:39+00:00\n"
 "PO-Revision-Date: 2026-09-08 00:00+0000\n"
 "Last-Translator: Crush:qwen3.6-27b - signed-off by J-C Berthon\n"
 "Language-Team: Chinese (simplified)\n"
@@ -55,9 +55,8 @@ msgid ""
 "limit bounds how often it can be resubmitted. This is strongly discouraged "
 "and is being evaluated for deprecation — set an expiry of 60 seconds or more."
 msgstr ""
-"过期时间设为 0，因此已解决的 challenge 永不过期，仅重放限制约束其可"
-"被重新提交的次数。强烈不推荐此设置，且正在评估将其弃用——请将过期时间设为 60 "
-"秒或更长。"
+"过期时间设为 0，因此已解决的 challenge 永不过期，仅重放限制约束其可被重新提交"
+"的次数。强烈不推荐此设置，且正在评估将其弃用——请将过期时间设为 60 秒或更长。"
 
 #. translators: %d is the configured Expiration value, in seconds
 #: admin/healthcheck.php:161
@@ -112,13 +111,13 @@ msgid "API mode is Custom but no Challenge URL is configured."
 msgstr "API 模式为自定义，但未配置 Challenge URL。"
 
 #. translators: %s is the connection error message
-#: admin/healthcheck.php:274
+#: admin/healthcheck.php:280
 #, php-format
 msgid "The Challenge URL is unreachable: %s"
 msgstr "Challenge URL 无法访问：%s"
 
 #. translators: %d is the HTTP status code returned by the backend
-#: admin/healthcheck.php:285
+#: admin/healthcheck.php:291
 #, php-format
 msgid ""
 "The Challenge URL responded with HTTP %d instead of a challenge. Check the "
@@ -128,7 +127,7 @@ msgstr ""
 "Challenge URL 返回了 HTTP %d 而非 challenge。请检查该 URL（包括任何 apiKey 参"
 "数）以及后端的域名/来源限制。"
 
-#: admin/healthcheck.php:295
+#: admin/healthcheck.php:301
 msgid ""
 "The Challenge URL did not return an ALTCHA challenge (JSON with algorithm, "
 "challenge, salt and signature fields expected)."
@@ -137,12 +136,12 @@ msgstr ""
 "和 signature 字段的 JSON）。"
 
 #. translators: %s is the algorithm name reported by the backend
-#: admin/healthcheck.php:304
+#: admin/healthcheck.php:310
 #, php-format
 msgid "The backend issues challenges with the unsupported algorithm \"%s\"."
 msgstr "后端使用不支持的算法 \"%s\" 发出 challenge。"
 
-#: admin/healthcheck.php:320
+#: admin/healthcheck.php:326
 msgid ""
 "The shared secret does not match the backend's HMAC secret — every form "
 "submission would fail verification. Copy the backend's HMAC secret into the "
@@ -152,7 +151,7 @@ msgstr ""
 "HMAC 密钥复制到签名密钥字段。"
 
 #. translators: %1$s is the algorithm used by the backend, %2$s the algorithm configured in OpenPorte
-#: admin/healthcheck.php:328
+#: admin/healthcheck.php:334
 #, php-format
 msgid ""
 "The backend issues %1$s challenges but the Algorithm setting is %2$s — form "
@@ -161,7 +160,7 @@ msgstr ""
 "后端发出 %1$s challenge，但算法设置为 %2$s——表单提交将无法通过验证。请将算法"
 "设置为 %1$s。"
 
-#: admin/healthcheck.php:342
+#: admin/healthcheck.php:348
 msgid ""
 "The backend issues challenges with no expiry (no future \"expires\" "
 "parameter in the salt), so a solved challenge never expires on its own and "
@@ -172,7 +171,7 @@ msgstr ""
 "已解决的 challenge 不会自行过期，仅重放限制约束其被接受的次数。请在后端启用 "
 "challenge 过期。"
 
-#: admin/healthcheck.php:348
+#: admin/healthcheck.php:354
 msgid ""
 "The backend returned a challenge whose expiry is already in the past. Its "
 "clock may be wrong or it may be serving a cached challenge; correct that "
@@ -182,7 +181,7 @@ msgstr ""
 "challenge；在使用自定义模式之前请修正该问题。"
 
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:353
+#: admin/healthcheck.php:359
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -190,12 +189,12 @@ msgid ""
 msgstr "Challenge URL 返回了有效的 %s challenge，且共享密钥匹配。"
 
 #. translators: %s is a duration such as "20 mins"
-#: admin/healthcheck.php:358
+#: admin/healthcheck.php:364
 #, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "后端的 challenge 会在约 %s 后过期。"
 
-#: admin/healthcheck.php:362
+#: admin/healthcheck.php:368
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
@@ -213,6 +212,10 @@ msgstr "一个注重隐私的 CAPTCHA 替代方案。"
 msgid "Do you like OpenPorte?"
 msgstr "您喜欢 OpenPorte 吗？"
 
+#: admin/options.php:42
+msgid "Review OpenPorte on WordPress.org"
+msgstr ""
+
 #: admin/options.php:43
 msgid "Review it!"
 msgstr "去评价一下吧！"
@@ -228,7 +231,10 @@ msgstr ""
 
 #. translators: the placeholders are opening and closing tags for a link (<a> tag)
 #: admin/options.php:77
-msgid "Please rate OpenPorte on WordPress.org to help us get the word out."
+#, fuzzy, php-format
+#| msgid "Please rate OpenPorte on WordPress.org to help us get the word out."
+msgid ""
+"Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out."
 msgstr "请在 WordPress.org 上为 OpenPorte 评分，帮助我们推广。"
 
 #. translators: %1$s and %2$s are the opening and closing tags of a link to the ALTCHA project.
@@ -237,8 +243,10 @@ msgstr "请在 WordPress.org 上为 OpenPorte 评分，帮助我们推广。"
 msgid "Powered by the %1$sALTCHA%2$s proof-of-work open-source project."
 msgstr "由 %1$sALTCHA%2$s PoW 开源项目提供支持。"
 
-#: admin/options.php:97
-msgid "Star OpenPorte on GitHub!"
+#: admin/options.php:96 admin/options.php:97
+#, fuzzy
+#| msgid "Star OpenPorte on GitHub!"
+msgid "Check OpenPorte on GitHub!"
 msgstr "在 GitHub 上为 OpenPorte 点个 Star！"
 
 #: admin/options.php:109
@@ -377,7 +385,7 @@ msgid "Verifying... please wait."
 msgstr "验证中... 请稍候。"
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1311
+#: includes/core.php:1315
 msgid "This form requires JavaScript!"
 msgstr "此表单需要 JavaScript！"
 
@@ -386,8 +394,8 @@ msgid ""
 "An Expiration of 0 means a solved challenge never expires. This value is "
 "being evaluated for deprecation; the recommended range is 60-14400 seconds."
 msgstr ""
-"过期时间为 0 表示已解决的 challenge 永不过期。此值正在评估弃用；推荐"
-"范围为 60-14400 秒。"
+"过期时间为 0 表示已解决的 challenge 永不过期。此值正在评估弃用；推荐范围为 "
+"60-14400 秒。"
 
 #. translators: %d is the saved Expiration value, in seconds
 #: includes/settings.php:118
@@ -528,8 +536,8 @@ msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
 "no expiry and 14400 is 4 hours."
 msgstr ""
-"challenge 的有效期。自定义接受 0 到 14400 秒，其中 0 表示永不过期，"
-"14400 为 4 小时。"
+"challenge 的有效期。自定义接受 0 到 14400 秒，其中 0 表示永不过期，14400 为 "
+"4 小时。"
 
 #: includes/settings.php:392
 msgid ""
@@ -540,8 +548,8 @@ msgid ""
 "evaluated for deprecation."
 msgstr ""
 "超过 300 秒，已解决的 challenge 可被重放的窗口会变长，尽管重放限制仍约束其被"
-"接受的次数。低于 60 秒时，challenge 可能在较慢设备完成解题前就已过期；而 0"
-"表示它永不过期——两者均不推荐，且正在评估弃用。"
+"接受的次数。低于 60 秒时，challenge 可能在较慢设备完成解题前就已过期；而 0表"
+"示它永不过期——两者均不推荐，且正在评估弃用。"
 
 #: includes/settings.php:398
 msgid "Replay limit"
