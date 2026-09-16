@@ -39,7 +39,7 @@ function openporte_options_page_html()
     <div>
       <div style="margin-bottom: 0.3rem;"><b><?php echo esc_html__('Do you like OpenPorte?', 'openporte'); ?></b></div>
       <div style="display:flex;gap: 0.5rem;">
-        <a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.5rem;">
+        <a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.5rem;" alt="<?php echo esc_html__('Review OpenPorte on WordPress.org', 'openporte'); ?>">
           <span><?php echo esc_html__('Review it!', 'openporte'); ?></span>
         </a>
       </div>
@@ -93,7 +93,7 @@ function openporte_options_page_html()
         ); ?>
       </p>
       <p>
-        <a href="https://github.com/openporte/openporte" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.3rem;">
+        <a href="https://github.com/openporte/openporte" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.3rem;" alt="<?php echo esc_html__('Star OpenPorte on GitHub!', 'openporte'); ?>">
           <span><?php echo esc_html__('Star OpenPorte on GitHub!', 'openporte'); ?></span>
         </a>
       </p>
