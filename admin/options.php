@@ -74,8 +74,8 @@ function openporte_options_page_html()
       <p>
         <?php
         echo sprintf(
+          /* translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte plugin page. */
           esc_html__(
-            /* translators: the placeholders are opening and closing tags for a link (<a> tag) */
             'Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out.',
             'openporte',
           ),
