@@ -246,6 +246,12 @@ function openporte_check_custom_endpoint($url, $secret, $configured_algorithm)
   // wp_remote_get, not wp_safe_remote_get: the URL is set by an administrator
   // (manage_options), and private-network backends (a LAN host or NAS running
   // e.g. GateCHA) are a primary use case that the "safe" variant would block.
+  // No allow-list check against a fixed set of approved URLs: $url is the
+  // site's own trusted "Custom" Challenge URL setting, not attacker-supplied
+  // request data, and this function is only reachable from
+  // openporte_maybe_check_custom_endpoint() while viewing OpenPorte's own
+  // settings screen (manage_options-gated) — there is no untrusted caller
+  // and no fixed list of endpoints to validate against.
   $response = wp_remote_get($url, array(
     'timeout' => 5,
     'headers' => array('accept' => 'application/json'),

@@ -65,6 +65,10 @@ if (openporte_plugin_active('coblocks')) {
       add_filter('pre_option_coblocks_google_recaptcha_site_key', '__return_true');
       add_filter('pre_option_coblocks_google_recaptcha_secret_key', '__return_true');
 
+      // Writing to $_POST, not reading it: CoBlocks' own reCAPTCHA verifier
+      // expects a token field to be present, so we plant a dummy value it
+      // will send to the pre_http_request filter below, which is what
+      // actually runs the ALTCHA check. No user-supplied data is read here.
       $_POST['g-recaptcha-token'] = self::RECAPTCHA_DUMMY_TOKEN;
 
       add_filter('pre_http_request', ['OpenPortePlugin_Coblocks', 'verify'], 10, 3);

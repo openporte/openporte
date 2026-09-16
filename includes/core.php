@@ -573,7 +573,11 @@ class OpenPortePlugin
     if (!is_string($payload) || $payload === '') {
       return null;
     }
-    $decoded = base64_decode($payload, true); // strict: reject non-base64 input
+    // base64_decode() here only parses the token's transport encoding (the
+    // token format is base64(JSON)); the result is never eval'd, included, or
+    // executed — it goes straight into json_decode() below. Strict mode
+    // rejects non-base64 input instead of silently mangling it.
+    $decoded = base64_decode($payload, true);
     if ($decoded === false) {
       return null;
     }
