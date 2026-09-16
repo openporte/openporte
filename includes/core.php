@@ -475,7 +475,7 @@ class OpenPortePlugin
       "footer" => sprintf(
         /* translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag) */
         __('Protected by %1$sALTCHA%2$s', 'openporte'),
-        '<a href="' . $ALTCHA_WEBSITE . '" target="_blank">',
+        '<a href="' . $ALTCHA_WEBSITE . '" target="_blank" rel="noopener noreferrer">',
         "</a>",
       ),
       "label" => __('I\'m not a robot', 'openporte'),
