@@ -76,10 +76,10 @@ function openporte_options_page_html()
         echo sprintf(
           esc_html__(
             /* translators: the placeholders are opening and closing tags for a link (<a> tag) */
-            'Please rate OpenPorte on WordPress.org to help us get the word out.',
+            'Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out.',
             'openporte',
           ),
-          '<a href="https://wordpress.org/support/plugin/openporte/reviews/" target="_blank" rel="noopener noreferrer">',
+          '<a href="https://wordpress.org/support/plugin/openporte/" target="_blank" rel="noopener noreferrer">',
           '</a>',
         ); ?>
       </p>
@@ -93,8 +93,8 @@ function openporte_options_page_html()
         ); ?>
       </p>
       <p>
-        <a href="https://github.com/openporte/openporte" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.3rem;" alt="<?php echo esc_html__('Star OpenPorte on GitHub!', 'openporte'); ?>">
-          <span><?php echo esc_html__('Star OpenPorte on GitHub!', 'openporte'); ?></span>
+        <a href="https://github.com/openporte/openporte" target="_blank" rel="noopener noreferrer" style="display: inline-flex; gap: 0.3rem;" alt="<?php echo esc_html__('Check OpenPorte on GitHub!', 'openporte'); ?>">
+          <span><?php echo esc_html__('Check OpenPorte on GitHub!', 'openporte'); ?></span>
         </a>
       </p>
     </div>
