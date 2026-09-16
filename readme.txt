@@ -1,6 +1,6 @@
 === OpenPorte Spam Protection ===
 Tags: captcha, spam, anti-spam, anti-bot, altcha
-Stable tag: 1.29.0
+Stable tag: 1.29.1
 Requires at least: 5.6
 Requires PHP: 8.0
 Tested up to: 7.1
@@ -214,6 +214,10 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 5. Floating UI Captcha
 
 == Changelog ==
+
+= 1.29.1 =
+
+* Front-end links now use `rel="noopener noreferrer"` on `target="_blank"` (settings page links and the "Protected by ALTCHA" footer text). Two equivalent links inside the bundled third-party `altcha.min.js` remain as shipped upstream; see #118 for details.
 
 = 1.29.0 =
 
