@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.29.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.0-dev\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-16T12:00:39+00:00\n"
+"POT-Creation-Date: 2026-10-19T23:15:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: openporte\n"
@@ -170,8 +170,8 @@ msgstr ""
 msgid "OpenPorte Spam Protection for WordPress, plugin version %1$s, ALTCHA widget version %2$s"
 msgstr ""
 
-#. translators: the placeholders are opening and closing tags for a link (<a> tag)
-#: admin/options.php:77
+#. translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte plugin page.
+#: admin/options.php:78
 #, php-format
 msgid "Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out."
 msgstr ""
@@ -231,65 +231,74 @@ msgstr ""
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr ""
 
-#: admin/options.php:267
-#: admin/options.php:269
-#: admin/options.php:435
-#: admin/options.php:437
-msgid "Show"
-msgstr ""
-
-#: admin/options.php:268
-#: admin/options.php:436
-msgid "Hide"
-msgstr ""
-
-#: admin/options.php:275
-#: admin/options.php:278
-msgid "Copy"
-msgstr ""
-
-#: admin/options.php:276
-msgid "Copied!"
-msgstr ""
-
-#: admin/options.php:277
-msgid "Copy failed"
+#: admin/options.php:283
+#: admin/options.php:285
+#: admin/options.php:286
+msgid "Show shared secret"
 msgstr ""
 
 #: admin/options.php:284
-msgid "Regenerate"
+msgid "Hide shared secret"
 msgstr ""
 
-#: admin/options.php:577
+#: admin/options.php:295
+#: admin/options.php:299
+#: admin/options.php:300
+msgid "Copy shared secret"
+msgstr ""
+
+#: admin/options.php:296
+msgid "Copied!"
+msgstr ""
+
+#: admin/options.php:297
+msgid "Copy failed"
+msgstr ""
+
+#: admin/options.php:309
+#: admin/options.php:310
+msgid "Generate new shared secret"
+msgstr ""
+
+#: admin/options.php:469
+#: admin/options.php:471
+msgid "Show"
+msgstr ""
+
+#: admin/options.php:470
+msgid "Hide"
+msgstr ""
+
+#: admin/options.php:611
 #: includes/settings.php:282
 msgid "Custom"
 msgstr ""
 
-#: admin/options.php:607
+#: admin/options.php:641
 msgid "5 minutes"
 msgstr ""
 
-#: admin/options.php:608
+#: admin/options.php:642
 msgid "30 minutes"
 msgstr ""
 
-#: admin/options.php:609
+#: admin/options.php:643
 msgid "1 hour"
 msgstr ""
 
-#: admin/options.php:638
+#: admin/options.php:672
 msgid "Unlimited (pre-1.29 behaviour)"
 msgstr ""
 
-#: admin/options.php:639
+#: admin/options.php:673
 msgid "Single use (strict)"
 msgstr ""
 
-#: admin/options.php:640
+#: admin/options.php:674
 msgid "5 uses (recommended)"
 msgstr ""
 
-#: admin/options.php:641
+#: admin/options.php:675
 msgid "10 uses"
 msgstr ""
 

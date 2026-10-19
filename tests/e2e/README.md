@@ -162,3 +162,20 @@ receive.
   options in `ensure()` so exactly one widget renders — the shared helpers
   target `.first()`. The register driver's `reset()` deletes the customers
   its tests created, sparing the login driver's fixture user.
+
+## Shared secret controls
+
+`shared-secret.spec.js` exercises the real settings page: keyboard Show/Hide,
+Clipboard API success/failure, HTTP fallback success/failure/exception, repeated
+copy feedback, regeneration without saving, and narrow LTR/RTL layouts.
+OpenPorte must be activated on the bench. The suite uses the wp-env admin
+credentials (`admin` / `password`), overridable through `WP_ADMIN_USER` and
+`WP_ADMIN_PASSWORD`. It edits only the browser's field value and never saves
+settings.
+
+```sh
+npx playwright test shared-secret.spec.js
+```
+
+Also check screen-reader announcements, 200% zoom, and admin colour schemes
+manually; DOM assertions alone cannot establish those behaviours.

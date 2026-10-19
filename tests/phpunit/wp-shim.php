@@ -276,6 +276,15 @@ function selected($a, $b = true, $echo = true)
   return $result;
 }
 function checked($a, $b = true, $echo = true) { return ''; }
+/** Mirrors WordPress' disabled attribute helper for renderer tests. */
+function disabled($a, $b = true, $echo = true)
+{
+  $result = (string) $a === (string) $b ? " disabled='disabled'" : '';
+  if ($echo) {
+    echo $result; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Fixed test-shim markup.
+  }
+  return $result;
+}
 function number_format_i18n($n, $decimals = 0) { return number_format($n, $decimals); }
 
 function _n($single, $plural, $number, $domain = '')

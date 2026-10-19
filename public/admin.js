@@ -41,84 +41,133 @@
     wireCustomToggle('#openporte_expires', '#openporte_expires_custom');
     wireCustomToggle('#openporte_replaylimit', '#openporte_replaylimit_custom');
 
-    // Show/Hide toggle for password-type settings fields. The labels come
-    // from data attributes rendered server-side, so they stay translated.
-    [...document.querySelectorAll('.openporte-toggle-password')].forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const input = document.getElementById(btn.dataset.target);
-        if (!input) {
+    /**
+     * Selects a pre-rendered icon without removing the button's SVG children.
+     *
+     * @since 1.30.0
+     * @param {HTMLButtonElement} button Action button.
+     * @param {string} icon Icon name.
+     * @return {void}
+     */
+    function setPasswordIcon( button, icon ) {
+      button.querySelectorAll( '[data-icon]' ).forEach( ( element ) => {
+        element.hidden = element.dataset.icon !== icon;
+      } );
+    }
+
+    // Labels are rendered server-side so icon-only controls stay translated.
+    document.querySelectorAll( '.openporte-toggle-password' ).forEach( ( button ) => {
+      button.addEventListener( 'click', () => {
+        const input = document.getElementById( button.dataset.target );
+        if ( ! input || input.disabled ) {
           return;
         }
         const reveal = input.type === 'password';
+        const label = reveal ? button.dataset.labelHide : button.dataset.labelShow;
         input.type = reveal ? 'text' : 'password';
-        btn.textContent = reveal ? btn.dataset.labelHide : btn.dataset.labelShow;
-      });
-    });
+        button.setAttribute( 'aria-label', label );
+        button.title = label;
+        if ( button.querySelector( '[data-icon]' ) ) {
+          setPasswordIcon( button, reveal ? 'unseen' : 'seen' );
+        } else {
+          // The deprecated generic renderer still exposes ordinary text buttons.
+          button.textContent = label;
+        }
+      } );
+    } );
 
-    // Copy button for password-type settings fields. The async Clipboard API
-    // needs a secure context, and wp-admin over plain http (intranets) is
-    // common — fall back to execCommand('copy') on a temporary textarea,
-    // because copying straight from a type=password input is unreliable
-    // across browsers.
-    [...document.querySelectorAll('.openporte-copy-password')].forEach((btn) => {
-      let timer = null;
-      const flash = (label) => {
-        // Clear any pending reset: a new click mid-flash must not let the
-        // older timeout snap the label back to "Copy" early.
-        if (timer !== null) {
-          window.clearTimeout(timer);
+    // Keep the HTTP fallback: the Clipboard API requires a secure context.
+    document.querySelectorAll( '.openporte-copy-password' ).forEach( ( button ) => {
+      const status = document.getElementById( button.dataset.status );
+      let resetTimer = null;
+      let announcementTimer = null;
+      let copying = false;
+
+      /**
+       * Shows and announces the outcome, including consecutive identical results.
+       *
+       * @since 1.30.0
+       * @param {boolean} copied Whether copying succeeded.
+       * @return {void}
+       */
+      const flash = ( copied ) => {
+        const label = copied ? button.dataset.labelCopied : button.dataset.labelFailed;
+        window.clearTimeout( resetTimer );
+        window.clearTimeout( announcementTimer );
+        setPasswordIcon( button, copied ? 'check' : 'copy' );
+        button.title = label;
+        // The accessible name remains the action; the live region owns feedback.
+        if ( status ) {
+          status.textContent = '';
+          // Separate mutations allow assistive technology to announce repeats.
+          announcementTimer = window.setTimeout( () => {
+            status.textContent = label;
+          }, 100 );
         }
-        btn.textContent = label;
-        timer = window.setTimeout(() => {
-          timer = null;
-          btn.textContent = btn.dataset.labelCopy;
-        }, 2000);
+        resetTimer = window.setTimeout( () => {
+          setPasswordIcon( button, 'copy' );
+          button.title = button.dataset.labelCopy;
+          if ( copied && status ) {
+            status.textContent = '';
+          }
+        }, 2000 );
       };
-      btn.addEventListener('click', () => {
-        const input = document.getElementById(btn.dataset.target);
-        if (!input) {
+
+      button.addEventListener( 'click', async () => {
+        const input = document.getElementById( button.dataset.target );
+        if ( ! input || input.disabled || copying ) {
           return;
         }
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(input.value).then(
-            () => flash(btn.dataset.labelCopied),
-            () => flash(btn.dataset.labelFailed)
-          );
+        // Ignore overlapping requests so a late result cannot overwrite a newer one.
+        copying = true;
+        if ( navigator.clipboard && window.isSecureContext ) {
+          try {
+            await navigator.clipboard.writeText( input.value );
+            flash( true );
+          } catch ( error ) {
+            flash( false );
+          } finally {
+            copying = false;
+          }
           return;
         }
-        const helper = document.createElement('textarea');
+        const activeElement = document.activeElement;
+        const helper = document.createElement( 'textarea' );
         helper.value = input.value;
         helper.style.position = 'fixed';
         helper.style.opacity = '0';
-        document.body.appendChild(helper);
+        document.body.appendChild( helper );
         helper.select();
         let copied = false;
         try {
-          copied = document.execCommand('copy');
-        } catch (err) {
+          copied = document.execCommand( 'copy' );
+        } catch ( error ) {
           copied = false;
+        } finally {
+          helper.remove();
+          // Selecting the helper steals keyboard focus; return it to the caller.
+          if ( activeElement ) {
+            activeElement.focus( { preventScroll: true } );
+          }
+          copying = false;
         }
-        helper.remove();
-        flash(copied ? btn.dataset.labelCopied : btn.dataset.labelFailed);
-      });
-    });
+        flash( copied );
+      } );
+    } );
 
-    // Regenerate button for the Shared Secret field: fills the input with a
-    // fresh 256-bit hex secret, matching the server-side format produced by
-    // OpenPortePlugin::random_secret() (bin2hex(random_bytes(32))). Nothing
-    // is stored until the user saves, so a reload cancels it.
-    [...document.querySelectorAll('.openporte-regenerate-secret')].forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const input = document.getElementById(btn.dataset.target);
-        if (!input || !window.crypto || !window.crypto.getRandomValues) {
+    // Fills the field only; Save Changes still controls persistence.
+    document.querySelectorAll( '.openporte-regenerate-secret' ).forEach( ( button ) => {
+      button.addEventListener( 'click', () => {
+        const input = document.getElementById( button.dataset.target );
+        if ( ! input || input.disabled || ! window.crypto || ! window.crypto.getRandomValues ) {
           return;
         }
-        const bytes = new Uint8Array(32);
-        window.crypto.getRandomValues(bytes);
-        input.value = [...bytes]
-          .map((byte) => byte.toString(16).padStart(2, '0'))
-          .join('');
-      });
-    });
+        const bytes = new Uint8Array( 32 );
+        window.crypto.getRandomValues( bytes );
+        input.value = [ ...bytes ]
+          .map( ( byte ) => byte.toString( 16 ).padStart( 2, '0' ) )
+          .join( '' );
+      } );
+    } );
   });
 })();
