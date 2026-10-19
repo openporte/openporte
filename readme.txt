@@ -1,6 +1,6 @@
 === OpenPorte Spam Protection ===
 Tags: captcha, spam, anti-spam, anti-bot, altcha
-Stable tag: 1.29.1
+Stable tag: 1.30.0-dev
 Requires at least: 5.6
 Requires PHP: 8.0
 Tested up to: 7.1
@@ -224,6 +224,10 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 5. Floating UI Captcha
 
 == Changelog ==
+
+= 1.30.0 (unreleased) =
+
+* Shared secret actions now use inline WordPress SVG icons inside the field, with accessible labels, copy feedback, and visible keyboard focus.
 
 = 1.29.1 =
 

@@ -250,75 +250,109 @@ function openporte_settings_text_callback(array $args)
 }
 
 /**
- * Renderer for password input settings fields. Includes an optional Show/Hide
- * toggle button controlled by the `display_toggle` arg, plus optional Copy and
- * Regenerate action buttons controlled by `display_copy` / `display_regenerate`
- * (see public/admin.js for their behaviour). The action buttons are keyed on
- * class + data-target only — never DOM position — so the planned move from
- * buttons to in-field icons (#70) is a markup/CSS change with no JS impact.
+ * Renders a trusted, bundled WordPress SVG icon from a fixed allowlist.
+ *
+ * @since 1.30.0
+ *
+ * @param string $icon Icon name.
+ * @return void
+ */
+function openporte_admin_password_icon( $icon ) {
+  $icons = array( 'seen', 'unseen', 'copy', 'update', 'check' );
+  if ( ! in_array( $icon, $icons, true ) ) {
+    return;
+  }
+
+  // Only reviewed plugin assets can reach this include; never user-supplied SVG.
+  include __DIR__ . '/../public/icons/wordpress/' . $icon . '.svg';
+}
+
+/**
+ * Renders a password setting with optional in-field SVG action buttons.
+ *
+ * Behaviour stays keyed on class and data-target. public/admin.js updates the
+ * icon visibility, accessible labels, and copy status without replacing buttons.
  *
  * @since 1.28.0
- * @since 1.29.0 Added the `display_copy` and `display_regenerate` args.
+ * @since 1.29.0 Added the display_copy and display_regenerate args.
+ * @since 1.30.0 Added in-field SVG controls and accessible copy feedback.
+ *
+ * @param array $args Settings field arguments.
+ * @return void
  */
-function openporte_settings_password_callback(array $args)
-{
-  $name = $args['name'];
-  $hint = isset($args['hint']) ? $args['hint'] : null;
-  $placeholder = isset($args['placeholder']) ? $args['placeholder'] : null;
-  $disabled = isset($args['disabled']) ? $args['disabled'] : false;
-  $display_toggle = isset($args['display_toggle']) ? $args['display_toggle'] : false;
-  $display_copy = isset($args['display_copy']) ? $args['display_copy'] : false;
-  $display_regenerate = isset($args['display_regenerate']) ? $args['display_regenerate'] : false;
-  $description = isset($args['description']) ? $args['description'] : null;
-  $tooltip = isset($args['tooltip']) ? $args['tooltip'] : '';
-  $class = 'openporte-large-text';
-  $autocomplete = 'new-password';
-  $setting = get_option($name);
-  $value = isset($setting) ? esc_attr($setting) : '';
-?>
-  <?php if ($description) { ?>
-    <div><label class="description" for="<?php echo esc_attr($name); ?>">
-      <?php echo esc_html($description); ?>
+function openporte_settings_password_callback( array $args ) {
+  $name               = $args['name'];
+  $hint               = $args['hint'] ?? null;
+  $placeholder        = $args['placeholder'] ?? null;
+  $disabled           = $args['disabled'] ?? false;
+  $display_toggle     = ( $args['display_toggle'] ?? false ) === true;
+  $display_copy       = ( $args['display_copy'] ?? false ) === true;
+  $display_regenerate = ( $args['display_regenerate'] ?? false ) === true;
+  $description        = $args['description'] ?? null;
+  $tooltip            = $args['tooltip'] ?? '';
+  $value              = get_option( $name, '' );
+  $action_count       = (int) $display_toggle + (int) $display_copy + (int) $display_regenerate;
+  ?>
+  <?php if ( $description ) { ?>
+    <div><label class="description" for="<?php echo esc_attr( $name ); ?>">
+      <?php echo esc_html( $description ); ?>
     </label></div>
   <?php } ?>
-  <input autocomplete="<?php echo esc_attr($autocomplete); ?>"
-    type="password"
-    name="<?php echo esc_attr($name); ?>"
-    id="<?php echo esc_attr($name); ?>"
-    class="<?php echo esc_attr($class); ?>"
-    title="<?php echo esc_attr($tooltip); ?>"
-    <?php echo is_null($placeholder) ? '' : ' placeholder="' . esc_attr($placeholder) . '"'; ?>
-    value="<?php echo esc_attr($value); ?>"
-    <?php echo $disabled === true ? ' disabled' : ''; ?>>
-  <?php if ($display_toggle === true): ?>
-    <button type="button" class="button button-secondary openporte-toggle-password"
-      data-target="<?php echo esc_attr($name); ?>"
-      data-label-show="<?php echo esc_attr__('Show', 'openporte'); ?>"
-      data-label-hide="<?php echo esc_attr__('Hide', 'openporte'); ?>">
-      <?php echo esc_html__('Show', 'openporte'); ?>
-    </button>
-  <?php endif; ?>
-  <?php if ($display_copy === true): ?>
-    <button type="button" class="button button-secondary openporte-copy-password"
-      data-target="<?php echo esc_attr($name); ?>"
-      data-label-copy="<?php echo esc_attr__('Copy', 'openporte'); ?>"
-      data-label-copied="<?php echo esc_attr__('Copied!', 'openporte'); ?>"
-      data-label-failed="<?php echo esc_attr__('Copy failed', 'openporte'); ?>">
-      <?php echo esc_html__('Copy', 'openporte'); ?>
-    </button>
-  <?php endif; ?>
-  <?php if ($display_regenerate === true): ?>
-    <button type="button" class="button button-secondary openporte-regenerate-secret"
-      data-target="<?php echo esc_attr($name); ?>">
-      <?php echo esc_html__('Regenerate', 'openporte'); ?>
-    </button>
-  <?php endif; ?>
-  <?php if ($hint) { ?>
-    <div class="openporte-hint">
-      <?php echo wp_kses($hint, OpenPortePlugin::$hint_allowed_tags); ?>
+  <div class="openporte-password-field" style="--openporte-password-actions: <?php echo (int) $action_count; ?>;">
+    <input autocomplete="new-password" type="password"
+      name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>"
+      class="openporte-large-text" title="<?php echo esc_attr( $tooltip ); ?>"
+      <?php if ( null !== $placeholder ) { ?>placeholder="<?php echo esc_attr( $placeholder ); ?>"<?php } ?>
+      <?php if ( $hint ) { ?>aria-describedby="<?php echo esc_attr( $name . '-hint' ); ?>"<?php } ?>
+      value="<?php echo esc_attr( $value ); ?>" <?php disabled( $disabled, true ); ?>>
+    <div class="openporte-password-actions">
+      <?php if ( $display_toggle ) { ?>
+        <button type="button" class="openporte-password-action openporte-toggle-password"
+          data-target="<?php echo esc_attr( $name ); ?>"
+          data-label-show="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
+          data-label-hide="<?php echo esc_attr__( 'Hide shared secret', 'openporte' ); ?>"
+          aria-label="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
+          title="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
+          <?php disabled( $disabled, true ); ?>>
+          <span data-icon="seen"><?php openporte_admin_password_icon( 'seen' ); ?></span>
+          <span data-icon="unseen" hidden><?php openporte_admin_password_icon( 'unseen' ); ?></span>
+        </button>
+      <?php } ?>
+      <?php if ( $display_copy ) { ?>
+        <button type="button" class="openporte-password-action openporte-copy-password"
+          data-target="<?php echo esc_attr( $name ); ?>"
+          data-label-copy="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
+          data-label-copied="<?php echo esc_attr__( 'Copied!', 'openporte' ); ?>"
+          data-label-failed="<?php echo esc_attr__( 'Copy failed', 'openporte' ); ?>"
+          data-status="<?php echo esc_attr( $name . '-status' ); ?>"
+          aria-label="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
+          title="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
+          <?php disabled( $disabled, true ); ?>>
+          <span data-icon="copy"><?php openporte_admin_password_icon( 'copy' ); ?></span>
+          <span data-icon="check" hidden><?php openporte_admin_password_icon( 'check' ); ?></span>
+        </button>
+      <?php } ?>
+      <?php if ( $display_regenerate ) { ?>
+        <button type="button" class="openporte-password-action openporte-regenerate-secret"
+          data-target="<?php echo esc_attr( $name ); ?>"
+          aria-label="<?php echo esc_attr__( 'Generate new shared secret', 'openporte' ); ?>"
+          title="<?php echo esc_attr__( 'Generate new shared secret', 'openporte' ); ?>"
+          <?php disabled( $disabled, true ); ?>>
+          <?php openporte_admin_password_icon( 'update' ); ?>
+        </button>
+      <?php } ?>
+    </div>
+  </div>
+  <?php if ( $display_copy ) { ?>
+    <div id="<?php echo esc_attr( $name . '-status' ); ?>" class="openporte-password-status"
+      role="status" aria-live="polite" aria-atomic="true"></div>
+  <?php } ?>
+  <?php if ( $hint ) { ?>
+    <div id="<?php echo esc_attr( $name . '-hint' ); ?>" class="openporte-hint">
+      <?php echo wp_kses( $hint, OpenPortePlugin::$hint_allowed_tags ); ?>
     </div>
   <?php } ?>
-<?php
+  <?php
 }
 
 /**

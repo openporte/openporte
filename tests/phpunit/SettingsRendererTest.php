@@ -1,13 +1,60 @@
 <?php
 /**
- * The select renderers in admin/options.php: the Custom-mode markup that
- * public/admin.js reacts to. This covers both plain dropdowns and the preset
+ * Settings renderers in admin/options.php: the accessible password actions
+ * and Custom-mode markup that public/admin.js reacts to, including the preset
  * plus Custom-number shape shared by Expiration and Replay limit.
  *
  * @package OpenPorte\Tests
  */
 class SettingsRendererTest extends OpenPorteTestCase
 {
+  /** Password controls must remain labelled, non-submitting, and linked to their hint. */
+  public function test_password_actions_have_accessible_names_and_status()
+  {
+    OpenPorte_Test_Env::$options['openporte_secret'] = 'renderer-test-secret';
+    $html = $this->render(function () {
+      openporte_settings_password_callback(array(
+        'name' => 'openporte_secret',
+        'hint' => 'Changes take effect when saved.',
+        'display_toggle' => true,
+        'display_copy' => true,
+        'display_regenerate' => true,
+      ));
+    });
+
+    $this->assertSame(3, substr_count($html, 'type="button"'));
+    $this->assertStringContainsString('aria-label="Show shared secret"', $html);
+    $this->assertStringContainsString('aria-label="Copy shared secret"', $html);
+    $this->assertStringContainsString('aria-label="Generate new shared secret"', $html);
+    $this->assertStringContainsString('aria-describedby="openporte_secret-hint"', $html);
+    $this->assertStringContainsString('id="openporte_secret-hint"', $html);
+    $this->assertStringContainsString('role="status" aria-live="polite" aria-atomic="true"', $html);
+    $this->assertSame(5, substr_count($html, 'focusable="false"'));
+    $this->assertStringContainsString('value="renderer-test-secret"', $html);
+  }
+
+  /** Optional controls must not appear or stay active for disabled inputs. */
+  public function test_password_actions_respect_optional_and_disabled_states()
+  {
+    $plain = $this->render(function () {
+      openporte_settings_password_callback(array('name' => 'openporte_secret'));
+    });
+    $this->assertStringNotContainsString('<button', $plain);
+    $this->assertStringNotContainsString('role="status"', $plain);
+    $this->assertStringNotContainsString('aria-describedby', $plain);
+
+    $disabled = $this->render(function () {
+      openporte_settings_password_callback(array(
+        'name' => 'openporte_secret',
+        'disabled' => true,
+        'display_toggle' => true,
+        'display_copy' => true,
+        'display_regenerate' => true,
+      ));
+    });
+    $this->assertSame(4, substr_count($disabled, "disabled='disabled'"));
+  }
+
   /** Run a renderer and capture the HTML it echoes. */
   private function render(callable $renderer)
   {
