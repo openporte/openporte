@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-19T23:15:49+00:00\n"
+"POT-Creation-Date: 2026-10-20T22:02:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: openporte\n"
@@ -231,74 +231,85 @@ msgstr ""
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr ""
 
-#: admin/options.php:283
-#: admin/options.php:285
-#: admin/options.php:286
-msgid "Show shared secret"
-msgstr ""
-
-#: admin/options.php:284
-msgid "Hide shared secret"
-msgstr ""
-
-#: admin/options.php:295
-#: admin/options.php:299
-#: admin/options.php:300
-msgid "Copy shared secret"
-msgstr ""
-
-#: admin/options.php:296
+#: admin/options.php:331
 msgid "Copied!"
 msgstr ""
 
-#: admin/options.php:297
+#: admin/options.php:332
 msgid "Copy failed"
 msgstr ""
 
-#: admin/options.php:309
-#: admin/options.php:310
+#: admin/options.php:337
+msgid "Show shared secret"
+msgstr ""
+
+#: admin/options.php:338
+msgid "Hide shared secret"
+msgstr ""
+
+#: admin/options.php:339
+msgid "Copy shared secret"
+msgstr ""
+
+#: admin/options.php:340
 msgid "Generate new shared secret"
 msgstr ""
 
-#: admin/options.php:469
-#: admin/options.php:471
+#: admin/options.php:346
+msgid "Show password"
+msgstr ""
+
+#: admin/options.php:347
+msgid "Hide password"
+msgstr ""
+
+#: admin/options.php:348
+msgid "Copy password"
+msgstr ""
+
+#: admin/options.php:349
+msgid "Generate new password"
+msgstr ""
+
+#: admin/options.php:652
+#: admin/options.php:654
 msgid "Show"
 msgstr ""
 
-#: admin/options.php:470
+#: admin/options.php:653
 msgid "Hide"
 msgstr ""
 
-#: admin/options.php:611
+#: admin/options.php:794
 #: includes/settings.php:282
 msgid "Custom"
 msgstr ""
 
-#: admin/options.php:641
+#: admin/options.php:824
 msgid "5 minutes"
 msgstr ""
 
-#: admin/options.php:642
+#: admin/options.php:825
 msgid "30 minutes"
 msgstr ""
 
-#: admin/options.php:643
+#: admin/options.php:826
 msgid "1 hour"
 msgstr ""
 
-#: admin/options.php:672
+#: admin/options.php:855
 msgid "Unlimited (pre-1.29 behaviour)"
 msgstr ""
 
-#: admin/options.php:673
+#: admin/options.php:856
 msgid "Single use (strict)"
 msgstr ""
 
-#: admin/options.php:674
+#: admin/options.php:857
 msgid "5 uses (recommended)"
 msgstr ""
 
-#: admin/options.php:675
+#: admin/options.php:858
 msgid "10 uses"
 msgstr ""
 
@@ -380,324 +391,324 @@ msgstr ""
 msgid "Shared secret"
 msgstr ""
 
-#: includes/settings.php:314
+#: includes/settings.php:316
 msgid "A secret key used to sign and verify challenges."
 msgstr ""
 
-#: includes/settings.php:317
+#: includes/settings.php:319
 msgid "OpenPorte generates a random secret automatically. Change it only if another application needs to use the same secret.<br/>In Custom API Mode, this value <strong>must exactly match</strong> the shared secret (sometimes called the HMAC secret) configured in your backend."
 msgstr ""
 
-#: includes/settings.php:319
+#: includes/settings.php:321
 msgid "Copy places the current secret on the clipboard. Regenerate fills in a fresh random secret; it only takes effect when you save changes, and challenges already issued with the old secret then stop verifying. In Custom API Mode, saving a new secret also breaks verification of new submissions until you update the secret on your backend to match."
 msgstr ""
 
-#: includes/settings.php:329
-#: includes/settings.php:335
+#: includes/settings.php:331
+#: includes/settings.php:337
 msgid "Hash algorithm for the challenges."
 msgstr ""
 
-#: includes/settings.php:329
+#: includes/settings.php:331
 msgid "Algorithm"
 msgstr ""
 
-#: includes/settings.php:336
+#: includes/settings.php:338
 msgid "In Self-hosted API Mode this is the algorithm used to generate and verify the proof-of-work challenges.<br/>In Custom API Mode it must match the algorithm your backend uses — most ALTCHA-compatible backends default to SHA-256."
 msgstr ""
 
-#: includes/settings.php:346
+#: includes/settings.php:348
 msgid "Low"
 msgstr ""
 
-#: includes/settings.php:347
+#: includes/settings.php:349
 msgid "Medium"
 msgstr ""
 
-#: includes/settings.php:348
+#: includes/settings.php:350
 msgid "High"
 msgstr ""
 
-#: includes/settings.php:358
+#: includes/settings.php:360
 msgid "Complexity"
 msgstr ""
 
-#: includes/settings.php:368
+#: includes/settings.php:370
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
 msgstr ""
 
-#: includes/settings.php:369
+#: includes/settings.php:371
 msgid "Select the PoW complexity for the widget: the higher the complexity, the longer visitors (and bots) work to solve the challenge.<br/>Even High is usually solved in under a second on a recent computer; on older phones it can take a few seconds. High is roughly 2–3× the work of Low."
 msgstr ""
 
-#: includes/settings.php:376
+#: includes/settings.php:378
 msgid "Expiration"
 msgstr ""
 
-#: includes/settings.php:387
+#: includes/settings.php:389
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
 msgstr ""
 
-#: includes/settings.php:390
+#: includes/settings.php:392
 msgid "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means no expiry and 14400 is 4 hours."
 msgstr ""
 
-#: includes/settings.php:392
+#: includes/settings.php:394
 msgid "Above 300 seconds the window in which a solved challenge can be replayed grows, though Replay limit still bounds how often one is accepted. Below 60 seconds a challenge can expire before a slow device finishes solving it, and 0 means it never expires at all — both are discouraged and are being evaluated for deprecation."
 msgstr ""
 
-#: includes/settings.php:398
+#: includes/settings.php:400
 msgid "Replay limit"
 msgstr ""
 
-#: includes/settings.php:404
+#: includes/settings.php:406
 msgid "How many times one solved challenge may be accepted. This applies in both API Modes."
 msgstr ""
 
-#: includes/settings.php:406
+#: includes/settings.php:408
 msgid "A visitor whose form comes back with an unrelated error (a missing field, a mistyped password) resubmits the same challenge, so a small allowance keeps those submissions working; every extra use is also one more replay available to a bot. Custom accepts 0 to 100, where 0 accepts a solved challenge for as long as it is valid — the behaviour of releases before 1.29.0, and not recommended."
 msgstr ""
 
-#: includes/settings.php:415
+#: includes/settings.php:417
 msgid "Widget Customisation"
 msgstr ""
 
-#: includes/settings.php:422
+#: includes/settings.php:424
 msgid "Auto verification"
 msgstr ""
 
-#: includes/settings.php:428
+#: includes/settings.php:430
 msgid "Select auto-verification behaviour."
 msgstr ""
 
-#: includes/settings.php:430
+#: includes/settings.php:432
 msgid "Disabled"
 msgstr ""
 
-#: includes/settings.php:431
+#: includes/settings.php:433
 msgid "On page load"
 msgstr ""
 
-#: includes/settings.php:432
+#: includes/settings.php:434
 msgid "On form focus"
 msgstr ""
 
-#: includes/settings.php:433
+#: includes/settings.php:435
 msgid "On form submit"
 msgstr ""
 
-#: includes/settings.php:440
+#: includes/settings.php:442
 msgid "Display Mode"
 msgstr ""
 
-#: includes/settings.php:446
+#: includes/settings.php:448
 msgid "Choose whether the widget sits inline in the page or floats near the submit button."
 msgstr ""
 
-#: includes/settings.php:448
+#: includes/settings.php:450
 msgid "Inline"
 msgstr ""
 
-#: includes/settings.php:449
+#: includes/settings.php:451
 msgid "Floating"
 msgstr ""
 
-#: includes/settings.php:456
+#: includes/settings.php:458
 msgid "Verification Delay"
 msgstr ""
 
-#: includes/settings.php:465
+#: includes/settings.php:467
 msgid "Some visitors perceive a slower check as more trustworthy, and that is this pause's only effect. It does not make spam-blocking any stronger; to raise the bar for bots, increase Complexity instead."
 msgstr ""
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:468
+#: includes/settings.php:470
 #, php-format
 msgid "Add %s second delay"
 msgstr ""
 
-#: includes/settings.php:476
+#: includes/settings.php:478
 msgid "Acknowledgement"
 msgstr ""
 
-#: includes/settings.php:482
+#: includes/settings.php:484
 msgid "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is free, open-source software — we would appreciate you keeping it visible, but the choice is yours."
 msgstr ""
 
-#: includes/settings.php:483
+#: includes/settings.php:485
 msgid "Hide the ALTCHA logo"
 msgstr ""
 
-#: includes/settings.php:498
+#: includes/settings.php:500
 msgid "This applies to the text shown inside the widget. Same as the logo: keeping it visible helps credit the project this plugin is built on, but it has no effect on how OpenPorte works."
 msgstr ""
 
-#: includes/settings.php:499
+#: includes/settings.php:501
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr ""
 
-#: includes/settings.php:508
+#: includes/settings.php:510
 msgid "WordPress"
 msgstr ""
 
-#: includes/settings.php:517
+#: includes/settings.php:519
 msgid "Register page"
 msgstr ""
 
-#: includes/settings.php:518
+#: includes/settings.php:520
 msgid "Protect WordPress registration page."
 msgstr ""
 
-#: includes/settings.php:521
+#: includes/settings.php:523
 msgid "Reset password page"
 msgstr ""
 
-#: includes/settings.php:522
+#: includes/settings.php:524
 msgid "Protect WordPress password reset page."
 msgstr ""
 
-#: includes/settings.php:525
+#: includes/settings.php:527
 msgid "Login page"
 msgstr ""
 
-#: includes/settings.php:526
+#: includes/settings.php:528
 msgid "Protect WordPress login page."
 msgstr ""
 
-#: includes/settings.php:529
+#: includes/settings.php:531
 msgid "Comments"
 msgstr ""
 
-#: includes/settings.php:530
+#: includes/settings.php:532
 msgid "Protect WordPress comments section."
 msgstr ""
 
-#: includes/settings.php:557
+#: includes/settings.php:559
 msgid "Integrations"
 msgstr ""
 
-#: includes/settings.php:573
+#: includes/settings.php:575
 msgid "CoBlocks"
 msgstr ""
 
-#: includes/settings.php:574
+#: includes/settings.php:576
 msgid "Protect CoBlocks forms."
 msgstr ""
 
-#: includes/settings.php:578
+#: includes/settings.php:580
 msgid "Contact Form 7"
 msgstr ""
 
-#: includes/settings.php:579
+#: includes/settings.php:581
 msgid "Protect Contact Form 7 forms."
 msgstr ""
 
-#: includes/settings.php:583
+#: includes/settings.php:585
 msgid "Elementor Pro Forms"
 msgstr ""
 
-#: includes/settings.php:584
+#: includes/settings.php:586
 msgid "Protect Elementor Pro forms."
 msgstr ""
 
-#: includes/settings.php:588
+#: includes/settings.php:590
 msgid "Enfold Theme"
 msgstr ""
 
-#: includes/settings.php:589
+#: includes/settings.php:591
 msgid "Protect Enfold theme forms."
 msgstr ""
 
-#: includes/settings.php:591
+#: includes/settings.php:593
 msgid "Theme not active."
 msgstr ""
 
-#: includes/settings.php:594
+#: includes/settings.php:596
 msgid "Formidable Forms"
 msgstr ""
 
-#: includes/settings.php:595
+#: includes/settings.php:597
 msgid "Protect Formidable Forms submissions."
 msgstr ""
 
-#: includes/settings.php:599
+#: includes/settings.php:601
 msgid "Forminator"
 msgstr ""
 
-#: includes/settings.php:600
+#: includes/settings.php:602
 msgid "Protect Forminator forms."
 msgstr ""
 
-#: includes/settings.php:604
+#: includes/settings.php:606
 msgid "Gravity Forms"
 msgstr ""
 
-#: includes/settings.php:605
+#: includes/settings.php:607
 msgid "Protect Gravity Forms submissions."
 msgstr ""
 
-#: includes/settings.php:609
+#: includes/settings.php:611
 msgid "HTML Forms"
 msgstr ""
 
-#: includes/settings.php:610
+#: includes/settings.php:612
 msgid "Protect HTML Forms submissions."
 msgstr ""
 
-#: includes/settings.php:614
+#: includes/settings.php:616
 msgid "wpDiscuz"
 msgstr ""
 
-#: includes/settings.php:615
+#: includes/settings.php:617
 msgid "Protect wpDiscuz comments section."
 msgstr ""
 
-#: includes/settings.php:619
+#: includes/settings.php:621
 msgid "WPForms"
 msgstr ""
 
-#: includes/settings.php:620
+#: includes/settings.php:622
 msgid "Protect WPForms submissions."
 msgstr ""
 
-#: includes/settings.php:624
+#: includes/settings.php:626
 msgid "WooCommerce register page"
 msgstr ""
 
-#: includes/settings.php:625
+#: includes/settings.php:627
 msgid "Protect the WooCommerce register page."
 msgstr ""
 
-#: includes/settings.php:629
+#: includes/settings.php:631
 msgid "WooCommerce reset password page"
 msgstr ""
 
-#: includes/settings.php:630
+#: includes/settings.php:632
 msgid "Protect the WooCommerce reset password page."
 msgstr ""
 
-#: includes/settings.php:634
+#: includes/settings.php:636
 msgid "WooCommerce login page"
 msgstr ""
 
-#: includes/settings.php:635
+#: includes/settings.php:637
 msgid "Protect the WooCommerce login page."
 msgstr ""
 
-#: includes/settings.php:642
+#: includes/settings.php:644
 msgid "Custom HTML"
 msgstr ""
 
-#: includes/settings.php:643
+#: includes/settings.php:645
 msgid "Configure hand-written widget tags."
 msgstr ""
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:647
+#: includes/settings.php:649
 #, php-format
 msgid "%1$sDeprecated%2$s, and scheduled for removal in the next major release — place the %3$s shortcode in your content instead."
 msgstr ""
 
-#: includes/settings.php:668
+#: includes/settings.php:670
 msgid "Plugin not active."
 msgstr ""
 

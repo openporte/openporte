@@ -311,6 +311,8 @@ if (is_admin()) {
       'openporte_general_settings_section',
       array(
         "name" => OpenPortePlugin::$option_secret,
+        // Selects the "shared secret" wording of the in-field action labels.
+        "kind" => "secret",
         "tooltip" => __('A secret key used to sign and verify challenges.', 'openporte'),
         // Two concatenated strings so the long-standing first sentence keeps
         // its existing translations; only the actions text is new.

@@ -268,90 +268,273 @@ function openporte_admin_password_icon( $icon ) {
 }
 
 /**
- * Renders a password setting with optional in-field SVG action buttons.
+ * Renders a password or secret setting with optional in-field SVG action buttons.
  *
  * Behaviour stays keyed on class and data-target. public/admin.js updates the
  * icon visibility, accessible labels, and copy status without replacing buttons.
+ * Each part of the markup has its own renderer below, so this stays a sequence.
  *
  * @since 1.28.0
  * @since 1.29.0 Added the display_copy and display_regenerate args.
- * @since 1.30.0 Added in-field SVG controls and accessible copy feedback.
+ * @since 1.30.0 Added in-field SVG controls, accessible copy feedback, and the
+ *               kind arg.
  *
- * @param array $args Settings field arguments.
+ * @param array $args {
+ *     Settings field arguments.
+ *
+ *     @type string $name               Option name; also the input id. Required.
+ *     @type string $kind               'password' (default) or 'secret'. Selects
+ *                                      the action labels only.
+ *     @type string $hint               Optional hint HTML, filtered by wp_kses().
+ *     @type string $placeholder        Optional placeholder text.
+ *     @type bool   $disabled           Whether the input and its actions are disabled.
+ *     @type bool   $display_toggle     Whether to show the Show/Hide action.
+ *     @type bool   $display_copy       Whether to show the Copy action.
+ *     @type bool   $display_regenerate Whether to show the Regenerate action.
+ *     @type string $description        Optional label displayed above the input.
+ *     @type string $tooltip            Optional title attribute of the input.
+ * }
  * @return void
  */
 function openporte_settings_password_callback( array $args ) {
-  $name               = $args['name'];
-  $hint               = $args['hint'] ?? null;
-  $placeholder        = $args['placeholder'] ?? null;
-  $disabled           = $args['disabled'] ?? false;
-  $display_toggle     = ( $args['display_toggle'] ?? false ) === true;
-  $display_copy       = ( $args['display_copy'] ?? false ) === true;
-  $display_regenerate = ( $args['display_regenerate'] ?? false ) === true;
-  $description        = $args['description'] ?? null;
-  $tooltip            = $args['tooltip'] ?? '';
-  $value              = get_option( $name, '' );
-  $action_count       = (int) $display_toggle + (int) $display_copy + (int) $display_regenerate;
+  $field = openporte_admin_password_args( $args );
+  openporte_admin_password_description( $field );
   ?>
-  <?php if ( $description ) { ?>
-    <div><label class="description" for="<?php echo esc_attr( $name ); ?>">
-      <?php echo esc_html( $description ); ?>
-    </label></div>
-  <?php } ?>
-  <div class="openporte-password-field" style="--openporte-password-actions: <?php echo (int) $action_count; ?>;">
-    <input autocomplete="new-password" type="password"
-      name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>"
-      class="openporte-large-text" title="<?php echo esc_attr( $tooltip ); ?>"
-      <?php if ( null !== $placeholder ) { ?>placeholder="<?php echo esc_attr( $placeholder ); ?>"<?php } ?>
-      <?php if ( $hint ) { ?>aria-describedby="<?php echo esc_attr( $name . '-hint' ); ?>"<?php } ?>
-      value="<?php echo esc_attr( $value ); ?>" <?php disabled( $disabled, true ); ?>>
+  <div class="openporte-password-field" style="--openporte-password-actions: <?php echo (int) $field['action_count']; ?>;">
+    <?php openporte_admin_password_input( $field ); ?>
     <div class="openporte-password-actions">
-      <?php if ( $display_toggle ) { ?>
-        <button type="button" class="openporte-password-action openporte-toggle-password"
-          data-target="<?php echo esc_attr( $name ); ?>"
-          data-label-show="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
-          data-label-hide="<?php echo esc_attr__( 'Hide shared secret', 'openporte' ); ?>"
-          aria-label="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
-          title="<?php echo esc_attr__( 'Show shared secret', 'openporte' ); ?>"
-          <?php disabled( $disabled, true ); ?>>
-          <span data-icon="seen"><?php openporte_admin_password_icon( 'seen' ); ?></span>
-          <span data-icon="unseen" hidden><?php openporte_admin_password_icon( 'unseen' ); ?></span>
-        </button>
-      <?php } ?>
-      <?php if ( $display_copy ) { ?>
-        <button type="button" class="openporte-password-action openporte-copy-password"
-          data-target="<?php echo esc_attr( $name ); ?>"
-          data-label-copy="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
-          data-label-copied="<?php echo esc_attr__( 'Copied!', 'openporte' ); ?>"
-          data-label-failed="<?php echo esc_attr__( 'Copy failed', 'openporte' ); ?>"
-          data-status="<?php echo esc_attr( $name . '-status' ); ?>"
-          aria-label="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
-          title="<?php echo esc_attr__( 'Copy shared secret', 'openporte' ); ?>"
-          <?php disabled( $disabled, true ); ?>>
-          <span data-icon="copy"><?php openporte_admin_password_icon( 'copy' ); ?></span>
-          <span data-icon="check" hidden><?php openporte_admin_password_icon( 'check' ); ?></span>
-        </button>
-      <?php } ?>
-      <?php if ( $display_regenerate ) { ?>
-        <button type="button" class="openporte-password-action openporte-regenerate-secret"
-          data-target="<?php echo esc_attr( $name ); ?>"
-          aria-label="<?php echo esc_attr__( 'Generate new shared secret', 'openporte' ); ?>"
-          title="<?php echo esc_attr__( 'Generate new shared secret', 'openporte' ); ?>"
-          <?php disabled( $disabled, true ); ?>>
-          <?php openporte_admin_password_icon( 'update' ); ?>
-        </button>
-      <?php } ?>
+      <?php openporte_admin_password_toggle_button( $field ); ?>
+      <?php openporte_admin_password_copy_button( $field ); ?>
+      <?php openporte_admin_password_regenerate_button( $field ); ?>
     </div>
   </div>
-  <?php if ( $display_copy ) { ?>
-    <div id="<?php echo esc_attr( $name . '-status' ); ?>" class="openporte-password-status"
-      role="status" aria-live="polite" aria-atomic="true"></div>
-  <?php } ?>
-  <?php if ( $hint ) { ?>
-    <div id="<?php echo esc_attr( $name . '-hint' ); ?>" class="openporte-hint">
-      <?php echo wp_kses( $hint, OpenPortePlugin::$hint_allowed_tags ); ?>
-    </div>
-  <?php } ?>
+  <?php
+  openporte_admin_password_status( $field );
+  openporte_admin_password_hint( $field );
+}
+
+/**
+ * Normalises the password renderer arguments and resolves their labels.
+ *
+ * @since 1.30.0
+ *
+ * @param array $args Settings field arguments, see openporte_settings_password_callback().
+ * @return array Arguments with defaults applied, plus `labels` and `action_count`.
+ */
+function openporte_admin_password_args( array $args ) {
+  $field = $args + array(
+    'kind'               => 'password',
+    'hint'               => null,
+    'placeholder'        => null,
+    'disabled'           => false,
+    'display_toggle'     => false,
+    'display_copy'       => false,
+    'display_regenerate' => false,
+    'description'        => null,
+    'tooltip'            => '',
+  );
+
+  // Only a literal true enables an action; truthy values such as '0' must not.
+  $field['display_toggle']     = true === $field['display_toggle'];
+  $field['display_copy']       = true === $field['display_copy'];
+  $field['display_regenerate'] = true === $field['display_regenerate'];
+  $field['action_count']       = (int) $field['display_toggle'] + (int) $field['display_copy'] + (int) $field['display_regenerate'];
+  $field['labels']             = openporte_admin_password_labels( $field['kind'] );
+
+  return $field;
+}
+
+/**
+ * Returns the translated action labels for a password-type setting.
+ *
+ * The icon-only buttons need a name that says what they act on, so a secret
+ * and a password get distinct wording rather than a bare "Show" or "Copy".
+ *
+ * @since 1.30.0
+ *
+ * @param string $kind 'secret' for the shared secret; anything else is a password.
+ * @return array Labels keyed by show, hide, copy, copied, failed, regenerate.
+ */
+function openporte_admin_password_labels( $kind ) {
+  $labels = array(
+    'copied' => __( 'Copied!', 'openporte' ),
+    'failed' => __( 'Copy failed', 'openporte' ),
+  );
+
+  if ( 'secret' === $kind ) {
+    return $labels + array(
+      'show'       => __( 'Show shared secret', 'openporte' ),
+      'hide'       => __( 'Hide shared secret', 'openporte' ),
+      'copy'       => __( 'Copy shared secret', 'openporte' ),
+      'regenerate' => __( 'Generate new shared secret', 'openporte' ),
+    );
+  }
+
+  // Default wording, also the fallback for an unknown kind.
+  return $labels + array(
+    'show'       => __( 'Show password', 'openporte' ),
+    'hide'       => __( 'Hide password', 'openporte' ),
+    'copy'       => __( 'Copy password', 'openporte' ),
+    'regenerate' => __( 'Generate new password', 'openporte' ),
+  );
+}
+
+/**
+ * Renders the optional label above a password setting.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_description( array $field ) {
+  if ( ! $field['description'] ) {
+    return;
+  }
+  ?>
+  <div><label class="description" for="<?php echo esc_attr( $field['name'] ); ?>">
+    <?php echo esc_html( $field['description'] ); ?>
+  </label></div>
+  <?php
+}
+
+/**
+ * Renders the password input itself.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_input( array $field ) {
+  $name = $field['name'];
+  ?>
+  <input autocomplete="new-password" type="password"
+    name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>"
+    class="openporte-large-text" title="<?php echo esc_attr( $field['tooltip'] ); ?>"
+    <?php if ( null !== $field['placeholder'] ) { ?>placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"<?php } ?>
+    <?php if ( $field['hint'] ) { ?>aria-describedby="<?php echo esc_attr( $name . '-hint' ); ?>"<?php } ?>
+    value="<?php echo esc_attr( get_option( $name, '' ) ); ?>" <?php disabled( $field['disabled'], true ); ?>>
+  <?php
+}
+
+/**
+ * Renders the optional Show/Hide action of a password setting.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_toggle_button( array $field ) {
+  if ( ! $field['display_toggle'] ) {
+    return;
+  }
+  $labels = $field['labels'];
+  ?>
+  <button type="button" class="openporte-password-action openporte-toggle-password"
+    data-target="<?php echo esc_attr( $field['name'] ); ?>"
+    data-label-show="<?php echo esc_attr( $labels['show'] ); ?>"
+    data-label-hide="<?php echo esc_attr( $labels['hide'] ); ?>"
+    aria-label="<?php echo esc_attr( $labels['show'] ); ?>"
+    title="<?php echo esc_attr( $labels['show'] ); ?>"
+    <?php disabled( $field['disabled'], true ); ?>>
+    <span data-icon="seen"><?php openporte_admin_password_icon( 'seen' ); ?></span>
+    <span data-icon="unseen" hidden><?php openporte_admin_password_icon( 'unseen' ); ?></span>
+  </button>
+  <?php
+}
+
+/**
+ * Renders the optional Copy action of a password setting.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_copy_button( array $field ) {
+  if ( ! $field['display_copy'] ) {
+    return;
+  }
+  $labels = $field['labels'];
+  ?>
+  <button type="button" class="openporte-password-action openporte-copy-password"
+    data-target="<?php echo esc_attr( $field['name'] ); ?>"
+    data-label-copy="<?php echo esc_attr( $labels['copy'] ); ?>"
+    data-label-copied="<?php echo esc_attr( $labels['copied'] ); ?>"
+    data-label-failed="<?php echo esc_attr( $labels['failed'] ); ?>"
+    data-status="<?php echo esc_attr( $field['name'] . '-status' ); ?>"
+    aria-label="<?php echo esc_attr( $labels['copy'] ); ?>"
+    title="<?php echo esc_attr( $labels['copy'] ); ?>"
+    <?php disabled( $field['disabled'], true ); ?>>
+    <span data-icon="copy"><?php openporte_admin_password_icon( 'copy' ); ?></span>
+    <span data-icon="check" hidden><?php openporte_admin_password_icon( 'check' ); ?></span>
+  </button>
+  <?php
+}
+
+/**
+ * Renders the optional Regenerate action of a password setting.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_regenerate_button( array $field ) {
+  if ( ! $field['display_regenerate'] ) {
+    return;
+  }
+  ?>
+  <button type="button" class="openporte-password-action openporte-regenerate-secret"
+    data-target="<?php echo esc_attr( $field['name'] ); ?>"
+    aria-label="<?php echo esc_attr( $field['labels']['regenerate'] ); ?>"
+    title="<?php echo esc_attr( $field['labels']['regenerate'] ); ?>"
+    <?php disabled( $field['disabled'], true ); ?>>
+    <?php openporte_admin_password_icon( 'update' ); ?>
+  </button>
+  <?php
+}
+
+/**
+ * Renders the live region announcing Copy results.
+ *
+ * Only rendered with the Copy action: it is the region its data-status names.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_status( array $field ) {
+  if ( ! $field['display_copy'] ) {
+    return;
+  }
+  ?>
+  <div id="<?php echo esc_attr( $field['name'] . '-status' ); ?>" class="openporte-password-status"
+    role="status" aria-live="polite" aria-atomic="true"></div>
+  <?php
+}
+
+/**
+ * Renders the optional hint below a password setting.
+ *
+ * Its id is the one the input references through aria-describedby.
+ *
+ * @since 1.30.0
+ *
+ * @param array $field Normalised arguments from openporte_admin_password_args().
+ * @return void
+ */
+function openporte_admin_password_hint( array $field ) {
+  if ( ! $field['hint'] ) {
+    return;
+  }
+  ?>
+  <div id="<?php echo esc_attr( $field['name'] . '-hint' ); ?>" class="openporte-hint">
+    <?php echo wp_kses( $field['hint'], OpenPortePlugin::$hint_allowed_tags ); ?>
+  </div>
   <?php
 }
 
