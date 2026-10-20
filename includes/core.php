@@ -17,6 +17,7 @@ class OpenPortePlugin
   public static $option_version = "openporte_version";
   public static $option_api = "openporte_api";
   public static $option_api_custom_url = "openporte_api_custom_url";
+  public static $option_selfhosted_transport = "openporte_selfhosted_transport";
   public static $option_secret = "openporte_secret";
   public static $option_complexity = "openporte_complexity";
   public static $option_expires = "openporte_expires";
@@ -132,6 +133,31 @@ class OpenPortePlugin
   public static $replay_ttl_fallback = 14400;
 
   /**
+   * Self-hosted challenge transports, in settings-page order.
+   *
+   * The single allowlist shared by the getter, the URL builder and the
+   * settings sanitizer, so no code path accepts a transport the others do
+   * not know.
+   *
+   * @since 1.30.0
+   * @var string[]
+   */
+  public static $selfhosted_transports = array('rest', 'ajax');
+
+  /**
+   * Admin-ajax action serving challenges to the widget.
+   *
+   * One source of truth for the two registered hook names and for the
+   * `action` value baked into the Ajax challenge URL: a divergence between
+   * the registered hook and the URL the widget fetches would break
+   * silently.
+   *
+   * @since 1.30.0
+   * @var string
+   */
+  public static $ajax_action = 'openporte_challenge';
+
+  /**
    * Per-request verification memo, keyed both on the submitted bytes and on
    * the verified signature.
    *
@@ -216,6 +242,55 @@ class OpenPortePlugin
   public function get_api_custom_url()
   {
     return trim(get_option(OpenPortePlugin::$option_api_custom_url));
+  }
+
+  /**
+   * Normalize a self-hosted transport value from any source.
+   *
+   * The shared definition of a usable transport, used by
+   * get_selfhosted_transport() below and by the settings-page sanitizer, so
+   * the value the challenge URL is rendered from is always the value the
+   * settings page shows and saves.
+   *
+   * Strictly allowlist: an exact string match against
+   * $selfhosted_transports, and only that. Case or whitespace variants, the
+   * empty string, unknown strings, arrays, objects, booleans and null all
+   * refuse — a corrupted option row must fall back, and nothing here casts,
+   * because (string) on an array would fabricate "Array".
+   *
+   * @since 1.30.0
+   *
+   * @param mixed $value Candidate transport from an option row or a form.
+   * @return string|null A value from $selfhosted_transports, or null when
+   *                     $value is not a usable one.
+   */
+  public static function normalize_selfhosted_transport($value)
+  {
+    if (!is_string($value)) {
+      return null;
+    }
+    return in_array($value, OpenPortePlugin::$selfhosted_transports, true) ? $value : null;
+  }
+
+  /**
+   * Selected self-hosted transport, normalized.
+   *
+   * An absent or invalid stored value falls back to REST: it is the transport
+   * every release before this one served self-hosted challenges through, so
+   * an in-place update — which never seeds the option — keeps its working
+   * URL, and a corrupted row degrades to the historical behaviour instead of
+   * a fabricated one.
+   *
+   * @since 1.30.0
+   *
+   * @return string One of $selfhosted_transports.
+   */
+  public function get_selfhosted_transport()
+  {
+    $transport = OpenPortePlugin::normalize_selfhosted_transport(
+      get_option(OpenPortePlugin::$option_selfhosted_transport, null)
+    );
+    return $transport === null ? 'rest' : $transport;
   }
 
   public function get_complexity()
@@ -458,18 +533,68 @@ class OpenPortePlugin
   }
 
 
+  /**
+   * Challenge URL the widget fetches from, in every API mode.
+   *
+   * Custom mode always uses the stored backend URL, whatever transport is
+   * selected — the transport setting chooses how *this site* serves
+   * challenges; it never rewrites an operator's own endpoint. Every other
+   * mode, including a legacy or unknown stored value, is self-hosted and
+   * follows the selected transport. Both transports stay registered
+   * regardless of the selection (see the endpoint wiring below), so a page
+   * already served on the other URL keeps working after a switch.
+   *
+   * @since 1.26.3
+   * @since 1.30.0 Self-hosted URLs now follow the selected transport.
+   *
+   * @return string The challenge URL for the current API mode and transport.
+   */
   public function get_challengeurl()
   {
     $api = $this->get_api();
-    if ($api === "custom") {
+    if ($api === 'custom') {
       $challenge_url = $this->get_api_custom_url();
     } else { /* default to selfhosted */
-      $challenge_url = get_rest_url(null, "/openporte/v1/challenge");
+      $challenge_url = $this->get_selfhosted_challenge_url();
     }
 
     $challenge_url = apply_filters('openporte_challenge_url', $challenge_url);
     // Deprecated alias kept for back-compat; remove in a future release.
     return apply_filters_deprecated('altcha_challenge_url', array($challenge_url), '1.27.0', 'openporte_challenge_url');
+  }
+
+  /**
+   * Self-hosted challenge URL for one transport, or for the selected one.
+   *
+   * The argument exists so a caller can build the URL of a specific
+   * transport without touching the stored setting — the settings-page
+   * reachability healthcheck probes the *other* transport before suggesting
+   * it. An invalid argument
+   * falls back to the selected (already normalized) transport.
+   *
+   * @since 1.30.0
+   *
+   * @param string|null $transport One of $selfhosted_transports; the
+   *                               selected transport when null or invalid.
+   * @return string The challenge URL for that transport.
+   */
+  public function get_selfhosted_challenge_url($transport = null)
+  {
+    $transport = OpenPortePlugin::normalize_selfhosted_transport($transport);
+    if ($transport === null) {
+      $transport = $this->get_selfhosted_transport();
+    }
+    if ('ajax' === $transport) {
+      // admin_url() rather than a hardcoded /wp-admin/: hosts that move the
+      // admin directory still answer the action where it lives.
+      return add_query_arg(
+        'action',
+        OpenPortePlugin::$ajax_action,
+        admin_url('admin-ajax.php')
+      );
+    }
+
+    return get_rest_url(null, '/openporte/v1/challenge');
   }
 
   public function get_translations($language = null)
@@ -1373,4 +1498,43 @@ function openporte_generate_challenge_endpoint()
   $resp = new WP_REST_Response(OpenPortePlugin::$instance->generate_challenge());
   $resp->set_headers(array('Cache-Control' => 'no-cache, no-store, max-age=0'));
   return $resp;
+}
+
+// The admin-ajax twin of the REST challenge endpoint (issue #100): a site
+// whose security tooling blocks anonymous REST access can serve the widget's
+// challenges from here instead. Both actions are registered unconditionally,
+// like the REST routes, because the transport setting only chooses the URL
+// the widget is rendered with — never which endpoint exists — and a page
+// cached on one URL must keep working after the setting changes to the other.
+add_action(
+  'wp_ajax_' . OpenPortePlugin::$ajax_action,
+  'openporte_generate_challenge_ajax_endpoint'
+);
+add_action(
+  'wp_ajax_nopriv_' . OpenPortePlugin::$ajax_action,
+  'openporte_generate_challenge_ajax_endpoint'
+);
+
+/**
+ * Admin-ajax endpoint serving a self-hosted challenge (issue #100).
+ *
+ * Public and stateless, exactly like the REST endpoint: no nonce, no
+ * capability check, no state written at issuance. The widget reaches it with
+ * a plain GET; the dispatcher also accepts POST for registered actions, and
+ * this callback answers either, so no method restriction is added here.
+ *
+ * The flat five-key challenge JSON is sent unwrapped — the widget parses
+ * that shape — and the response must never be served from a shared cache.
+ *
+ * @since 1.30.0
+ */
+function openporte_generate_challenge_ajax_endpoint()
+{
+  // Set explicitly for parity with the REST endpoint across the whole
+  // supported floor: admin-ajax.php already calls nocache_headers(), but
+  // cores before 6.8 do not include no-store for anonymous visitors.
+  // header() replaces that earlier Cache-Control line rather than adding a
+  // second one, so the response carries exactly the REST endpoint's policy.
+  header('Cache-Control: no-cache, no-store, max-age=0');
+  wp_send_json(OpenPortePlugin::$instance->generate_challenge());
 }
