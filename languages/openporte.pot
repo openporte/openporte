@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-20T22:02:39+00:00\n"
+"POT-Creation-Date: 2026-10-20T22:44:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: openporte\n"
@@ -231,85 +231,85 @@ msgstr ""
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr ""
 
-#: admin/options.php:331
+#: admin/options.php:332
 msgid "Copied!"
 msgstr ""
 
-#: admin/options.php:332
+#: admin/options.php:333
 msgid "Copy failed"
 msgstr ""
 
-#: admin/options.php:337
+#: admin/options.php:338
 msgid "Show shared secret"
 msgstr ""
 
-#: admin/options.php:338
+#: admin/options.php:339
 msgid "Hide shared secret"
 msgstr ""
 
-#: admin/options.php:339
+#: admin/options.php:340
 msgid "Copy shared secret"
 msgstr ""
 
-#: admin/options.php:340
+#: admin/options.php:341
 msgid "Generate new shared secret"
 msgstr ""
 
-#: admin/options.php:346
+#: admin/options.php:347
 msgid "Show password"
 msgstr ""
 
-#: admin/options.php:347
+#: admin/options.php:348
 msgid "Hide password"
 msgstr ""
 
-#: admin/options.php:348
+#: admin/options.php:349
 msgid "Copy password"
 msgstr ""
 
-#: admin/options.php:349
+#: admin/options.php:350
 msgid "Generate new password"
 msgstr ""
 
-#: admin/options.php:652
-#: admin/options.php:654
+#: admin/options.php:653
+#: admin/options.php:655
 msgid "Show"
 msgstr ""
 
-#: admin/options.php:653
+#: admin/options.php:654
 msgid "Hide"
 msgstr ""
 
-#: admin/options.php:794
+#: admin/options.php:795
 #: includes/settings.php:282
 msgid "Custom"
 msgstr ""
 
-#: admin/options.php:824
+#: admin/options.php:825
 msgid "5 minutes"
 msgstr ""
 
-#: admin/options.php:825
+#: admin/options.php:826
 msgid "30 minutes"
 msgstr ""
 
-#: admin/options.php:826
+#: admin/options.php:827
 msgid "1 hour"
 msgstr ""
 
-#: admin/options.php:855
+#: admin/options.php:856
 msgid "Unlimited (pre-1.29 behaviour)"
 msgstr ""
 
-#: admin/options.php:856
+#: admin/options.php:857
 msgid "Single use (strict)"
 msgstr ""
 
-#: admin/options.php:857
+#: admin/options.php:858
 msgid "5 uses (recommended)"
 msgstr ""
 
-#: admin/options.php:858
+#: admin/options.php:859
 msgid "10 uses"
 msgstr ""
 
@@ -400,7 +400,7 @@ msgid "OpenPorte generates a random secret automatically. Change it only if anot
 msgstr ""
 
 #: includes/settings.php:321
-msgid "Copy places the current secret on the clipboard. Regenerate fills in a fresh random secret; it only takes effect when you save changes, and challenges already issued with the old secret then stop verifying. In Custom API Mode, saving a new secret also breaks verification of new submissions until you update the secret on your backend to match."
+msgid "The \"Copy shared secret\" icon button copies the current secret to the clipboard. The \"Generate new shared secret\" icon button fills in a fresh random secret; it only takes effect when you save changes, and challenges already issued with the old secret then stop verifying. In Custom API Mode, saving a new secret also breaks verification of new submissions until you update the secret on your backend to match."
 msgstr ""
 
 #: includes/settings.php:331

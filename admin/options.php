@@ -263,8 +263,9 @@ function openporte_admin_password_icon( $icon ) {
     return;
   }
 
-  // Only reviewed plugin assets can reach this include; never user-supplied SVG.
-  include __DIR__ . '/../public/icons/wordpress/' . $icon . '.svg';
+  // Emit only reviewed plugin assets as data; XML declarations must not run as PHP.
+  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile -- Read-only, allowlisted plugin assets need no filesystem transport or credentials.
+  readfile( __DIR__ . '/../public/icons/wordpress/' . $icon . '.svg' );
 }
 
 /**

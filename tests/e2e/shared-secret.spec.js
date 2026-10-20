@@ -11,8 +11,15 @@ test.beforeEach(async ({ page }) => {
     });
   });
   await page.goto('/wp-login.php');
-  await page.locator('#user_login').fill(process.env.WP_ADMIN_USER || 'admin');
-  await page.locator('#user_pass').fill(process.env.WP_ADMIN_PASSWORD || 'password');
+  // Core schedules a delayed login focus(). Set both values in one task so it
+  // cannot redirect the password insertion into the username field mid-fill.
+  await page.locator('#loginform').evaluate((form, credentials) => {
+    form.elements.log.value = credentials.username;
+    form.elements.pwd.value = credentials.password;
+  }, {
+    username: process.env.WP_ADMIN_USER || 'admin',
+    password: process.env.WP_ADMIN_PASSWORD || 'password',
+  });
   await Promise.all([
     page.waitForURL('**/wp-admin/**'),
     page.locator('#wp-submit').click(),
@@ -49,6 +56,20 @@ test('keyboard show/hide preserves the secret, icons, and action names', async (
   await expect(show).toHaveAccessibleName('Show shared secret');
   await expect(show.locator('[data-icon="seen"] svg')).toBeVisible();
   await expect(show).toBeFocused();
+});
+
+test('icon focus rings follow keyboard rather than pointer focus', async ({ page }) => {
+  const { show, copy } = controls(page);
+  await show.click();
+  await expect(show).toBeFocused();
+  expect(await show.evaluate((element) => element.matches(':focus-visible'))).toBe(false);
+  await expect(show).toHaveCSS('outline-style', 'none');
+
+  await page.keyboard.press('Tab');
+  await expect(copy).toBeFocused();
+  await expect(copy).toHaveCSS('outline-style', 'solid');
+  await page.emulateMedia({ forcedColors: 'active' });
+  await expect(copy).toHaveCSS('outline-style', 'solid');
 });
 
 test('copy announces repeated success and resets its icon without losing focus', async ({ page }) => {
@@ -156,7 +177,7 @@ test('long secrets stay clear of controls on narrow LTR and RTL layouts', async 
   expect(await show.evaluate((element) => getComputedStyle(element).outlineStyle)).not.toBe('none');
 });
 
-test('the deprecated renderer still updates ordinary Show/Hide button text', async ({ page }) => {
+test('text-only toggle buttons still update their label (deprecated renderer contract)', async ({ page }) => {
   await page.addInitScript(() => {
     document.addEventListener('DOMContentLoaded', () => {
       // The deprecated callback's public class/data-target contract, added before
