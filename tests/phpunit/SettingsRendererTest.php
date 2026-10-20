@@ -15,6 +15,7 @@ class SettingsRendererTest extends OpenPorteTestCase
     $html = $this->render(function () {
       openporte_settings_password_callback(array(
         'name' => 'openporte_secret',
+        'kind' => 'secret',
         'hint' => 'Changes take effect when saved.',
         'display_toggle' => true,
         'display_copy' => true,
@@ -31,6 +32,31 @@ class SettingsRendererTest extends OpenPorteTestCase
     $this->assertStringContainsString('role="status" aria-live="polite" aria-atomic="true"', $html);
     $this->assertSame(5, substr_count($html, 'focusable="false"'));
     $this->assertStringContainsString('value="renderer-test-secret"', $html);
+  }
+
+  /** Without a kind, or with an unknown one, the actions are worded for a password. */
+  public function test_password_actions_default_to_password_labels()
+  {
+    foreach (array(null, 'unknown') as $kind) {
+      $args = array(
+        'name' => 'openporte_secret',
+        'display_toggle' => true,
+        'display_copy' => true,
+        'display_regenerate' => true,
+      );
+      if ($kind !== null) {
+        $args['kind'] = $kind;
+      }
+      $html = $this->render(function () use ($args) {
+        openporte_settings_password_callback($args);
+      });
+
+      $this->assertStringContainsString('data-label-show="Show password"', $html);
+      $this->assertStringContainsString('data-label-hide="Hide password"', $html);
+      $this->assertStringContainsString('aria-label="Copy password"', $html);
+      $this->assertStringContainsString('aria-label="Generate new password"', $html);
+      $this->assertStringNotContainsString('shared secret', $html);
+    }
   }
 
   /** Optional controls must not appear or stay active for disabled inputs. */
