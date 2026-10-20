@@ -8,6 +8,28 @@
  */
 class SettingsRendererTest extends OpenPorteTestCase
 {
+  /**
+   * The deprecated PHP renderer must still expose the text-toggle JS contract.
+   *
+   * @since 1.30.0
+   */
+  public function test_deprecated_password_renderer_exposes_text_toggle_contract()
+  {
+    $html = $this->render(function () {
+      openporte_settings_field_callback(array(
+        'type' => 'password',
+        'name' => 'openporte_legacy_password',
+        'display_toggle' => true,
+      ));
+    });
+
+    $this->assertStringContainsString('class="button button-secondary openporte-toggle-password"', $html);
+    $this->assertStringContainsString('data-target="openporte_legacy_password"', $html);
+    $this->assertStringContainsString('data-label-show="Show"', $html);
+    $this->assertStringContainsString('data-label-hide="Hide"', $html);
+    $this->assertStringNotContainsString('<svg', $html);
+  }
+
   /** Password controls must remain labelled, non-submitting, and linked to their hint. */
   public function test_password_actions_have_accessible_names_and_status()
   {
