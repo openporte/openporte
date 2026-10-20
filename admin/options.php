@@ -169,6 +169,35 @@ function openporte_integrations_section_callback()
 }
 
 /**
+ * Intro of the Data section, with a warning about what deleting the plugin
+ * removes.
+ *
+ * The warning is always shown, whatever the toggle state: the toggle can be
+ * switched off again before the plugin is deleted, and a static message needs
+ * no script. The `inline` class keeps WordPress core from moving the notice to
+ * the top of the page, away from the toggle it is about.
+ *
+ * @since 1.30.0
+ */
+function openporte_data_section_callback()
+{
+  ?>
+
+    <p><?php echo esc_html__('Choose what happens to the OpenPorte settings when the plugin is deleted.', 'openporte'); ?></p>
+    <div class="notice notice-warning inline">
+      <p><?php echo sprintf(
+          /* translators: %1$s and %2$s are opening and closing tags for bold */
+          esc_html__('%1$sWarning:%2$s while "Keep settings" is off, deleting the plugin permanently removes all OpenPorte settings, including the shared secret. This cannot be undone. If you plan to reinstall OpenPorte, switch it on and save before deleting the plugin.', 'openporte'),
+          '<strong>',
+          '</strong>'
+        );
+      ?></p>
+    </div>
+
+  <?php
+}
+
+/**
  * Renderer for text and URL input settings fields.
  * Supports the `custom` arg to add a `data-custom-api` attribute for JS-based
  * mode switching (see public/admin.js).

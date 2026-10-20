@@ -178,6 +178,16 @@ the widget and visitors still have to tick it, but nothing checks the result on
 the server — a bot posting directly to the form's endpoint is not stopped. See
 **Supported Integrations** for the list.
 
+= Will deleting the plugin remove my settings? =
+
+By default, yes: deleting OpenPorte from the Plugins page permanently removes
+all of its settings, including the shared secret. Deactivating it removes
+nothing. To keep your configuration for a later reinstall, switch on **Keep
+settings when the plugin is deleted** under Settings → OpenPorte → Data and
+save before deleting the plugin. Temporary data such as replay counters is
+removed either way, and the settings of the original ALTCHA Spam Protection
+plugin are never touched.
+
 == REST API ==
 
 This plugin requires the WordPress REST API. If you are using any "Disable REST API" plugins, ensure that the endpoint `/altcha/v1/challenge` (marked for deprecation) and `/openporte/v1/challenge` are allowed.

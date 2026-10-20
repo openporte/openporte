@@ -163,7 +163,12 @@ openporte.php              Entry point + plugin header. Defines constants, requi
                            every file in load order, registers the [openporte]/[altcha]
                            shortcodes, the activation + legacy-option migration hooks,
                            and the REST route.
-uninstall.php              Deletes all openporte_* options on plugin deletion.
+uninstall.php              On plugin deletion, always deletes the plugin's transients
+                           (replay counters, endpoint-check cache) and, unless the
+                           "Keep settings when the plugin is deleted" toggle
+                           (openporte_uninstall_keep_data, Data section) is on, every
+                           openporte_* option. Hardcodes that key and the transient
+                           prefixes: OpenPortePlugin is not loaded during uninstall.
 includes/
   core.php                 OpenPortePlugin singleton — shared logic: option accessors,
                            challenge generation, HMAC verification, widget HTML

@@ -48,6 +48,18 @@ class OpenPortePlugin
   public static $option_integration_enfold_theme = "openporte_integration_enfold_theme";
 
   /**
+   * Option key of the "Keep settings when the plugin is deleted" toggle.
+   *
+   * Read by uninstall.php, which hardcodes the same string because this class
+   * is not loaded during uninstall — keep the two in sync (pinned by
+   * tests/phpunit/UninstallTest.php).
+   *
+   * @since 1.30.0
+   * @var string
+   */
+  public static $option_uninstall_keep_data = "openporte_uninstall_keep_data";
+
+  /**
    * Extra pause, in milliseconds, added to verification when the Verification
    * Delay setting is on. Single source of truth: the widget attribute and the
    * settings-page hint are both derived from it.
