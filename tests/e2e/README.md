@@ -1,6 +1,6 @@
 # OpenPorte E2E suite
 
-Browser-driven tests against a running wp-env bench. Two spec files, two axes:
+Browser-driven tests against a running wp-env bench. Three spec files, three axes:
 
 - **`settings-matrix.spec.js`** — **integrations × auto-verification mode ×
   Floating UI**, so combinations too numerous to click through by hand get
@@ -8,6 +8,9 @@ Browser-driven tests against a running wp-env bench. Two spec files, two axes:
   (submission AJAX winning against the proof-of-work solve).
 - **`replay-limit.spec.js`** — what happens when the *same* solved token is
   submitted again (issue #101).
+- **`shared-secret.spec.js`** — the in-field Show/Hide, Copy and Regenerate
+  controls of the Shared secret setting (issue #107); see
+  [Shared secret controls](#shared-secret-controls).
 
 ## The settings matrix (`settings-matrix.spec.js`)
 
@@ -120,6 +123,7 @@ npm test                                       # everything, all drivers
 MATRIX_DRIVERS=wpdiscuz npm test               # one integration
 npx playwright test --grep "onsubmit"          # one mode across drivers
 npx playwright test replay-limit.spec.js       # just the replay-limit suite
+npx playwright test shared-secret.spec.js      # just the shared secret controls
 npm run test:headed                            # watch it
 npm run report                                 # open the HTML report
 ```
