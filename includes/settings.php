@@ -688,5 +688,36 @@ if (is_admin()) {
 
     do_action('openporte_settings_integrations');
     do_action_deprecated('altcha_settings_integrations', array(), '1.27.0', 'openporte_settings_integrations');
+
+    /*
+     * ================ Section - Data ================
+     * Registered after the integrations hooks above, so fields that third-party
+     * code adds through them still land in the Integrations section.
+    */
+    register_setting(
+      'openporte_options',
+      OpenPortePlugin::$option_uninstall_keep_data,
+      array( 'type' => 'integer', 'sanitize_callback' => 'absint', 'default' => 0 )
+    );
+
+    add_settings_section(
+      'openporte_data_settings_section',
+      __('Data', 'openporte'),
+      'openporte_data_section_callback',
+      'openporte_admin'
+    );
+
+    add_settings_field(
+      'openporte_settings_uninstall_keep_data_field',
+      __('Plugin deletion', 'openporte'),
+      'openporte_settings_checkbox_callback',
+      'openporte_admin',
+      'openporte_data_settings_section',
+      array(
+        "name" => OpenPortePlugin::$option_uninstall_keep_data,
+        "toggle_label" => __('Keep settings when the plugin is deleted.', 'openporte'),
+        "hint" => __('When on, deleting OpenPorte leaves its settings, including the shared secret, in the database, and a later reinstall picks them up again. Temporary data (replay counters, cached checks) is always removed. Deactivating the plugin never removes anything.', 'openporte'),
+      )
+    );
   }
 }

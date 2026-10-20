@@ -203,6 +203,13 @@ function wp_cache_incr($key, $offset = 1, $group = '')
     : OpenPorte_Test_Env::$cache[$group][$key];
 }
 
+/** uninstall.php flushes the object cache after its sweep. */
+function wp_cache_flush()
+{
+  OpenPorte_Test_Env::$cache = array();
+  return true;
+}
+
 /* ---------------------------------------------------------- hooks & filters */
 
 /** Record action registration so the suite can assert load-time wiring. */
@@ -339,8 +346,9 @@ function wp_remote_retrieve_body($response)
 /* --------------------------------------------------------------- fake $wpdb */
 
 /**
- * The three statements includes/core.php issues against wp_options, backed by
- * the in-memory options table.
+ * The three statements includes/core.php issues against wp_options, plus the
+ * prefix DELETE uninstall.php sweeps it with, backed by the in-memory options
+ * table.
  *
  * This is a stand-in for MySQL's *result*, never for its concurrency: the
  * guarded INSERT/UPDATE is atomic because InnoDB row-locks it, and no
@@ -349,6 +357,12 @@ function wp_remote_retrieve_body($response)
 class OpenPorte_Fake_Wpdb
 {
   public $options = 'wp_options';
+
+  /** Same escaping as core: LIKE wildcards and the escape character itself. */
+  public function esc_like($text)
+  {
+    return addcslashes($text, '_%\\');
+  }
 
   public function prepare($query, ...$args)
   {
@@ -381,7 +395,41 @@ class OpenPorte_Fake_Wpdb
       OpenPorte_Test_Env::$options[$m[1]] = (string) (intval(OpenPorte_Test_Env::$options[$m[1]]) + 1);
       return 1;
     }
+    if (preg_match("/^DELETE FROM .* WHERE option_name LIKE '((?:[^'\\\\]|\\\\.)*)'$/", $query, $m)) {
+      $regex = self::like_to_regex(stripslashes($m[1]));
+      $deleted = 0;
+      foreach (array_keys(OpenPorte_Test_Env::$options) as $name) {
+        if (preg_match($regex, (string) $name)) {
+          unset(OpenPorte_Test_Env::$options[$name]);
+          $deleted++;
+        }
+      }
+      return $deleted;
+    }
     throw new RuntimeException('Fake $wpdb saw an unexpected query: ' . $query);
+  }
+
+  /**
+   * Translate a LIKE pattern into an anchored regex: % and _ are wildcards,
+   * a backslash makes the next character literal (MySQL's default escape).
+   */
+  private static function like_to_regex($pattern)
+  {
+    $regex = '';
+    $length = strlen($pattern);
+    for ($i = 0; $i < $length; $i++) {
+      $char = $pattern[$i];
+      if ('\\' === $char && $i + 1 < $length) {
+        $regex .= preg_quote($pattern[++$i], '/');
+      } elseif ('%' === $char) {
+        $regex .= '.*';
+      } elseif ('_' === $char) {
+        $regex .= '.';
+      } else {
+        $regex .= preg_quote($char, '/');
+      }
+    }
+    return '/^' . $regex . '$/s';
   }
 
   public function get_var($query)
