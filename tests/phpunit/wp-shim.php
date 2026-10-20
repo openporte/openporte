@@ -37,7 +37,7 @@ class OpenPorte_Test_Env
   /** @var array<int,array> Every add_action() call made while loading the plugin. */
   public static $registered_actions = array();
 
-  /** @var array<int,string> Every _deprecated_function()/_doing_it_wrong() subject. */
+  /** @var array<int,string> Every _deprecated_function()/_doing_it_wrong() subject, and every deprecated hook that had a callback. */
   public static $deprecations = array();
 
   /** @var array<string,callable> Filter callbacks, keyed by hook name. */
@@ -65,6 +65,14 @@ class OpenPorte_Test_Env
   public static $http_response = array();
 
   /**
+   * Last payload passed to wp_send_json().
+   *
+   * @since 1.30.0
+   * @var mixed
+   */
+  public static $sent_json = null;
+
+  /**
    * Restore a pristine environment. Call from setUp().
    *
    * @param array<string,mixed> $options Options to seed the table with.
@@ -84,6 +92,7 @@ class OpenPorte_Test_Env
     self::$broken_timeout_add = false;
     self::$broken_database = false;
     self::$http_response = array();
+    self::$sent_json = null;
   }
 
   /**
@@ -236,7 +245,26 @@ function apply_filters($tag, $value, ...$args)
   return call_user_func_array(OpenPorte_Test_Env::$filters[$tag], array_merge(array($value), $args));
 }
 
-function apply_filters_deprecated($tag, $args, $version, $replacement = '') { return $args[0]; }
+/**
+ * Like core: a deprecated hook runs its callbacks, and is reported, only when
+ * something is attached to it.
+ *
+ * @since 1.29.0
+ * @since 1.30.0 Dispatch attached callbacks and record deprecated hooks.
+ *
+ * @param string $tag         Deprecated filter name.
+ * @param array  $args        Filter arguments, beginning with the value.
+ * @param string $version     Version that deprecated the filter.
+ * @param string $replacement Replacement filter name.
+ * @return mixed Filtered value.
+ */
+function apply_filters_deprecated( $tag, $args, $version, $replacement = '' ) {
+  if ( ! isset( OpenPorte_Test_Env::$filters[ $tag ] ) ) {
+    return $args[0];
+  }
+  OpenPorte_Test_Env::$deprecations[] = $tag;
+  return apply_filters( $tag, ...$args );
+}
 
 function current_filter() { return OpenPorte_Test_Env::$current_filter; }
 
@@ -318,7 +346,57 @@ function plugin_dir_path($file) { return dirname($file) . '/'; }
 function plugin_dir_url($file) { return 'https://example.test/wp-content/plugins/openporte/'; }
 function get_rest_url($blog_id = null, $path = '') { return 'https://example.test/wp-json' . $path; }
 function get_admin_url() { return 'https://example.test/wp-admin/'; }
-function add_query_arg(...$args) { return ''; }
+/**
+ * Build an admin URL on the fixed test site.
+ *
+ * @since 1.30.0
+ *
+ * @param string $path   Path relative to the admin directory.
+ * @param string $scheme Scheme requested by the caller; unused by this shim.
+ * @return string Absolute admin URL.
+ */
+function admin_url( $path = '', $scheme = 'admin' ) {
+  return 'https://example.test/wp-admin/' . ltrim( $path, '/' );
+}
+
+/**
+ * Append one query argument to a URL within the plugin's supported test cases.
+ *
+ * Support only an explicit URL, string key and string value. Fragments and
+ * existing keys require more of WordPress's URL handling than this shim models,
+ * so reject them instead of silently producing a misleading result. Values
+ * arrive already encoded, matching the convention used by the plugin's callers.
+ *
+ * @since 1.29.0
+ * @since 1.30.0 Build supported URLs and reject unsupported inputs.
+ *
+ * @param string      $key   Query argument name.
+ * @param string      $value Query argument value.
+ * @param string|null $url   Explicit URL with no fragment or existing key.
+ * @return string URL with the appended query argument.
+ * @throws RuntimeException When an input needs unsupported URL handling.
+ */
+function add_query_arg( $key, $value = '', $url = null ) {
+  if ( ! is_string( $key ) || ! is_string( $value ) || ! is_string( $url ) ) {
+    throw new RuntimeException( 'add_query_arg() shim: only explicit (key, value, url) strings are implemented.' );
+  }
+  if ( false !== strpos( $url, '#' ) ) {
+    throw new RuntimeException( 'add_query_arg() shim: URL fragments are not implemented.' );
+  }
+
+  // Decode query keys so percent-encoded or array-shaped keys cannot evade the guard.
+  $query      = parse_url( $url, PHP_URL_QUERY );
+  $query_args = array();
+  if ( is_string( $query ) ) {
+    parse_str( $query, $query_args );
+  }
+  if ( array_key_exists( $key, $query_args ) ) {
+    throw new RuntimeException( 'add_query_arg() shim: replacing existing query arguments is not implemented.' );
+  }
+
+  $separator = ( false !== strpos( $url, '?' ) ) ? '&' : '?';
+  return $url . $separator . $key . '=' . $value;
+}
 function wp_parse_url($url, $component = -1) { return parse_url($url, $component); }
 function is_plugin_active($plugin) { return false; }
 function get_template() { return 'twentytwentyfive'; }
@@ -350,6 +428,36 @@ function wp_remote_retrieve_response_code($response)
 function wp_remote_retrieve_body($response)
 {
   return isset($response['body']) ? $response['body'] : '';
+}
+
+/* --------------------------------------------------------------- JSON output */
+
+/**
+ * Signals that the fake wp_send_json() terminated the request.
+ *
+ * Core ends wp_send_json() with die(), which a test cannot catch; the shim
+ * throws this instead, so a test can both observe what was sent and prove
+ * the handler terminated.
+ *
+ * @since 1.30.0
+ */
+class OpenPorte_JsonSent extends \Exception
+{
+}
+
+/**
+ * Record a JSON payload and emulate request termination.
+ *
+ * @since 1.30.0
+ *
+ * @param mixed    $data        Payload passed to wp_send_json().
+ * @param int|null $status_code HTTP status requested; unused by this shim.
+ * @return void
+ * @throws OpenPorte_JsonSent Always, to emulate termination without exiting PHPUnit.
+ */
+function wp_send_json( $data, $status_code = null ) {
+  OpenPorte_Test_Env::$sent_json = $data;
+  throw new OpenPorte_JsonSent();
 }
 
 /* --------------------------------------------------------------- fake $wpdb */
