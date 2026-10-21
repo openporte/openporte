@@ -89,3 +89,4 @@ logs/
 # AI/Agent
 .crush.json
 .agents/memory/
+.claude/

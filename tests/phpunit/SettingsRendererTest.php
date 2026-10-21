@@ -268,4 +268,74 @@ class SettingsRendererTest extends OpenPorteTestCase
     $this->assertStringContainsString('value="0"', $html);
     $this->assertStringNotContainsString('value="5"', $html);
   }
+
+  /* ------------------------------------------------- self-hosted transport */
+
+  /**
+   * The `value` arg selects the passed value, not the raw stored option.
+   *
+   * The transport field passes its normalized reader's value; if the renderer
+   * ignored it and read the option directly, a corrupt or absent row would
+   * leave the browser to select the first item instead of what is enforced.
+   */
+  public function test_the_select_uses_the_value_arg_over_the_stored_option()
+  {
+    OpenPorte_Test_Env::$options['openporte_selfhosted_transport'] = 'rest';
+
+    $html = $this->render(function () {
+      openporte_settings_select_callback(array(
+        'name' => 'openporte_selfhosted_transport',
+        'value' => 'ajax',
+        'options' => array('rest' => 'REST API', 'ajax' => 'Ajax (admin-ajax.php)'),
+      ));
+    });
+
+    $this->assertStringContainsString("<option value=\"ajax\"  selected='selected'", $html);
+    $this->assertStringNotContainsString("<option value=\"rest\"  selected='selected'", $html);
+  }
+
+  /**
+   * Without the `value` arg the stored option is still what gets selected.
+   *
+   * Regression guard for every existing field, which does not pass `value`:
+   * adding the arg must not change how a plain select reads its option.
+   */
+  public function test_the_select_still_reads_the_stored_option_without_value()
+  {
+    OpenPorte_Test_Env::$options['openporte_complexity'] = 'high';
+
+    $html = $this->render(function () {
+      openporte_settings_select_callback(array(
+        'name' => 'openporte_complexity',
+        'options' => array('low' => 'Low', 'medium' => 'Medium', 'high' => 'High'),
+      ));
+    });
+
+    $this->assertStringContainsString("<option value=\"high\"  selected='selected'", $html);
+    $this->assertStringNotContainsString("<option value=\"low\"  selected='selected'", $html);
+  }
+
+  /**
+   * A selfhosted_only field that is disabled carries both markers.
+   *
+   * The served markup must say the control is inert in Custom mode (data-
+   * selfhosted-api) and is currently disabled, so the no-JS fallback rests on
+   * the HTML alone and public/admin.js can re-enable it when the mode changes
+   * back to Self-hosted.
+   */
+  public function test_a_disabled_selfhosted_only_select_carries_both_markers()
+  {
+    $html = $this->render(function () {
+      openporte_settings_select_callback(array(
+        'name' => 'openporte_selfhosted_transport',
+        'value' => 'rest',
+        'disabled' => true,
+        'selfhosted_only' => true,
+        'options' => array('rest' => 'REST API', 'ajax' => 'Ajax (admin-ajax.php)'),
+      ));
+    });
+
+    $this->assertStringContainsString('data-selfhosted-api', $html);
+    $this->assertStringContainsString(' disabled', $html);
+  }
 }

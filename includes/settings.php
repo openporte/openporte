@@ -177,6 +177,37 @@ function openporte_sanitize_complexity( $value ) {
   return array_key_exists( $value, OpenPortePlugin::get_complexity_matrix() ) ? $value : 'low';
 }
 
+/**
+ * Sanitize the Self-hosted transport setting.
+ *
+ * The field is disabled in Custom API mode (the backend owns challenge
+ * issuance), so the browser omits it. wp-admin/options.php still updates every
+ * registered setting, causing null to reach this callback through
+ * sanitize_option(). Without a guard the sanitizer would run the allowlist on
+ * null and fall back to REST, silently wiping a stored Ajax choice on every
+ * Custom-mode save. Same null-safe pattern as openporte_sanitize_complexity():
+ * keep the normalized stored value.
+ *
+ * A non-null submission is checked against the shared allowlist via
+ * OpenPortePlugin::normalize_selfhosted_transport(); anything off it falls back
+ * to REST. No sanitize_text_field() and no (string) cast: an array would
+ * fabricate "Array" and a boolean would become "1", neither of which is a
+ * transport.
+ *
+ * @since 1.30.0
+ */
+function openporte_sanitize_selfhosted_transport( $value ) {
+  if ( null === $value ) {
+    // The browser omits this disabled Custom-mode field, but wp-admin/options.php
+    // still calls update_option() for every registered setting. That null value
+    // reaches this callback through sanitize_option(); without the guard it would
+    // fall back to REST and wipe a stored Ajax choice on every Custom-mode save.
+    return OpenPortePlugin::$instance->get_selfhosted_transport();
+  }
+  $transport = OpenPortePlugin::normalize_selfhosted_transport( $value );
+  return null === $transport ? 'rest' : $transport;
+}
+
 if (is_admin()) {
   add_action('admin_init', 'openporte_settings_init');
 
@@ -186,6 +217,14 @@ if (is_admin()) {
       'openporte_options',
       OpenPortePlugin::$option_api,
       array( 'sanitize_callback' => 'sanitize_text_field' )
+    );
+
+    // No 'default' key: a registration default could mask a genuinely absent
+    // row and undermine the read-time REST fallback that preserves upgrades.
+    register_setting(
+      'openporte_options',
+      OpenPortePlugin::$option_selfhosted_transport,
+      array( 'sanitize_callback' => 'openporte_sanitize_selfhosted_transport' )
     );
 
     register_setting(
@@ -276,7 +315,7 @@ if (is_admin()) {
       'openporte_general_settings_section',
       array(
         "name" => OpenPortePlugin::$option_api,
-        "hint" => __('Select the API Mode. Use Self-hosted for the built-in WordPress REST API, or Custom to point to your own ALTCHA-compatible backend.', 'openporte'),
+        "hint" => __('Select the API Mode. Use Self-hosted to generate challenges on this site, or Custom to point to your own ALTCHA-compatible backend.', 'openporte'),
         "options" => array(
           "selfhosted" => __('Self-hosted', 'openporte'),
           "custom" => __('Custom', 'openporte'),
@@ -285,6 +324,46 @@ if (is_admin()) {
     );
 
     $custom_api_mode_active = (get_option(OpenPortePlugin::$option_api, 'selfhosted') === 'custom');
+
+    // The choices are built from the shared allowlist so a transport added to
+    // OpenPortePlugin::$selfhosted_transports can never be missing from the
+    // field; labels are keyed on the value, and an unknown one falls back to
+    // its raw key (mirrors the Complexity options above). Neither label says
+    // "default": a future release may change the fresh-install seed, which
+    // would make a "default" label wrong.
+    $openporte_transport_labels = array(
+      'rest' => __('REST API', 'openporte'),
+      'ajax' => __('Ajax (admin-ajax.php)', 'openporte'),
+    );
+    $openporte_transport_options = array();
+    foreach (OpenPortePlugin::$selfhosted_transports as $openporte_transport) {
+      $openporte_transport_options[$openporte_transport] = isset($openporte_transport_labels[$openporte_transport])
+        ? $openporte_transport_labels[$openporte_transport]
+        : $openporte_transport;
+    }
+
+    add_settings_field(
+      'openporte_settings_selfhosted_transport_field',
+      '<label for="' . OpenPortePlugin::$option_selfhosted_transport . '">' . __('Self-hosted transport', 'openporte') . '</label>',
+      'openporte_settings_select_callback',
+      'openporte_admin',
+      'openporte_general_settings_section',
+      array(
+        "name" => OpenPortePlugin::$option_selfhosted_transport,
+        // The setting is inert in Custom mode: the backend owns challenge
+        // issuance. Showing an editable control there would promise something
+        // the plugin cannot deliver.
+        'disabled' => $custom_api_mode_active,
+        'selfhosted_only' => true,
+        'disabled_note' => __('Only used in Self-hosted API Mode.', 'openporte'),
+        "hint" => __('Choose how this site serves challenges. If a security plugin blocks the REST API for visitors, try Ajax. If access to admin-ajax.php is restricted, use REST API. Test the form while logged out after changing this setting.', 'openporte'),
+        // The effective (normalized) value, not the raw option: an absent or
+        // corrupt row must render as what get_selfhosted_transport() actually
+        // enforces, never leaving the browser to select the first item.
+        "value" => OpenPortePlugin::$instance->get_selfhosted_transport(),
+        "options" => $openporte_transport_options,
+      )
+    );
 
     add_settings_field(
       'openporte_settings_challenge_url_field',

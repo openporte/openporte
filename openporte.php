@@ -204,6 +204,16 @@ function openporte_activate()
   // this one pins SHA-256, and a plugin update — which never runs the
   // activation hook — leaves the option absent and falls back to it.
   add_option(OpenPortePlugin::$option_algorithm, $is_fresh_install ? 'SHA-512' : 'SHA-256');
+  // Self-hosted transport (issue #100): which endpoint serves the widget's
+  // challenges in Self-hosted mode. REST is the default for new and existing
+  // installations alike, so a plain add_option() suffices; giving new
+  // installations Ajax instead would turn this line into
+  // $is_fresh_install ? 'ajax' : 'rest', leaving existing sites on REST.
+  // Like the algorithm seed above, a plugin update never runs the activation
+  // hook, so an updated site keeps the option absent and
+  // get_selfhosted_transport() falls back to REST. add_option() is a no-op when
+  // the row already exists, so an explicit choice survives (re)activation.
+  add_option(OpenPortePlugin::$option_selfhosted_transport, 'rest');
   add_option(OpenPortePlugin::$option_secret, OpenPortePlugin::$instance->random_secret());
   // openporte_integration_custom is deliberately no longer seeded to 1 here:
   // the Custom HTML integration is deprecated (#62), so new installs get the
