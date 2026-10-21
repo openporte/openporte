@@ -142,4 +142,93 @@ class SettingsSanitizerTest extends OpenPorteTestCase
 
     $this->assertSame('extreme', openporte_sanitize_complexity('extreme'));
   }
+
+  /* ---------------------------------------------------- self-hosted transport */
+
+  /**
+   * Both allowlisted transports are saved unchanged.
+   *
+   * The baseline for the fallback cases below: if a valid value did not pass
+   * through, every "falls back to REST" test would pass vacuously.
+   */
+  public function test_a_valid_transport_passes_through()
+  {
+    $this->assertSame('rest', openporte_sanitize_selfhosted_transport('rest'));
+    $this->assertSame('ajax', openporte_sanitize_selfhosted_transport('ajax'));
+  }
+
+  /**
+   * Any off-allowlist submission is saved as REST, never cast.
+   *
+   * Covers a mistyped or hand-edited form value and the type-confusion cases
+   * (string) would mangle: an array becomes "Array", a boolean "1". Neither
+   * is a transport, so both must land on the compatibility fallback.
+   */
+  public function test_an_invalid_transport_falls_back_to_rest()
+  {
+    $invalid = array(
+      '',             // empty string
+      'REST',         // case variant is not an allowlist value
+      ' ajax ',       // whitespace variant is not an allowlist value
+      'graphql',      // unknown string
+      true,           // booleans must not become "1"
+      false,
+      0,              // integers are not transports
+      array('rest'),  // arrays must not fabricate "Array"
+      new stdClass(),
+    );
+    foreach ($invalid as $value) {
+      $this->assertSame(
+        'rest',
+        openporte_sanitize_selfhosted_transport($value),
+        var_export($value, true) . ' must fall back to REST.'
+      );
+    }
+  }
+
+  /**
+   * A null (disabled-field) submission keeps a stored Ajax choice.
+   *
+   * The field is disabled in Custom mode, so the browser omits it and
+   * wp-admin/options.php passes null. Without the guard a Custom-mode save
+   * would wipe a deliberate Ajax choice back to REST on every save.
+   */
+  public function test_a_null_transport_preserves_a_stored_ajax_choice()
+  {
+    OpenPorte_Test_Env::$options['openporte_selfhosted_transport'] = 'ajax';
+
+    $this->assertSame('ajax', openporte_sanitize_selfhosted_transport(null));
+  }
+
+  /**
+   * A null submission with nothing stored reads as REST.
+   *
+   * The in-place-update shape: the option was never seeded, so there is no
+   * stored choice to preserve and the compatibility fallback applies.
+   */
+  public function test_a_null_transport_with_nothing_stored_returns_rest()
+  {
+    $this->assertSame('rest', openporte_sanitize_selfhosted_transport(null));
+  }
+
+  /**
+   * A null submission with a corrupt stored value reads as REST.
+   *
+   * The guard must return the normalized stored value, not the raw row: an
+   * array or unknown string in the database is not a transport and cannot be
+   * cast back into one. This is what distinguishes the guard from a blind
+   * (string) get_option() cast.
+   */
+  public function test_a_null_transport_with_a_corrupt_stored_value_returns_rest()
+  {
+    foreach (array(array('ajax'), 'bogus') as $corrupt) {
+      OpenPorte_Test_Env::$options['openporte_selfhosted_transport'] = $corrupt;
+
+      $this->assertSame(
+        'rest',
+        openporte_sanitize_selfhosted_transport(null),
+        var_export($corrupt, true) . ' is not a usable stored transport.'
+      );
+    }
+  }
 }

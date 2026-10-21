@@ -123,7 +123,7 @@ function openporte_general_section_callback()
     <p><?php
       echo sprintf(
         /* translators: the placeholders are opening and closing tags for bold */
-        esc_html__('%1$sSelf-hosted%2$s generates challenges via the WordPress REST API.', 'openporte'),
+        esc_html__('%1$sSelf-hosted%2$s generates challenges on this site.', 'openporte'),
         '<strong>',
         '</strong>'
       );
@@ -720,8 +720,14 @@ function openporte_settings_field_callback(array $args)
  * rather than patching the attribute on in JS keeps the no-JS fallback resting
  * on the served markup alone.
  *
+ * Supports the `value` arg: when set, it is used instead of the stored option,
+ * for a field whose reader normalizes the option before rendering (see
+ * openporte_render_preset_select(), which has the same shape). When absent the
+ * behaviour is unchanged and the raw stored option is used.
+ *
  * @since 1.27.0
  * @since 1.29.0 Added the `disabled_note` and `selfhosted_only` args.
+ * @since 1.30.0 Added the `value` arg.
  */
 function openporte_settings_select_callback(array $args)
 {
@@ -734,7 +740,11 @@ function openporte_settings_select_callback(array $args)
   $tooltip = isset($args['tooltip']) ? $args['tooltip'] : '';
   $options = isset($args['options']) ? $args['options'] : array();
   $setting = get_option($name);
-  $value = isset($setting) ? esc_attr($setting) : '';
+  // The `value` arg lets a field pass its reader's normalized value instead of
+  // the raw stored option; when absent the behaviour is unchanged.
+  $value = isset($args['value'])
+    ? esc_attr($args['value'])
+    : (isset($setting) ? esc_attr($setting) : '');
   // Inverse of the data-custom-api attribute used by the Challenge URL field:
   // this control is one Custom mode takes away, not one it needs.
   $mode_attr = $selfhosted_only ? ' data-selfhosted-api' : '';
