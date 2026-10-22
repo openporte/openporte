@@ -228,6 +228,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 = 1.30.0 (unreleased) =
 
 * Shared secret actions now use inline WordPress SVG icons inside the field, with accessible labels, copy feedback, and visible keyboard focus.
+* Fixed the duplicated saved notice when updating OpenPorte settings.
 
 = 1.29.1 =
 
