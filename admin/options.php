@@ -2,7 +2,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
+/**
+ * Render the OpenPorte settings page (Settings > OpenPorte Anti-spam).
+ *
+ * @since 1.26.3
+ * @since 1.30.0 Notices are placed through the `wp-header-end` marker instead
+ *               of a second settings_errors() call, which showed every
+ *               settings message twice.
+ */
 function openporte_options_page_html()
 {
   wp_enqueue_script(
@@ -48,11 +55,16 @@ function openporte_options_page_html()
 
   <div class="wrap">
 
-    <hr>
+    <?php
+    // No settings_errors() here: core already prints settings messages on
+    // every page under the Settings menu (wp-admin/options-head.php), so a
+    // second call repeated each one. `wp-header-end` tells core's admin script
+    // to place those messages, and every other admin notice, right here.
+    ?>
+    <hr class="wp-header-end">
 
     <form action="options.php" method="post">
       <?php
-      settings_errors();
       settings_fields('openporte_options');
       do_settings_sections('openporte_admin');
       submit_button();
