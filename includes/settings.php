@@ -44,6 +44,8 @@ function openporte_sanitize_challenge_url( $value ) {
  *               disabled and therefore omitted in Custom mode, after which
  *               WordPress passes null to the sanitizer), and warns about the
  *               0 / below-60 values under review.
+ * @since 1.30.0 Also preserves the stored value when 'custom' arrives without
+ *               its companion input, instead of saving 0.
  */
 function openporte_sanitize_expires( $value ) {
   if ( null === $value ) {
@@ -55,8 +57,14 @@ function openporte_sanitize_expires( $value ) {
     // openporte_sanitize_challenge_url().
     return (int) get_option( OpenPortePlugin::$option_expires, '300' );
   }
-  if ( 'custom' === $value && isset( $_POST['openporte_expires_custom'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- wp-admin/options.php verifies the settings nonce before sanitize callbacks run; absint() below is the sanitizer.
-    $value = wp_unslash( $_POST['openporte_expires_custom'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+  if ( 'custom' === $value ) {
+    if ( ! isset( $_POST['openporte_expires_custom'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- wp-admin/options.php verifies the settings nonce before sanitize callbacks run.
+      // 'custom' without its companion input (a hand-crafted options.php
+      // POST) carries no value at all; absint( 'custom' ) = 0 would turn
+      // that into "never expires".
+      return (int) get_option( OpenPortePlugin::$option_expires, '300' );
+    }
+    $value = wp_unslash( $_POST['openporte_expires_custom'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- absint() below is the sanitizer.
   }
   $expires = min( absint( $value ), 14400 );
   openporte_warn_expires( $expires );
@@ -133,13 +141,20 @@ function openporte_warn_expires( $expires ) {
  * become 0 (which the admin can see is wrong), never 5.
  *
  * @since 1.29.0
+ * @since 1.30.0 Preserves the stored value when 'custom' arrives without its
+ *               companion input, instead of saving 0.
  */
 function openporte_sanitize_replaylimit( $value ) {
   if ( null === $value ) {
     return (int) get_option( OpenPortePlugin::$option_replaylimit, OpenPortePlugin::$replaylimit_default );
   }
-  if ( 'custom' === $value && isset( $_POST['openporte_replaylimit_custom'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- wp-admin/options.php verifies the settings nonce before sanitize callbacks run; intval() below is the sanitizer.
-    $value = wp_unslash( $_POST['openporte_replaylimit_custom'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+  if ( 'custom' === $value ) {
+    if ( ! isset( $_POST['openporte_replaylimit_custom'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- wp-admin/options.php verifies the settings nonce before sanitize callbacks run.
+      // Same as Expiration: intval( 'custom' ) = 0 would silently switch
+      // replay protection off.
+      return (int) get_option( OpenPortePlugin::$option_replaylimit, OpenPortePlugin::$replaylimit_default );
+    }
+    $value = wp_unslash( $_POST['openporte_replaylimit_custom'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- intval() below is the sanitizer.
   }
   return min( max( 0, intval( $value ) ), 100 );
 }

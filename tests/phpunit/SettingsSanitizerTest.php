@@ -80,6 +80,16 @@ class SettingsSanitizerTest extends OpenPorteTestCase
     $this->assertSame(90, openporte_sanitize_expires('custom'));
   }
 
+  public function test_a_custom_expires_without_its_companion_preserves_the_stored_value()
+  {
+    // A hand-crafted options.php POST: absint('custom') would be 0, i.e.
+    // "never expires".
+    $_POST = array();
+    OpenPorte_Test_Env::$options['openporte_expires'] = 1800;
+
+    $this->assertSame(1800, openporte_sanitize_expires('custom'));
+  }
+
   public function test_a_null_replaylimit_preserves_the_stored_value()
   {
     OpenPorte_Test_Env::$options['openporte_replaylimit'] = 7;
@@ -109,6 +119,15 @@ class SettingsSanitizerTest extends OpenPorteTestCase
     $_POST = array('openporte_replaylimit_custom' => '3');
 
     $this->assertSame(3, openporte_sanitize_replaylimit('custom'));
+  }
+
+  public function test_a_custom_replaylimit_without_its_companion_preserves_the_stored_value()
+  {
+    // intval('custom') would be 0, i.e. replay protection silently off.
+    $_POST = array();
+    OpenPorte_Test_Env::$options['openporte_replaylimit'] = 7;
+
+    $this->assertSame(7, openporte_sanitize_replaylimit('custom'));
   }
 
   public function test_a_null_complexity_preserves_the_stored_value()
