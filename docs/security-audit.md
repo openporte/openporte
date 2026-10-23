@@ -28,6 +28,12 @@
 > The per-guideline coverage tables are Appendix A and Appendix B; the framework
 > pass surfaced no new Medium/High issues but added the Info/Low observations
 > #9–#11 below.
+>
+> Findings #13–#19 come from the review of 1.30.0-dev at commit `5c804b5`
+> (2026-10-23). All seven are fixed in 1.30.0. Each records the first release
+> that carried the defect, so a site can tell whether it was affected; releases
+> before OpenPorte 1.27.0 are those of the original ALTCHA Spam Protection
+> plugin, whose code OpenPorte inherited.
 
 ## Summary
 
@@ -66,10 +72,37 @@ logic**; the rest are low-severity hardening items.
 | 10 | Formidable autoloader regex does not block path separators | Path traversal (theoretical) | `integrations/formidable.php` | Low | **Fixed** |
 | 11 | Unused dead code from the removed paid-SaaS path | Attack surface / maintainability | `core.php` | Info | **Fixed** |
 | 12 | Inline-script JSON not hardened against `</script>` breakout | XSS (defence in depth) | `integrations/custom.php` | Info | **Fixed** |
+| 13 | Solved challenges accepted after their expiry | Replay / weak verification | `verify_solution()` | Medium | **Fixed (1.30.0)** |
+| 14 | Login challenge checked only after the password | Brute force / oracle | `integrations/wordpress.php`, `integrations/woocommerce.php` | Medium | **Fixed (1.30.0)** |
+| 15 | Forged WooCommerce field skips login and reset checks | CAPTCHA bypass | `integrations/wordpress.php`, `integrations/woocommerce.php` | Medium | **Fixed (1.30.0)** |
+| 16 | CoBlocks reCAPTCHA overridden while the integration is off | CAPTCHA bypass | `integrations/coblocks.php` | Medium | **Fixed (1.30.0)** |
+| 17 | Site endpoints issue challenges in Custom API mode | CAPTCHA policy bypass | challenge endpoints in `includes/core.php` | Low | **Fixed (1.30.0)** |
+| 18 | Elementor field file ends the whole request | Robustness | `integrations/elementor/field.php` | Info | **Fixed (1.30.0)** |
+| 19 | "Custom" preset without a value saved as 0 | Configuration integrity (admin only) | `includes/settings.php` | Info | **Fixed (1.30.0)** |
 
 > Findings 9–11 came from the framework review (Appendix A/B). None was
 > exploitable; each was a non-breaking hardening and has now been applied.
 > Finding 12 came from a follow-up hardening pass.
+
+**Affected releases for findings #13–#19.** Every release from the one named
+below up to and including OpenPorte 1.29.1 carries the defect; 1.30.0 fixes it.
+
+| # | Present since | Affected configuration |
+| - | ------------- | ---------------------- |
+| 13 | ALTCHA Spam Protection 0.3.2 (the first release) | Every site; worse with Replay limit 0 (pre-1.29.0 behaviour) |
+| 14 | ALTCHA Spam Protection 0.3.2 (the first release) | WordPress or WooCommerce login protection on |
+| 15 | ALTCHA Spam Protection 1.13.1 | WooCommerce active, WordPress login or reset protection on, the matching WooCommerce protection off |
+| 16 | ALTCHA Spam Protection 1.23.0 | CoBlocks active with its own reCAPTCHA configured, OpenPorte's CoBlocks integration off (the default) |
+| 17 | ALTCHA Spam Protection 1.21.0 (Custom API mode added) | API mode Custom |
+| 18 | ALTCHA Spam Protection 1.4.0 | Elementor active without Elementor Pro's form field classes |
+| 19 | OpenPorte 1.28.0 (Expiration); 1.29.0 (Replay limit) | Only a hand-crafted settings POST by an administrator |
+
+The same review corrected three statements of this document that had been
+inaccurate since its 1.29.0 revision: the claim that the WordPress and
+WooCommerce `authenticate` callbacks are mutually exclusive through their nonce
+guards (finding #1; see #15), the CVE-2025-68113 cross-check's "not affected"
+(Appendix D; see #13), and the statement that the challenge endpoints always
+answer (finding #5; see #17).
 
 ---
 
@@ -98,9 +131,11 @@ stateless primitives, which keep doing pure cryptography. It adds two layers:
 
 - a **per-request memo**, keyed both on the submitted bytes and on the verified
   signature, so repeated third-party or future integration calls cost one use
-  even when the JSON envelope is re-encoded in between. No shipped integration
-  currently verifies twice in one request; the WordPress and WooCommerce
-  authentication callbacks are mutually exclusive through their nonce guards;
+  even when the JSON envelope is re-encoded in between. Since 1.30.0 a core
+  login does verify twice in one request — the pre-password gate and the
+  `authenticate` backstop (finding #14) — and the memo answers the second
+  check. The WordPress and WooCommerce login callbacks are mutually exclusive
+  through `openporte_is_woocommerce_form_submission()` (finding #15);
 - an **atomic reuse counter**, keyed on the token's HMAC-verified `signature`
   and bounded by the new **Replay limit** setting (`openporte_replaylimit`,
   default **5**, `0` = unlimited).
@@ -390,7 +425,8 @@ since 1.30.0 also the `wp_ajax_openporte_challenge` /
 `GET /wp-json/openporte/v1/challenge` (and the deprecated `altcha/v1` alias) is
 unauthenticated and uncapped, and so is its admin-ajax twin
 `/wp-admin/admin-ajax.php?action=openporte_challenge`. Both are always
-registered, whichever Self-hosted transport is selected, and both call the same
+registered, whichever Self-hosted transport is selected; since 1.30.0 both
+refuse while API mode is Custom (finding #17). Otherwise both call the same
 `generate_challenge()`: each call runs `random_int()` plus a couple of hashes
 and returns a fresh signed challenge with `Cache-Control: no-cache, no-store,
 max-age=0`. The Ajax action deliberately has no nonce or capability check: it
@@ -549,6 +585,133 @@ $attrs = wp_json_encode(
 );
 ```
 
+### 13. Solved challenges accepted after their expiry — Medium — Fixed (1.30.0)
+
+**Type:** Replay / weak verification.
+**Location:** `includes/core.php`, `verify_solution()` and
+`has_payload_fields()`.
+**Present since:** ALTCHA Spam Protection 0.3.2 (the first release).
+
+The challenge digest covers the salt and the solution number concatenated; the
+signature covers the digest, so the *bytes* are signed but the *boundary*
+between salt and number is not. The verifier accepted any scalar as `number`
+and read the expiry only from the salt. A submitted token could therefore be
+reshaped so that its signature still verified while the expiry was no longer
+read, and a solved challenge stayed acceptable after it expired. With the
+replay counter (1.29.0) such a token was still bounded to Replay limit uses
+per counter window (4 hours for a token without expiry); with Replay limit 0,
+not at all. Applies to Self-hosted and Custom mode alike, because OpenPorte
+verifies Custom tokens locally. No signing secret is needed, only one solved
+challenge.
+
+**Fix applied.** `verify_solution()` accepts `number` only as a non-negative
+integer or a digit-only string (`is_solution_number()`), before any hashing, so
+a refused token writes no replay state. Pinned by `VerifyPrimitivesTest`
+(accepted shapes, 14 refused shapes each correctly signed, integral JSON floats,
+and the boundary regression for all three algorithms).
+
+### 14. Login challenge checked only after the password — Medium — Fixed (1.30.0)
+
+**Type:** Brute force / password-correctness oracle.
+**Location:** `integrations/wordpress.php`, `integrations/woocommerce.php`.
+**Present since:** ALTCHA Spam Protection 0.3.2 (the first release).
+
+The login checks ran on `authenticate` at priority 20, after core's own
+credential check registered at the same priority (and so running first). A wrong
+password failed before the challenge was looked at, so password guessing cost
+no proof-of-work, and a correct guess stood out by getting the CAPTCHA error
+instead of "incorrect password".
+
+**Fix applied.** Both integrations check the challenge on `wp_authenticate_user`,
+which core applies after the user lookup and before `wp_check_password()`, in
+both its username and email paths. A missing or invalid token is refused
+whatever the password. The `authenticate` callbacks stay as a backstop for
+authentication providers that skip `wp_authenticate_user`; the per-request
+verify memo makes their second check free, so one login costs one use. Residual:
+an unknown username still returns core's `invalid_username` before the gate —
+core's own messages already disclose that. Pinned by `LoginIntegrationTest`.
+
+### 15. Forged WooCommerce field skips login and reset checks — Medium — Fixed (1.30.0)
+
+**Type:** CAPTCHA bypass.
+**Location:** `integrations/wordpress.php`, `integrations/woocommerce.php`.
+**Present since:** ALTCHA Spam Protection 1.13.1.
+
+The WordPress handlers deferred to WooCommerce whenever WooCommerce was active
+and the request carried WooCommerce's nonce field; the WooCommerce handlers
+acted only on their own toggle. Nothing on `wp-login.php` verifies that field,
+so with WordPress protection on and the matching WooCommerce protection off,
+adding it to a `wp-login.php` login or lost-password request skipped both
+checks. Since #14 is fixed, the login half mostly matters for completing a login
+with known credentials; the reset half allowed reset-email spam without
+proof-of-work.
+
+**Fix applied.** Ownership is decided in one helper,
+`openporte_is_woocommerce_form_submission()` (`includes/helpers.php`), which
+ignores the field on `wp-login.php` — the only screen that fires `login_init`.
+Both integrations route through it. Pinned by `LoginIntegrationTest`.
+
+### 16. CoBlocks reCAPTCHA overridden while the integration is off — Medium — Fixed (1.30.0)
+
+**Type:** CAPTCHA bypass.
+**Location:** `integrations/coblocks.php`.
+**Present since:** ALTCHA Spam Protection 1.23.0 (the integration's first
+release).
+
+The integration replaces CoBlocks' reCAPTCHA check with the ALTCHA one by
+spoofing the reCAPTCHA keys, token and verify response (see the AGENTS.md
+gotcha). It armed that spoof on every CoBlocks submission whatever the toggle
+said, and answered "success" while the toggle was off. A site relying on
+CoBlocks' own reCAPTCHA, with OpenPorte's CoBlocks integration off (the
+default), had it silently disabled.
+
+**Fix applied.** Each of the three steps (`render_block_data()`,
+`before_form_submit()`, `verify()`) acts only while the integration is on;
+`verify()` returns the original response otherwise. Pinned by
+`CoblocksIntegrationTest`.
+
+### 17. Site endpoints issue challenges in Custom API mode — Low — Fixed (1.30.0)
+
+**Type:** CAPTCHA policy bypass.
+**Location:** `includes/core.php`, `openporte_generate_challenge_endpoint()` and
+`openporte_generate_challenge_ajax_endpoint()`.
+**Present since:** ALTCHA Spam Protection 1.21.0, which added Custom API mode.
+
+In Custom mode the configured backend issues the challenges, signed with the
+shared secret OpenPorte verifies with. The site's own endpoints kept answering
+with the same secret, so their challenges verified too: a bot could bypass
+whatever the backend enforces at issuance (difficulty, rate limits, expiry
+policy, statistics).
+
+**Fix applied.** Both endpoints, and the deprecated `altcha/v1` alias, refuse
+with a 403 `openporte_challenge_unavailable` error while API mode is Custom
+(`openporte_challenge_unavailable()`). They stay registered, so the transport
+setting still only chooses a URL. Pinned by `ChallengeTransportTest`.
+
+### 18. Elementor field file ends the whole request — Info — Fixed (1.30.0)
+
+**Type:** Robustness.
+**Location:** `integrations/elementor/field.php`, `integrations/elementor.php`.
+**Present since:** ALTCHA Spam Protection 1.4.0.
+
+`field.php` called `die()` when Elementor Pro's field base class was missing,
+ending whatever request loaded it. Only reachable through Elementor Pro's own
+registration hook, so not exploitable. **Fixed:** the file returns instead, and
+`openporte_register_form_field()` checks the class before requiring it.
+
+### 19. "Custom" preset without a value saved as 0 — Info — Fixed (1.30.0)
+
+**Type:** Configuration integrity.
+**Location:** `includes/settings.php`, `openporte_sanitize_expires()` and
+`openporte_sanitize_replaylimit()`.
+**Present since:** OpenPorte 1.28.0 for Expiration, 1.29.0 for Replay limit.
+
+A settings save posting `custom` without the companion number input stored
+`absint('custom')` / `intval('custom')` = 0: "never expires", or replay
+protection off. Only a hand-crafted `options.php` POST by a `manage_options`
+user produces it. **Fixed:** the stored value is kept. Pinned by
+`SettingsSanitizerTest`.
+
 ---
 
 ## Appendix C — Coding-standards tooling (WPCS)
@@ -682,7 +845,7 @@ alone:
 
 | Advisory | OpenPorte | Evidence |
 | -------- | --------- | -------- |
-| CVE-2025-68113 — a solved token's `expires` could be edited because the salt's query string was not terminated, letting a crafted secret number splice a later expiry onto it | **Not affected** — and now pinned | `generate_challenge()` appends a trailing `&` to the salt, terminating the query string, and `expires` lives inside the salt that the challenge hashes and the signature covers: editing it breaks the challenge digest. The invariant is documented at the code and pinned by `tests/phpunit/VerifyPrimitivesTest.php` (`test_editing_the_salt_expiry_breaks_the_challenge`, `test_appending_a_parameter_to_the_salt_breaks_the_challenge`) so a future refactor cannot quietly undo it |
+| CVE-2025-68113 — a solved token's `expires` could be edited because the salt's query string was not terminated, letting a crafted secret number splice a later expiry onto it | **Not affected by this transformation**; a related one was fixed in 1.30.0 (finding #13) | `generate_challenge()` appends a trailing `&` to the salt, terminating the query string, and `expires` lives inside the salt that the challenge hashes and the signature covers: editing it breaks the challenge digest. Pinned by `tests/phpunit/VerifyPrimitivesTest.php` (`test_editing_the_salt_expiry_breaks_the_challenge`, `test_appending_a_parameter_to_the_salt_breaks_the_challenge`). The delimiter does not stop the salt/number boundary from being moved the other way; until 1.30.0 that could drop the expiry entirely (finding #13). Since 1.30.0 `verify_solution()` accepts only a digit-only `number`, which closes the class, pinned by `test_moving_the_expiry_out_of_the_salt_is_refused` |
 
 This matters more since 1.29.0 than it did before: the replay counter's lifetime
 is derived from `expires`, so a token whose expiry could be forged forward would

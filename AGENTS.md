@@ -191,11 +191,17 @@ For upgrades and licensing-risk contingency (only load on a need-basis):
 
 ## Known gotchas
 
-**`authenticate` hook — dual registration at priority 20.**
-`integrations/wordpress.php` and `integrations/woocommerce.php` both hook `authenticate`
-at priority 20. Mutual exclusion relies on `isset($_POST['woocommerce-login-nonce'])`.
-The same pattern applies to `lostpassword_post`. If WooCommerce renames that nonce field,
-both handlers fire on the same request. Keep both files in sync when changing auth logic.
+**Login and lost password — dual registration, one owner per request.**
+`integrations/wordpress.php` and `integrations/woocommerce.php` both check the login
+challenge twice: on `wp_authenticate_user` (before core compares the password — the
+check that matters, see `docs/security-audit.md` #14) and on `authenticate` at priority
+20 (a backstop for providers that skip that filter; the verify memo makes the second
+check free). Both also hook `lostpassword_post`. Which file owns a request is decided
+only by `openporte_is_woocommerce_form_submission()` in `includes/helpers.php`: the
+WooCommerce nonce field counts only when WooCommerce is active and the request is not
+`wp-login.php` (`login_init` not fired). Never route on the bare field again (#15). If
+WooCommerce renames its nonce fields, its forms fall back to the WordPress handlers.
+Keep both files in sync when changing auth logic.
 
 **`integrations/coblocks.php` — intentional reCAPTCHA spoof.**
 CoBlocks has no extension API, so the integration fakes a reCAPTCHA token and intercepts
