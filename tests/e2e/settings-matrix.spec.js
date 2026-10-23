@@ -4,6 +4,7 @@ const {
   wpSetOption,
   applyBaseline,
   applyCombo,
+  expectTransport,
   waitForVerified,
   clickWidgetCheckbox,
   tamperWidgetToken,
@@ -39,6 +40,7 @@ for (const driver of drivers) {
           const marker = `e2e ${driver.key} ${label} #${++counter} ${Date.now()}`;
 
           await driver.open(page, ctx);
+          await expectTransport(page);
           await driver.fill(page, ctx, marker);
 
           // Pre-solve where the mode supports it. The rows that don't:

@@ -70,6 +70,16 @@ function purgeComments(postId) {
 
 const BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8888';
 
+// Self-hosted transport every combo runs over (issue #100): `rest`, the shipped
+// default, or `ajax` (`npm run test:ajax`). The matrix is the same for both, so
+// a pass on each shows OpenPorte works the same whichever endpoint serves the
+// challenge. Anything else is a typo: fail before running the matrix over the
+// wrong transport.
+const TRANSPORT = process.env.OPENPORTE_E2E_TRANSPORT || 'rest';
+if (!['rest', 'ajax'].includes(TRANSPORT)) {
+  throw new Error(`OPENPORTE_E2E_TRANSPORT must be "rest" or "ajax", got "${TRANSPORT}".`);
+}
+
 /**
  * Poll a front-end URL until its HTML contains `needle`.
  *
@@ -116,6 +126,23 @@ function applyBaseline() {
   // replaylimit=1 would make every later acceptance test look like a
   // verification regression.
   wpSetOption('openporte_replaylimit', '5');
+  wpSetOption('openporte_selfhosted_transport', TRANSPORT);
+}
+
+/**
+ * Fail unless the page's widget fetches its challenge over TRANSPORT.
+ *
+ * Guards against false confidence: an ignored or misspelt option would let the
+ * matrix pass over REST while claiming to test Ajax.
+ */
+async function expectTransport(page) {
+  const url = await page.locator('altcha-widget').first().getAttribute('challengeurl');
+  const expected = TRANSPORT === 'ajax'
+    ? '/wp-admin/admin-ajax.php?action=openporte_challenge'
+    : '/openporte/v1/challenge';
+  if (!url || !url.includes(expected)) {
+    throw new Error(`Widget challengeurl is "${url}", expected the ${TRANSPORT} endpoint (${expected}).`);
+  }
 }
 
 /** Per-combo widget settings. auto: ''|onload|onfocus|onsubmit; floating: 0|1. */
@@ -239,6 +266,7 @@ async function injectToken(page, token) {
 
 module.exports = {
   BASE_URL,
+  TRANSPORT,
   REPLAY_FORM_TAG,
   tagWidgetForm,
   captureWidgetToken,
@@ -250,6 +278,7 @@ module.exports = {
   purgeComments,
   applyBaseline,
   applyCombo,
+  expectTransport,
   waitForVerified,
   clickWidgetCheckbox,
   tamperWidgetToken,

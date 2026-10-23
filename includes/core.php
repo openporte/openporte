@@ -564,27 +564,17 @@ class OpenPortePlugin
   }
 
   /**
-   * Self-hosted challenge URL for one transport, or for the selected one.
+   * Self-hosted challenge URL for the selected transport.
    *
-   * The argument exists so a caller can build the URL of a specific
-   * transport without touching the stored setting — the settings-page
-   * reachability healthcheck probes the *other* transport before suggesting
-   * it. An invalid argument
-   * falls back to the selected (already normalized) transport.
+   * Unfiltered: get_challengeurl() applies the challenge URL filters on top.
    *
    * @since 1.30.0
    *
-   * @param string|null $transport One of $selfhosted_transports; the
-   *                               selected transport when null or invalid.
-   * @return string The challenge URL for that transport.
+   * @return string The challenge URL for the selected transport.
    */
-  public function get_selfhosted_challenge_url($transport = null)
+  public function get_selfhosted_challenge_url()
   {
-    $transport = OpenPortePlugin::normalize_selfhosted_transport($transport);
-    if ($transport === null) {
-      $transport = $this->get_selfhosted_transport();
-    }
-    if ('ajax' === $transport) {
+    if ('ajax' === $this->get_selfhosted_transport()) {
       // admin_url() rather than a hardcoded /wp-admin/: hosts that move the
       // admin directory still answer the action where it lives.
       return add_query_arg(

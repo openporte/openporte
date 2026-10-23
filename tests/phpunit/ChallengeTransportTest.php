@@ -202,49 +202,6 @@ class ChallengeTransportTest extends OpenPorteTestCase
   }
 
   /**
-   * The URL builder can target a transport other than the selected one.
-   *
-   * The settings-page reachability healthcheck needs the URL of the *other*
-   * transport to probe it before suggesting a switch. An invalid argument
-   * must fall back to the selected transport, never to a fabricated URL.
-   *
-   * @since 1.30.0
-   */
-  public function test_url_builder_targets_a_specific_transport()
-  {
-    update_option(OpenPortePlugin::$option_selfhosted_transport, 'rest');
-    $this->assertSame(
-      'https://example.test/wp-json/openporte/v1/challenge',
-      $this->plugin->get_selfhosted_challenge_url('rest')
-    );
-    $this->assertSame(
-      'https://example.test/wp-admin/admin-ajax.php?action=openporte_challenge',
-      $this->plugin->get_selfhosted_challenge_url('ajax')
-    );
-    // An invalid argument falls back to the selected transport.
-    $this->assertSame(
-      'https://example.test/wp-json/openporte/v1/challenge',
-      $this->plugin->get_selfhosted_challenge_url('bogus')
-    );
-  }
-
-  /**
-   * Missing or invalid URL-builder arguments retain a selected Ajax transport.
-   *
-   * REST-only assertions would also pass with an unconditional REST fallback.
-   * Keep this case separate so an explicit Ajax choice cannot be lost.
-   *
-   * @since 1.30.0
-   */
-  public function test_url_builder_falls_back_to_selected_ajax_transport() {
-    update_option( OpenPortePlugin::$option_selfhosted_transport, 'ajax' );
-    $expected = 'https://example.test/wp-admin/admin-ajax.php?action=openporte_challenge';
-
-    $this->assertSame( $expected, $this->plugin->get_selfhosted_challenge_url() );
-    $this->assertSame( $expected, $this->plugin->get_selfhosted_challenge_url( 'bogus' ) );
-  }
-
-  /**
    * The URL shim rejects URLs it cannot modify faithfully.
    *
    * Reject fragments and existing action keys instead of silently building an
