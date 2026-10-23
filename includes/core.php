@@ -163,9 +163,10 @@ class OpenPortePlugin
    *
    * One submission must cost one use of its token even when a third-party
    * caller or future integration verifies it more than once in the same
-   * request, including through a re-encoded JSON envelope. No shipped
-   * integration currently does so: the WordPress and WooCommerce authentication
-   * callbacks are mutually exclusive through their nonce guards.
+   * request, including through a re-encoded JSON envelope. A core login does
+   * so since 1.30.0: the `wp_authenticate_user` gate checks the token before
+   * the password, then the `authenticate` backstop checks it again, and this
+   * memo answers the second check.
    *
    * Cleared on `init` by reset_request_state(), so persistent-worker SAPIs
    * (FrankenPHP, RoadRunner, Swoole) cannot leak it into the next request.

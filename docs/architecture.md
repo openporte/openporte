@@ -321,9 +321,11 @@ callers and never for the internal dispatch.
 
 The memo makes verification idempotent within one request: repeated third-party
 calls, future integration paths, and re-encoded JSON envelopes still cost one
-use. No shipped integration currently verifies twice in one request; the
-WordPress and WooCommerce `authenticate` callbacks are mutually exclusive
-through their nonce guards. The memo is cleared on `init` by
+use. Since 1.30.0 a core login verifies twice in one request — the
+`wp_authenticate_user` gate before the password check, then the `authenticate`
+backstop — and the memo answers the second check, so one login costs one use.
+The WordPress and WooCommerce login callbacks are mutually exclusive through
+`openporte_is_woocommerce_form_submission()`. The memo is cleared on `init` by
 `reset_request_state()`, so persistent-worker SAPIs (FrankenPHP, RoadRunner,
 Swoole) cannot leak one visitor's accepted token into the next visitor's
 request.
