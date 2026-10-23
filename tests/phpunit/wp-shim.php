@@ -89,6 +89,14 @@ class OpenPorte_Test_Env
   public static $sent_json = null;
 
   /**
+   * Last HTTP status passed to wp_send_json().
+   *
+   * @since 1.30.0
+   * @var int|null
+   */
+  public static $sent_json_status = null;
+
+  /**
    * Restore a pristine environment. Call from setUp().
    *
    * @param array<string,mixed> $options Options to seed the table with.
@@ -109,6 +117,7 @@ class OpenPorte_Test_Env
     self::$broken_database = false;
     self::$http_response = array();
     self::$sent_json = null;
+    self::$sent_json_status = null;
     self::$active_plugins = array();
     self::$logged_in = false;
   }
@@ -444,11 +453,23 @@ class WP_Error
   /** @var array<string,array<int,string>> Messages, keyed by error code. */
   private $errors = array();
 
-  public function __construct($code = '', $message = '')
+  /** @var array<string,mixed> Data, keyed by error code. */
+  private $error_data = array();
+
+  public function __construct($code = '', $message = '', $data = '')
   {
     if ('' !== $code) {
       $this->errors[$code][] = $message;
+      if ('' !== $data) {
+        $this->error_data[$code] = $data;
+      }
     }
+  }
+
+  public function get_error_data($code = '')
+  {
+    $code = '' === $code ? $this->get_error_code() : $code;
+    return isset($this->error_data[$code]) ? $this->error_data[$code] : null;
   }
 
   public function add($code, $message) { $this->errors[$code][] = $message; }
@@ -507,12 +528,13 @@ class OpenPorte_JsonSent extends \Exception
  * @since 1.30.0
  *
  * @param mixed    $data        Payload passed to wp_send_json().
- * @param int|null $status_code HTTP status requested; unused by this shim.
+ * @param int|null $status_code HTTP status requested; recorded for assertions.
  * @return void
  * @throws OpenPorte_JsonSent Always, to emulate termination without exiting PHPUnit.
  */
 function wp_send_json( $data, $status_code = null ) {
   OpenPorte_Test_Env::$sent_json = $data;
+  OpenPorte_Test_Env::$sent_json_status = $status_code;
   throw new OpenPorte_JsonSent();
 }
 

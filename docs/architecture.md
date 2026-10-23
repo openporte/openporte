@@ -26,7 +26,11 @@ service dependency. A third mode — a paid SaaS classifier hosted on
   endpoint `wp-json/openporte/v1/challenge` (default) or the admin-ajax action
   `wp-admin/admin-ajax.php?action=openporte_challenge` (issue #100). Both are
   always registered and return the same `generate_challenge()` JSON; the
-  setting only picks the URL the widget is rendered with. There is
+  setting only picks the URL the widget is rendered with. Since 1.30.0 both
+  refuse with a 403 `openporte_challenge_unavailable` error while API mode is
+  `custom` (`openporte_challenge_unavailable()`): they sign with the same
+  shared secret as the backend, so their challenges would otherwise verify and
+  bypass the backend's issuance rules. There is
   deliberately no automatic reachability check: a probe from the server cannot
   see firewall, CDN or browser-side rules, so the admin checks by hand (README,
   "Self-hosted transport"). No API key, no external service, no account.
@@ -197,7 +201,8 @@ includes/
                            challenge generation, HMAC verification, widget HTML
                            rendering, the wp_kses attribute whitelist; registers the
                            REST challenge route and the admin-ajax challenge action
-                           (both always, whatever the selected transport).
+                           (both always, whatever the selected transport; both
+                           refuse in Custom API mode).
   helpers.php              Enqueue helpers + openporte_plugin_active() detection.
   admin.php                Admin menu (Settings → OpenPorte Anti-spam); requires
                            admin/healthcheck.php.
