@@ -114,8 +114,11 @@ as a silent in-place update. Because the entry file was renamed
    - The signing secret is **unchanged** (`wp option get openporte_secret` equals
      the value noted in step 1) — otherwise previously issued challenges break.
    - On **Test Page**, both `[altcha]` and `[openporte]` render the widget.
-   - `/wp-json/altcha/v1/challenge` and `/wp-json/openporte/v1/challenge` both
-     return a challenge.
+   - `/wp-json/altcha/v1/challenge`, `/wp-json/openporte/v1/challenge` and
+     `/wp-admin/admin-ajax.php?action=openporte_challenge` all return a
+     challenge.
+   - `wp option get openporte_selfhosted_transport` is `rest`: an imported
+     configuration keeps the historical REST transport.
    - `./wp-env.sh logs` (or `wp-env logs`) is clean — no PHP warnings/notices.
 5. Roll back (optional): deactivate OpenPorte, reactivate ALTCHA — its config is
    intact.

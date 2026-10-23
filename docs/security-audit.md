@@ -147,8 +147,8 @@ Three properties make the bound hold rather than merely exist:
 The counter lives in transient-shaped `wp_options` rows, so WordPress's own
 garbage collection reclaims it — no schema, no cron. It is written **only after
 full cryptographic success**, so junk, forged and expired tokens never create
-state and the open REST challenge endpoint stays stateless (finding #5 is
-unaffected).
+state and the open challenge endpoints (REST and, since 1.30.0, admin-ajax)
+stay stateless (finding #5 is unaffected).
 
 **Custom-backend ("GateCHA") mode is covered by the same mechanism.** This also
 closes a gap that was never recorded here: OpenPorte verifies custom-backend
@@ -382,11 +382,19 @@ plaintext-in-DB aspect is finding #7.)
 
 **Type:** Denial of service / abuse.
 **Location:** `includes/core.php`, the `rest_api_init` route with
-`permission_callback => '__return_true'`, and `openporte_generate_challenge_endpoint()`.
+`permission_callback => '__return_true'`, and `openporte_generate_challenge_endpoint()`;
+since 1.30.0 also the `wp_ajax_openporte_challenge` /
+`wp_ajax_nopriv_openporte_challenge` actions and
+`openporte_generate_challenge_ajax_endpoint()` (issue #100).
 
 `GET /wp-json/openporte/v1/challenge` (and the deprecated `altcha/v1` alias) is
-unauthenticated and uncapped. Each call runs `random_int()` plus a couple of
-hashes and returns a fresh signed challenge.
+unauthenticated and uncapped, and so is its admin-ajax twin
+`/wp-admin/admin-ajax.php?action=openporte_challenge`. Both are always
+registered, whichever Self-hosted transport is selected, and both call the same
+`generate_challenge()`: each call runs `random_int()` plus a couple of hashes
+and returns a fresh signed challenge with `Cache-Control: no-cache, no-store,
+max-age=0`. The Ajax action deliberately has no nonce or capability check: it
+changes no state, and logged-out visitors are exactly who must reach it.
 
 **Decision — Accepted, not fixed.** The endpoint *must* be publicly reachable
 for the CAPTCHA to function. The usual mitigation, per-IP throttling via
@@ -396,7 +404,8 @@ plugin's explicit "collects no visitor IP address" privacy promise (see
 proof-of-work already prevents forging a *valid* solution, so the residual risk
 is generic request-flooding, best handled at the web-server / WAF / caching
 layer rather than in-plugin. Operators who need it can rate-limit the route
-upstream.
+upstream — both of them: limiting only the selected transport leaves the other
+URL open.
 
 ---
 
@@ -585,7 +594,7 @@ Mapped against <https://developer.wordpress.org/plugins/security/>.
 | Capability checks | Pass | `add_options_page( …, 'manage_options', … )`; Settings API enforces the cap on save; comment handler skips for `manage_options` |
 | Avoid direct file access | Pass | `ABSPATH` (or `WP_UNINSTALL_PLUGIN`) guard at the top of every PHP file |
 | Prepared SQL | Pass | Only direct query is `uninstall.php`, using `$wpdb->prepare()` + `$wpdb->esc_like()` |
-| Secure REST endpoints | Pass (permissive by design) | `permission_callback` present; intentionally public for challenge generation (finding #5) |
+| Secure REST endpoints | Pass (permissive by design) | `permission_callback` present; intentionally public for challenge generation (finding #5). The admin-ajax twin (since 1.30.0) is public by the same design |
 | No dynamic file inclusion from input | Pass | All `require`/`include` are static literals; the one variable include is the guarded Formidable autoloader (finding #10) |
 | No `eval`/`system`/`unserialize`/`extract` | Pass | grep-confirmed absent |
 | Don't trust proxy/`$_SERVER` headers | Pass | No `$_SERVER` reads; `get_ip_address()` removed in 1.27.0 |
@@ -596,7 +605,7 @@ OWASP Top 10 (2021):
 
 | Category | Status | Notes |
 | -------- | ------ | ----- |
-| A01 Broken Access Control | Pass | Admin gated by `manage_options`; the only public surface (challenge REST) is intentional and exposes no secret |
+| A01 Broken Access Control | Pass | Admin gated by `manage_options`; the only public surface (the challenge endpoint, over REST and, since 1.30.0, admin-ajax) is intentional and exposes no secret |
 | A02 Cryptographic Failures | Pass (note) | `random_bytes`/`random_int` CSPRNG, HMAC-SHA256, constant-time `hash_equals`; key length is finding #9 |
 | A03 Injection | Pass | SQL prepared; no command/code injection sinks; output escaped; autoloader note in finding #10 |
 | A04 Insecure Design | Pass (note) | Stateless-PoW replay is **bounded since 1.29.0** (finding #1) — an atomic reuse counter in `verify()`, with the residuals recorded there; dead code in finding #11 |
@@ -639,7 +648,7 @@ independently in this audit before the advisory was read.
 
 | # | SecuPress finding (v2 ≤ 2.2) | OpenPorte | Evidence |
 | - | --------------------------- | --------- | -------- |
-| 1 | IDOR — no nonce in `includes/admin/actions.php` | N/A | No `wp_ajax_*`/`admin_post_*` handler exists (grep-confirmed). Admin writes go through the Settings API — `settings_fields( 'openporte_options' )` in `admin/options.php` supplies the `options.php` nonce, and the page is registered with `manage_options` in `includes/admin.php` |
+| 1 | IDOR — no nonce in `includes/admin/actions.php` | N/A | No `wp_ajax_*`/`admin_post_*` handler existed at the cross-check (grep-confirmed). Since 1.30.0 the only one is the public, read-only challenge action (finding #5): it writes no state, so the IDOR/CSRF class does not apply. Admin writes go through the Settings API — `settings_fields( 'openporte_options' )` in `admin/options.php` supplies the `options.php` nonce, and the page is registered with `manage_options` in `includes/admin.php` |
 | 2–4 | 3× CSRF on the "set" functions | N/A | Same absent surface. The settings involved (license, IP bypass, cookie exceptions, under-attack) do not exist here |
 | 5 | Timing side-channel — `===` instead of `hash_equals()` | **Fixed** | `hash_equals` guards every HMAC comparison: `verify_server_signature()` and `verify_solution()` in `includes/core.php`, plus the health check in `admin/healthcheck.php`. See the note below on the remaining non-secret `===` |
 | 6 | Insufficient entropy #1 — 12-byte (96-bit) secret | **Fixed** — finding #9 | `random_secret()` is `bin2hex( random_bytes( 32 ) )`. Independently found and fixed here before the advisory was read. Residual for upgraded installs: see the closing note |

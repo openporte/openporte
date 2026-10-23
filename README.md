@@ -141,8 +141,9 @@ OpenPorte verifies submissions in one of two modes, selected in the settings
 (API Mode):
 
 * **Self-hosted** (default) — a proof-of-work challenge is issued and verified by
-  your own WordPress site via the REST API. Fully self-contained, no external
-  service, no account.
+  your own WordPress site, served through the REST API (default) or
+  admin-ajax.php (see [Self-hosted transport](#self-hosted-transport)). Fully
+  self-contained, no external service, no account.
 * **Custom** — point the Challenge URL at your own ALTCHA-compatible backend
   (e.g. a self-hosted ALTCHA Sentinel, or [GateCHA](https://gatecha.org));
   submissions are verified with your site's shared secret. The Algorithm
@@ -164,7 +165,8 @@ call (replay tracking, verification statistics) are not used.
 
 | Setting | Self-hosted | Custom |
 | ------- | ----------- | ------ |
-| Challenge URL | ignored (the built-in REST endpoint is used) | fetched by the widget — include any required query parameters (e.g. an `apiKey`) |
+| Challenge URL | ignored (the built-in endpoint of the selected transport is used) | fetched by the widget — include any required query parameters (e.g. an `apiKey`) |
+| Self-hosted transport | selects REST API or Ajax (admin-ajax.php) | ignored — the widget fetches the Challenge URL |
 | Shared secret | signs and verifies challenges | must **equal the backend's HMAC secret**; used to verify locally |
 | Algorithm | generates and verifies challenges | must **match the backend's algorithm**; used at verification only |
 | Complexity | sets the PoW difficulty | ignored — the backend decides |
@@ -176,15 +178,75 @@ call (replay tracking, verification statistics) are not used.
 Two things worth knowing in Custom mode: a mismatched Algorithm or shared
 secret is invisible while the widget solves (the widget reads the algorithm
 from the challenge itself) and only shows up when a form submission is
-verified server-side; and the self-hosted REST challenge endpoint remains
-registered, so challenges signed with the same secret can also be obtained
-from WordPress itself.
+verified server-side; and both self-hosted challenge endpoints (REST and
+Ajax) remain registered, so challenges signed with the same secret can also be
+obtained from WordPress itself.
 
-### REST API
+### Self-hosted transport
 
-This plugin requires the WordPress REST API. If you are using any "Disable
-REST API" plugins, ensure that the endpoint `/altcha/v1/challenge` (now
-deprecated) and `/openporte/v1/challenge` is allowed.
+In Self-hosted mode, the widget fetches each challenge from your own site.
+The **Self-hosted transport** setting (Settings > OpenPorte Anti-spam, below
+API Mode)
+chooses which WordPress endpoint serves it:
+
+| Transport | Challenge URL (logged-out visitors fetch it) |
+| --------- | -------------------------------------------- |
+| **REST API** (default) | `/wp-json/openporte/v1/challenge`, or `/?rest_route=/openporte/v1/challenge` with plain permalinks |
+| **Ajax** | `/wp-admin/admin-ajax.php?action=openporte_challenge` |
+
+Both endpoints serve the same challenge and are verified the same way; both
+stay registered whichever one is selected. The deprecated
+`/wp-json/altcha/v1/challenge` alias is still served too.
+
+**When to switch.** Keep REST API unless the widget cannot load a challenge
+for logged-out visitors. A common cause is a security or optimization plugin
+that disables the REST API for visitors (for example "Disable WP REST API" or
+Clearfy): the browser console then shows an error such as `Server responded
+with 401` or `Unexpected token '<'`. Either allow `/openporte/v1/challenge` in
+that plugin, or switch the transport to Ajax. Conversely, if a plugin or host
+rule blocks `admin-ajax.php` for visitors, stay on REST API. Ajax is not a
+universal fix: plugins that keep visitors out of wp-admin ("hide" or "lock
+down" wp-admin, membership plugins) often block `admin-ajax.php` too, sometimes
+only for logged-in subscribers and customers.
+
+**How to check, by hand.** OpenPorte does not test this automatically: a check
+run from the server cannot see firewall, CDN or browser-side rules, so only a
+real visitor request is conclusive.
+
+1. Open a private browser window, so you are logged out.
+2. Open the challenge URL of the selected transport (table above) on your site.
+   A working endpoint shows a short JSON text with `algorithm`, `challenge`,
+   `maxnumber`, `salt` and `signature`. An error message, a login page, a
+   redirect or an HTML page means it is blocked for visitors.
+3. If it is blocked, open the other transport's URL the same way. If that one
+   works, select it in the settings and save.
+4. Still logged out, open a page with a protected form, solve the widget and
+   submit the form. If your forms are also used by logged-in visitors, repeat
+   once as a subscriber or customer: they reach admin-ajax.php through a
+   different hook than logged-out visitors.
+
+**After switching.** Pages already cached by a page-cache plugin, the host or a
+CDN still contain the old challenge URL: purge those caches so visitors get the
+new one. Both endpoints stay available, so a cached page keeps working as long
+as its endpoint is reachable.
+
+**What switching does not fix.** The transport only changes how the widget gets
+its challenge. A form plugin that submits forms through the REST API itself
+(Contact Form 7, for example) still needs the REST API for its own submissions,
+whichever transport OpenPorte uses.
+
+**Upgrading and downgrading.** Upgrading to 1.30.0 changes nothing: every site
+keeps the REST API until Ajax is selected. Before downgrading to a release
+older than 1.30.0, switch back to REST API, or purge page and CDN caches after
+the downgrade: older releases have no Ajax endpoint, so a page cached with the
+Ajax challenge URL cannot load a challenge.
+
+**Multisite.** Each site has its own transport setting; a site where it was
+never saved uses the REST API.
+
+**Custom routing.** To serve challenges from another URL entirely (a proxy, a
+different host), use the `openporte_challenge_url` filter (see
+[Filters](#filters)); it overrides the selected transport's URL.
 
 ### Hooks
 
@@ -195,7 +257,8 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
 #### Filters
 
 * `apply_filters('openporte_challenge_url', $challenge_url)`  
-  Override the challenge URL.  
+  Override the challenge URL. In Self-hosted mode it receives the URL of the
+  selected transport; in Custom mode, the configured Challenge URL.  
   **Returns:** `string`
 
 * `apply_filters('openporte_integrations', $integrations)`  

@@ -20,17 +20,39 @@ The plugin operates in two modes, both fully self-contained with no external
 service dependency. A third mode — a paid SaaS classifier hosted on
 `altcha.org` — was removed.
 
-- **`selfhosted`** (default): proof-of-work. Challenges are served by a
-  WordPress REST endpoint at `wp-json/openporte/v1/challenge`. No API key, no
-  external service, no account.
+- **`selfhosted`** (default): proof-of-work. Challenges are served by this
+  WordPress site through the selected **Self-hosted transport** (option
+  `openporte_selfhosted_transport`, `rest` | `ajax`, since 1.30.0): the REST
+  endpoint `wp-json/openporte/v1/challenge` (default) or the admin-ajax action
+  `wp-admin/admin-ajax.php?action=openporte_challenge` (issue #100). Both are
+  always registered and return the same `generate_challenge()` JSON; the
+  setting only picks the URL the widget is rendered with. There is
+  deliberately no automatic reachability check: a probe from the server cannot
+  see firewall, CDN or browser-side rules, so the admin checks by hand (README,
+  "Self-hosted transport"). No API key, no external service, no account.
 - **`custom`**: the challenge URL points to a backend the site operator runs
   themselves. This is the legitimate self-hostable backend path — it is *not* a
   paid or remote service.
 
-The mode is selected via the `altcha_api` option. In `get_challengeurl()`,
-`custom` returns the operator-supplied URL stored in `altcha_api_custom_url`;
+The mode is selected via the `openporte_api` option. In `get_challengeurl()`,
+`custom` returns the operator-supplied URL stored in `openporte_api_custom_url`;
 any other value — including legacy `"eu"` / `"us"` values left in the database
-by old installs — falls back to the local REST endpoint.
+by old installs — falls back to the self-hosted endpoint of the selected
+transport (`get_selfhosted_challenge_url()`; an absent or invalid transport
+reads as REST). Either result then passes through the `openporte_challenge_url`
+filter and its deprecated `altcha_challenge_url` alias.
+
+**Transport lifecycle (1.30.0).** `openporte_activate()` seeds
+`openporte_selfhosted_transport` with `rest` (`add_option()`, so an explicit
+choice survives reactivation); `openporte_upgrade()` adds nothing, because a
+plugin update never runs the activation hook and the getter's REST fallback
+already preserves the historical URL — the same pattern as the Algorithm
+seeding below. REST is the default for new and existing sites alike; giving
+new installs Ajax would only change the activation seed to
+`$is_fresh_install ? 'ajax' : 'rest'`. On multisite the option is per site,
+and a site that never saved it reads REST. A downgrade below 1.30.0 ignores
+the option and renders REST again, but pages cached with the Ajax URL fail
+until purged, since older releases have no Ajax action.
 
 ### What Custom mode actually does — and what it does not
 
@@ -62,7 +84,8 @@ the 1.29.0 replay work):
 
 | Setting | `selfhosted` | `custom` |
 | ------- | ------------ | -------- |
-| Challenge URL | — (built from the REST route) | **active** |
+| Challenge URL | — (built from the selected transport) | **active** |
+| Self-hosted transport | active (REST or Ajax endpoint) | — (the widget fetches the Challenge URL) |
 | Shared secret | active (signs and verifies) | active (must match the backend's) |
 | Algorithm | active (generation + verification) | active — must match what the backend serves |
 | Complexity | active | — (the backend sets the difficulty) |
@@ -161,8 +184,8 @@ integration file self-registers its hooks at require time and no-ops unless its
 ```text
 openporte.php              Entry point + plugin header. Defines constants, requires
                            every file in load order, registers the [openporte]/[altcha]
-                           shortcodes, the activation + legacy-option migration hooks,
-                           and the REST route.
+                           shortcodes, and the activation + legacy-option migration
+                           hooks.
 uninstall.php              On plugin deletion, always deletes the plugin's transients
                            (replay counters, endpoint-check cache) and, unless the
                            "Keep settings when the plugin is deleted" toggle
@@ -172,7 +195,9 @@ uninstall.php              On plugin deletion, always deletes the plugin's trans
 includes/
   core.php                 OpenPortePlugin singleton — shared logic: option accessors,
                            challenge generation, HMAC verification, widget HTML
-                           rendering, the wp_kses attribute whitelist.
+                           rendering, the wp_kses attribute whitelist; registers the
+                           REST challenge route and the admin-ajax challenge action
+                           (both always, whatever the selected transport).
   helpers.php              Enqueue helpers + openporte_plugin_active() detection.
   admin.php                Admin menu (Settings → OpenPorte Anti-spam); requires
                            admin/healthcheck.php.
