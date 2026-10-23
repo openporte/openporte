@@ -202,26 +202,21 @@ test.describe('replay limit', () => {
   test('still logs a user in when the limit is strict', async ({ page }) => {
     // The highest-harm regression this feature could cause: a strict limit of 1
     // that locks every user out of the site. WordPress and WooCommerce both
-    // register an `authenticate` callback at priority 20, kept mutually
-    // exclusive only by a WooCommerce nonce check (see AGENTS.md), so
-    // WooCommerce is activated deliberately here — both callbacks are
-    // registered while the login runs.
+    // check the login, kept mutually exclusive by
+    // openporte_is_woocommerce_form_submission() (see AGENTS.md), so
+    // WooCommerce is activated deliberately here — both integrations' callbacks
+    // are registered while the login runs.
     //
-    // What this pins, precisely: that the pair stays mutually exclusive (the
-    // WooCommerce callback returns early on the missing woocommerce-login-nonce
-    // before it reaches verify(), so exactly one verification runs), that the
-    // login succeeds on the single use the limit allows, and that the counter
-    // is really live on this path.
+    // What this pins, precisely: that only the WordPress integration acts on
+    // wp-login.php, that the login succeeds on the single use the limit allows,
+    // and that the counter is really live on this path.
     //
-    // What it does NOT pin is the per-request memo: this flow verifies once,
-    // so the memo could regress and the test would still pass. Two
-    // verifications in one request are covered by
-    // VerifyMemoTest::test_two_verifications_in_one_request_count_as_one_use.
-    // No shipped integration verifies twice in one request today — login and
-    // lost-password are mutually exclusive by nonce, WordPress and WooCommerce
-    // registration are different hooks fired by different code paths, and
-    // wpDiscuz shares the WordPress preprocess_comment callback — so a browser
-    // test for it would have nothing to exercise. Revisit if that changes.
+    // Since 1.30.0 it also pins the per-request memo on a real login. The
+    // WordPress integration verifies twice in this one request — on
+    // wp_authenticate_user before the password check, then on the
+    // `authenticate` backstop (docs/security-audit.md #14) — and at a limit of
+    // 1 the second check succeeds only because the memo answers it without
+    // consuming another use. VerifyMemoTest covers the memo in isolation.
     ensureWooCommerce();
     wpSetOption('openporte_integration_wordpress_login', '1');
     wpSetOption('openporte_integration_woocommerce_login', '0');

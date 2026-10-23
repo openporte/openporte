@@ -1,6 +1,6 @@
 # OpenPorte E2E suite
 
-Browser-driven tests against a running wp-env bench. Three spec files, three axes:
+Browser-driven tests against a running wp-env bench. Four spec files, four axes:
 
 - **`settings-matrix.spec.js`** — **integrations × auto-verification mode ×
   Floating UI**, so combinations too numerous to click through by hand get
@@ -11,6 +11,12 @@ Browser-driven tests against a running wp-env bench. Three spec files, three axe
 - **`shared-secret.spec.js`** — the in-field Show/Hide, Copy and Regenerate
   controls of the Shared secret setting (issue #107); see
   [Shared secret controls](#shared-secret-controls).
+- **`login-gate.spec.js`** — wp-login.php login and lost-password protection
+  (`docs/security-audit.md` #14 and #15). Without a token, a wrong and a
+  correct password get the same CAPTCHA error; with a solved challenge, core
+  answers "incorrect password" or logs the user in. With WooCommerce active and
+  only WordPress protection on, a forged WooCommerce nonce field on wp-login.php
+  no longer skips the login or the lost-password check.
 
 ## The settings matrix (`settings-matrix.spec.js`)
 
@@ -68,11 +74,13 @@ restoring `openporte_replaylimit` afterwards:
   The page never navigates, so this is the real shape of a visitor correcting a
   field and resubmitting: same token, three times, all accepted.
 - **still logs a user in when the limit is strict** — the highest-harm
-  regression this feature could cause. WordPress and WooCommerce both register
-  an `authenticate` callback at priority 20, kept mutually exclusive only by a
-  WooCommerce nonce check (see AGENTS.md); if that guard slipped, or anything
-  else verified twice in one request, a limit of 1 would lock every user out.
-  WooCommerce is activated deliberately so both callbacks are registered, the
+  regression this feature could cause. Since 1.30.0 a wp-login.php login checks
+  the token twice in one request — before the password check
+  (`wp_authenticate_user`) and on the `authenticate` backstop — so at a limit of
+  1 it succeeds only if the per-request memo answers the second check. The
+  WordPress and WooCommerce checks are kept mutually exclusive by
+  `openporte_is_woocommerce_form_submission()` (see AGENTS.md); WooCommerce is
+  activated deliberately so both integrations' callbacks are registered. The
   login must succeed, and the token it consumed must then fail to replay.
 
 Replays are posted the way a bot would: fresh page, widget detached, the
