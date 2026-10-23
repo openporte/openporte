@@ -365,4 +365,80 @@ class ChallengeTransportTest extends OpenPorteTestCase
     $this->assertNotSame('', $sent['challenge']);
     $this->assertNotSame('', $sent['salt']);
   }
+
+  /* ------------------------------------------------------- Custom API mode */
+
+  /**
+   * Call the Ajax endpoint and return what it sent, ignoring only the
+   * environmental "headers already sent" warning (see the test above).
+   *
+   * @since 1.30.0
+   *
+   * @return mixed The payload passed to wp_send_json().
+   */
+  private function call_ajax_endpoint()
+  {
+    set_error_handler(static function (int $errno, string $errstr) {
+      return E_WARNING === $errno && false !== strpos($errstr, 'Cannot modify header information');
+    });
+    try {
+      openporte_generate_challenge_ajax_endpoint();
+      $this->fail('The endpoint must terminate the request through wp_send_json().');
+    } catch (OpenPorte_JsonSent $e) {
+      return OpenPorte_Test_Env::$sent_json;
+    } finally {
+      restore_error_handler();
+    }
+  }
+
+  /**
+   * In Custom API mode the REST endpoint refuses with a 403 error instead of
+   * a signed challenge: the backend issues them, with the same secret.
+   *
+   * @since 1.30.0
+   */
+  public function test_rest_endpoint_refuses_in_custom_mode()
+  {
+    update_option(OpenPortePlugin::$option_api, 'custom');
+
+    $response = openporte_generate_challenge_endpoint();
+
+    $this->assertInstanceOf(WP_Error::class, $response);
+    $this->assertSame('openporte_challenge_unavailable', $response->get_error_code());
+    $this->assertSame(array('status' => 403), $response->get_error_data());
+  }
+
+  /**
+   * In Custom API mode the Ajax endpoint refuses with the same error shape
+   * and a 403, and sends no challenge fields.
+   *
+   * @since 1.30.0
+   */
+  public function test_ajax_endpoint_refuses_in_custom_mode()
+  {
+    update_option(OpenPortePlugin::$option_api, 'custom');
+
+    $sent = $this->call_ajax_endpoint();
+
+    $this->assertSame(403, OpenPorte_Test_Env::$sent_json_status);
+    $this->assertSame('openporte_challenge_unavailable', $sent['code']);
+    $this->assertSame(array('status' => 403), $sent['data']);
+    $this->assertArrayNotHasKey('signature', $sent);
+  }
+
+  /**
+   * Any other stored mode, including a legacy value, still issues
+   * challenges: only Custom refuses.
+   *
+   * @since 1.30.0
+   */
+  public function test_ajax_endpoint_still_issues_outside_custom_mode()
+  {
+    update_option(OpenPortePlugin::$option_api, 'eu');
+
+    $sent = $this->call_ajax_endpoint();
+
+    $this->assertNull(OpenPorte_Test_Env::$sent_json_status);
+    $this->assertArrayHasKey('signature', $sent);
+  }
 }

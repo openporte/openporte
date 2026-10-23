@@ -196,7 +196,9 @@ chooses which WordPress endpoint serves it:
 
 Both endpoints serve the same challenge and are verified the same way; both
 stay registered whichever one is selected. The deprecated
-`/wp-json/altcha/v1/challenge` alias is still served too.
+`/wp-json/altcha/v1/challenge` alias is still served too. In Custom API mode
+all of them refuse with an error (HTTP 403) instead: your backend issues the
+challenges there, and a challenge from your site would bypass its rules.
 
 **When to switch.** Keep REST API unless the widget cannot load a challenge
 for logged-out visitors. A common cause is a security or optimization plugin

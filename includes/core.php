@@ -1513,8 +1513,48 @@ add_action(
   }
 );
 
+/**
+ * Why the built-in endpoints issue no challenge in Custom API mode.
+ *
+ * In Custom mode the configured backend issues every challenge, signed with
+ * the same shared secret this site verifies with. A challenge from this site's
+ * own endpoints would verify just as well, letting a bot bypass whatever the
+ * backend enforces at issuance (its difficulty, rate limits, expiry policy,
+ * statistics). The endpoints stay registered, so the transport setting still
+ * only chooses a URL; the API mode decides whether they answer.
+ *
+ * @since 1.30.0
+ *
+ * @return array{code:string,message:string,status:int}|null The refusal in
+ *         Custom mode, or null when the endpoints should issue challenges.
+ */
+function openporte_challenge_unavailable()
+{
+  if (OpenPortePlugin::$instance->get_api() !== 'custom') {
+    return null;
+  }
+
+  return array(
+    'code' => 'openporte_challenge_unavailable',
+    'message' => __('This site does not issue challenges in Custom API mode.', 'openporte'),
+    'status' => 403,
+  );
+}
+
+/**
+ * REST endpoint serving a self-hosted challenge.
+ *
+ * @since 1.26.3
+ * @since 1.30.0 Refuses with a 403 error in Custom API mode.
+ *
+ * @return WP_REST_Response|WP_Error The challenge, or the Custom-mode refusal.
+ */
 function openporte_generate_challenge_endpoint()
 {
+  $unavailable = openporte_challenge_unavailable();
+  if ($unavailable !== null) {
+    return new WP_Error($unavailable['code'], $unavailable['message'], array('status' => $unavailable['status']));
+  }
   $resp = new WP_REST_Response(OpenPortePlugin::$instance->generate_challenge());
   $resp->set_headers(array('Cache-Control' => 'no-cache, no-store, max-age=0'));
   return $resp;
@@ -1526,6 +1566,8 @@ function openporte_generate_challenge_endpoint()
 // like the REST routes, because the transport setting only chooses the URL
 // the widget is rendered with — never which endpoint exists — and a page
 // cached on one URL must keep working after the setting changes to the other.
+// Only the API mode decides whether they answer: in Custom mode both refuse
+// (see openporte_challenge_unavailable()).
 add_action(
   'wp_ajax_' . OpenPortePlugin::$ajax_action,
   'openporte_generate_challenge_ajax_endpoint'
@@ -1545,6 +1587,8 @@ add_action(
  *
  * The flat five-key challenge JSON is sent unwrapped — the widget parses
  * that shape — and the response must never be served from a shared cache.
+ * In Custom API mode it refuses with a 403 instead, shaped like the REST
+ * endpoint's error (see openporte_challenge_unavailable()).
  *
  * @since 1.30.0
  */
@@ -1556,5 +1600,17 @@ function openporte_generate_challenge_ajax_endpoint()
   // header() replaces that earlier Cache-Control line rather than adding a
   // second one, so the response carries exactly the REST endpoint's policy.
   header('Cache-Control: no-cache, no-store, max-age=0');
+  $unavailable = openporte_challenge_unavailable();
+  if ($unavailable !== null) {
+    // The shape of a REST WP_Error response, so a client reads both alike.
+    wp_send_json(
+      array(
+        'code' => $unavailable['code'],
+        'message' => $unavailable['message'],
+        'data' => array('status' => $unavailable['status']),
+      ),
+      $unavailable['status']
+    );
+  }
   wp_send_json(OpenPortePlugin::$instance->generate_challenge());
 }
