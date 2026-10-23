@@ -356,7 +356,16 @@ if (is_admin()) {
         'disabled' => $custom_api_mode_active,
         'selfhosted_only' => true,
         'disabled_note' => __('Only used in Self-hosted API Mode.', 'openporte'),
-        "hint" => __('Choose how this site serves challenges. If a security plugin blocks the REST API for visitors, try Ajax. If access to admin-ajax.php is restricted, use REST API. Test the form while logged out after changing this setting.', 'openporte'),
+        // No automatic reachability check (issue #100): a probe from the
+        // server cannot see firewall, CDN or browser-side rules, so the admin
+        // checks by hand, guided by the README section linked here. Keep the
+        // anchor in sync with the "Self-hosted transport" heading in README.md.
+        "hint" => sprintf(
+          /* translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte documentation. */
+          __('Choose how this site serves challenges to visitors. REST API is the default; use Ajax if a security plugin blocks the REST API for logged-out visitors. After changing it, test a protected form in a private window.<br/>%1$sHow to choose and check the transport%2$s', 'openporte'),
+          '<a href="https://github.com/openporte/openporte#self-hosted-transport" target="_blank" rel="noopener noreferrer">',
+          '</a>'
+        ),
         // The effective (normalized) value, not the raw option: an absent or
         // corrupt row must render as what get_selfhosted_transport() actually
         // enforces, never leaving the browser to select the first item.

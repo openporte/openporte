@@ -4,6 +4,7 @@
   "description": "Browser-driven settings-matrix tests for OpenPorte (integrations x auto-mode x floating). See README.md.",
   "scripts": {
     "test": "playwright test",
+    "test:ajax": "OPENPORTE_E2E_TRANSPORT=ajax playwright test settings-matrix.spec.js",
     "test:headed": "playwright test --headed",
     "report": "playwright show-report"
   },
