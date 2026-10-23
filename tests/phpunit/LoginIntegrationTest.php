@@ -92,6 +92,23 @@ class LoginIntegrationTest extends OpenPorteTestCase
   }
 
   /**
+   * Run the two `wp_authenticate_user` callbacks in WordPress's order: the
+   * point where core has found the user but not yet compared the password.
+   *
+   * @since 1.30.0
+   *
+   * @param WP_User|WP_Error $user Value core passes in.
+   * @return WP_User|WP_Error
+   */
+  private function authenticate_user($user = null)
+  {
+    $user = $user === null ? new WP_User() : $user;
+    $user = openporte_woocommerce_authenticate_user($user, 'any password');
+
+    return openporte_wordpress_authenticate_user($user, 'any password');
+  }
+
+  /**
    * Run the two `lostpassword_post` callbacks in WordPress's order.
    *
    * @since 1.30.0
@@ -272,5 +289,84 @@ class LoginIntegrationTest extends OpenPorteTestCase
     $this->request(array('wordpress' => true, 'post' => array('woocommerce-lost-password-nonce' => 'x')));
 
     $this->assertFalse($this->lostpassword_refused());
+  }
+
+  /* ------------------------------------------------- before the password check */
+
+  /**
+   * Regression: on wp-login.php the challenge is checked before the password,
+   * so a missing token is refused whatever password was typed.
+   *
+   * @since 1.30.0
+   */
+  public function test_wp_login_gate_refuses_a_missing_token_before_the_password()
+  {
+    $this->request(array('wordpress' => true, 'wp_login' => true));
+
+    $this->assertInstanceOf(WP_Error::class, $this->authenticate_user());
+  }
+
+  /**
+   * The same on WooCommerce's My Account login.
+   *
+   * @since 1.30.0
+   */
+  public function test_woocommerce_login_gate_refuses_a_missing_token_before_the_password()
+  {
+    $this->request(array('woocommerce' => true, 'post' => array('woocommerce-login-nonce' => 'x')));
+
+    $this->assertInstanceOf(WP_Error::class, $this->authenticate_user());
+  }
+
+  /**
+   * The gate follows the same routing: a forged WooCommerce field on
+   * wp-login.php is still checked.
+   *
+   * @since 1.30.0
+   */
+  public function test_wp_login_gate_ignores_a_forged_woocommerce_field()
+  {
+    $this->request(array(
+      'wordpress' => true,
+      'wp_login' => true,
+      'post' => array('woocommerce-login-nonce' => 'x'),
+    ));
+
+    $this->assertInstanceOf(WP_Error::class, $this->authenticate_user());
+  }
+
+  /**
+   * An error from an earlier callback passes through the gate untouched.
+   *
+   * @since 1.30.0
+   */
+  public function test_login_gate_passes_an_earlier_error_through()
+  {
+    $this->request(array('wordpress' => true, 'wp_login' => true));
+    $error = new WP_Error('earlier', 'earlier');
+
+    $this->assertSame($error, $this->authenticate_user($error));
+  }
+
+  /**
+   * A valid token passes the gate, then the `authenticate` backstop, on one
+   * request at Replay limit 1: the backstop's second check of the same token
+   * is answered by the per-request memo, so the login costs exactly one use.
+   * The next request with the same token is refused, which shows that use was
+   * really consumed.
+   *
+   * @since 1.30.0
+   */
+  public function test_gate_and_backstop_consume_one_use_per_login()
+  {
+    update_option(OpenPortePlugin::$option_replaylimit, 1);
+    $token = $this->token(time() + 600);
+    $this->request(array('wordpress' => true, 'wp_login' => true, 'post' => array('altcha' => $token)));
+
+    $this->assertInstanceOf(WP_User::class, $this->authenticate_user());
+    $this->assertInstanceOf(WP_User::class, $this->authenticate());
+
+    $this->next_request();
+    $this->assertInstanceOf(WP_Error::class, $this->authenticate_user());
   }
 }
