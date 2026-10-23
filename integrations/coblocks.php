@@ -28,6 +28,20 @@ if (openporte_plugin_active('coblocks')) {
       return $block_content;
     }
 
+    /**
+     * Arm the reCAPTCHA spoof for a CoBlocks form submission.
+     *
+     * Runs on every parsed block; acts once per request, on the first
+     * coblocks/form block of a coblocks-form-submit POST, by queueing
+     * before_form_submit() on CoBlocks' coblocks_before_form_submit action.
+     *
+     * @since 1.26.3
+     * @since 1.30.0 Does nothing while the CoBlocks integration is off.
+     *
+     * @param array|mixed $parsed_block The block being rendered.
+     * @param array       $source_block The original, unfiltered block.
+     * @return array The block, unchanged.
+     */
     public static function render_block_data($parsed_block, array $source_block): array
     {
       static $filters_added;
@@ -40,6 +54,15 @@ if (openporte_plugin_active('coblocks')) {
       $block_name   = $parsed_block['blockName'] ?? '';
 
       if ('coblocks/form' !== $block_name) {
+        return $parsed_block;
+      }
+
+      // The spoof overrides the site's own reCAPTCHA keys and token, then
+      // answers Google's verify call itself. With the integration off it
+      // would silently approve every submission of a form whose real
+      // reCAPTCHA the site owner configured in CoBlocks — so only take over
+      // when OpenPorte protects the form.
+      if (!OpenPortePlugin::$instance->get_integration_coblocks()) {
         return $parsed_block;
       }
 
@@ -60,8 +83,28 @@ if (openporte_plugin_active('coblocks')) {
       return $parsed_block;
     }
 
+    /**
+     * Swap CoBlocks' reCAPTCHA check for the ALTCHA one, just before CoBlocks
+     * processes the submission.
+     *
+     * Forces the reCAPTCHA keys on, plants the dummy token and hooks verify()
+     * on pre_http_request, so CoBlocks' own verify call is answered by ALTCHA.
+     *
+     * @since 1.26.3
+     * @since 1.30.0 Does nothing while the CoBlocks integration is off.
+     *
+     * @param array $post Submitted form data, as passed by CoBlocks.
+     * @param array $atts Form block attributes, as passed by CoBlocks.
+     * @return void
+     */
     public static function before_form_submit(array $post, array $atts): void
     {
+      // Second guard behind render_block_data(): with the integration off,
+      // the site's own reCAPTCHA keys and token must reach CoBlocks untouched.
+      if (!OpenPortePlugin::$instance->get_integration_coblocks()) {
+        return;
+      }
+
       add_filter('pre_option_coblocks_google_recaptcha_site_key', '__return_true');
       add_filter('pre_option_coblocks_google_recaptcha_secret_key', '__return_true');
 
@@ -74,6 +117,22 @@ if (openporte_plugin_active('coblocks')) {
       add_filter('pre_http_request', ['OpenPortePlugin_Coblocks', 'verify'], 10, 3);
     }
 
+    /**
+     * Answer CoBlocks' reCAPTCHA verify request with the ALTCHA verdict.
+     *
+     * Hooked on pre_http_request by before_form_submit(). Only the request
+     * carrying our dummy token to CoBlocks' verify URL is intercepted; every
+     * other HTTP request passes through untouched.
+     *
+     * @since 1.26.3
+     * @since 1.30.0 Returns $response unchanged while the CoBlocks integration
+     *               is off, instead of a faked success.
+     *
+     * @param false|array|WP_Error $response    The short-circuit response so far.
+     * @param array                $parsed_args HTTP request arguments.
+     * @param string               $url         The request URL.
+     * @return false|array|WP_Error A faked reCAPTCHA response, or $response unchanged.
+     */
     public static function verify($response, array $parsed_args, string $url)
     {
       if (
@@ -86,19 +145,22 @@ if (openporte_plugin_active('coblocks')) {
       remove_filter('pre_http_request', ['OpenPortePlugin_Coblocks', 'verify']);
 
       $plugin = OpenPortePlugin::$instance;
-      $active = $plugin->get_integration_coblocks();
-      if ($active) {
-        $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if ($plugin->verify($altcha) === false) {
-          return [
-            'body'     => '{"success":false}',
-            'response' =>
-            [
-              'code'    => 200,
-              'message' => 'OK',
-            ],
-          ];
-        }
+      // Defence in depth: render_block_data() and before_form_submit() no
+      // longer arm the spoof while the integration is off. Should this still
+      // run then, hand CoBlocks its own request back instead of approving it.
+      if (!$plugin->get_integration_coblocks()) {
+        return $response;
+      }
+      $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+      if ($plugin->verify($altcha) === false) {
+        return [
+          'body'     => '{"success":false}',
+          'response' =>
+          [
+            'code'    => 200,
+            'message' => 'OK',
+          ],
+        ];
       }
       return [
         'body'     => '{"success":true}',
