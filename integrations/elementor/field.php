@@ -2,8 +2,12 @@
 
 if (!defined('ABSPATH')) exit;
 
+// Without Elementor Pro's field base class there is nothing to extend. Stop
+// loading this file only: die() here would end the whole request, blanking
+// whatever page happened to load it. openporte_register_form_field() checks
+// the same class before requiring this file.
 if (!class_exists('\ElementorPro\Modules\Forms\Fields\Field_Base')) {
-  die();
+  return;
 }
 
 class OpenPorte_Elementor_Form_Field extends \ElementorPro\Modules\Forms\Fields\Field_Base
