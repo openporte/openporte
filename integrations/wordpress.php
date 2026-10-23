@@ -49,25 +49,20 @@ add_action(
 );
 
 /**
- * Check the challenge on a WordPress login (wp-login.php and any form that
- * signs in through wp_signon()), unless WooCommerce owns the submission.
+ * The WordPress login challenge check, shared by the pre-password gate and the
+ * `authenticate` backstop below.
  *
- * Hooked on `authenticate` at priority 20, after core's own credential checks.
+ * Applies to wp-login.php and any form that signs in through wp_signon(),
+ * except XML-RPC, REST and WooCommerce submissions.
  *
- * @since 1.26.3
- * @since 1.30.0 Converted from a closure; routes WooCommerce submissions
- *               through openporte_is_woocommerce_form_submission().
+ * @since 1.30.0
  *
- * @param WP_User|WP_Error|null $user     Result of the earlier callbacks.
- * @param string                $username Submitted username or email.
- * @param string                $password Submitted password.
- * @return WP_User|WP_Error|null $user unchanged, or a WP_Error when the
- *                               challenge fails.
+ * @param WP_User|null $user User the submitted username or email resolved to;
+ *                           null only on the backstop, when no earlier
+ *                           `authenticate` callback produced a result.
+ * @return WP_User|WP_Error|null $user, or a WP_Error when the challenge fails.
  */
-function openporte_wordpress_authenticate( $user, $username, $password ) {
-  if ( $user instanceof WP_Error ) {
-    return $user;
-  }
+function openporte_wordpress_check_login( $user ) {
   if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
     return $user; // Skip XMLRPC
   }
@@ -89,6 +84,55 @@ function openporte_wordpress_authenticate( $user, $username, $password ) {
     }
   }
   return $user;
+}
+
+/**
+ * Check the challenge on a WordPress login before the password is checked.
+ *
+ * Core applies `wp_authenticate_user` after looking the user up and before
+ * comparing the password, in both its username and its email path. Checking
+ * here means a wrong password costs a solved challenge too, and a correct one
+ * cannot be told apart from a wrong one by the error message.
+ *
+ * @since 1.30.0
+ *
+ * @param WP_User|WP_Error $user     User found for the submitted login, or an
+ *                                   earlier callback's error.
+ * @param string           $password Submitted password; unused.
+ * @return WP_User|WP_Error $user, or a WP_Error when the challenge fails.
+ */
+function openporte_wordpress_authenticate_user( $user, $password ) {
+  if ( ! ( $user instanceof WP_User ) ) {
+    return $user;
+  }
+  return openporte_wordpress_check_login( $user );
+}
+add_filter( 'wp_authenticate_user', 'openporte_wordpress_authenticate_user', 10, 2 );
+
+/**
+ * Backstop for login paths that never apply `wp_authenticate_user`, such as a
+ * third-party authentication provider at the `authenticate` filter.
+ *
+ * Hooked at priority 20, after core's own credential checks. On a core login
+ * the gate above has already verified the same token in this request, so the
+ * per-request verify memo answers here without consuming a second use.
+ *
+ * @since 1.26.3
+ * @since 1.30.0 Converted from a closure; routes WooCommerce submissions
+ *               through openporte_is_woocommerce_form_submission(); now the
+ *               backstop to openporte_wordpress_authenticate_user().
+ *
+ * @param WP_User|WP_Error|null $user     Result of the earlier callbacks.
+ * @param string                $username Submitted username or email; unused.
+ * @param string                $password Submitted password; unused.
+ * @return WP_User|WP_Error|null $user unchanged, or a WP_Error when the
+ *                               challenge fails.
+ */
+function openporte_wordpress_authenticate( $user, $username, $password ) {
+  if ( $user instanceof WP_Error ) {
+    return $user;
+  }
+  return openporte_wordpress_check_login( $user );
 }
 add_filter( 'authenticate', 'openporte_wordpress_authenticate', 20, 3 );
 
