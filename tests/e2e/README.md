@@ -43,6 +43,14 @@ Real browser, real PoW solving (no mocks): the widget genuinely computes the
 challenge, so this also catches timing regressions like the complexity-range
 change that exposed the wpDiscuz race.
 
+**Self-hosted transport.** `applyBaseline()` sets `openporte_selfhosted_transport`
+from `OPENPORTE_E2E_TRANSPORT` (`rest` by default, or `ajax`; anything else
+fails before the run). `npm run test:ajax` runs this matrix over Ajax. Each
+acceptance test first checks that the widget's `challengeurl` points at the
+expected endpoint, so a mistyped or ignored setting cannot pass as an Ajax run.
+Only working cases are tested — REST works, and Ajax works the same; a blocked
+transport is not simulated (issue #100).
+
 ## The replay-limit suite (`replay-limit.spec.js`)
 
 A second spec file, on its own axis: not "does one solved token work" but
@@ -121,6 +129,7 @@ npx playwright install chromium
 cd tests/e2e
 npm test                                       # everything, all drivers
 MATRIX_DRIVERS=wpdiscuz npm test               # one integration
+npm run test:ajax                              # the matrix over the Ajax transport
 npx playwright test --grep "onsubmit"          # one mode across drivers
 npx playwright test replay-limit.spec.js       # just the replay-limit suite
 npx playwright test shared-secret.spec.js      # just the shared secret controls

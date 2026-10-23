@@ -407,6 +407,40 @@ WooCommerce login and registration. The suite is **not shipped** (`tests/` is
 excluded by `.distignore`). Full details, prerequisites and the rationale for
 what is *not* driven are in [`tests/e2e/README.md`](../tests/e2e/README.md).
 
+The matrix runs over the REST transport by default. `npm run test:ajax` (in
+`tests/e2e/`) runs the same matrix with **Self-hosted transport** set to Ajax;
+each acceptance test also checks that the widget really fetches from the
+expected endpoint.
+
+### Self-hosted transport (REST and Ajax)
+
+Since 1.30.0 self-hosted challenges are served through the REST API (default) or
+admin-ajax.php (issue #100). Test **working cases only**: OpenPorte works over
+REST, and works the same over Ajax. Blocked-endpoint scenarios (a security
+plugin rejecting one transport) are deliberately not tested: they exercise
+WordPress and third-party behaviour, and OpenPorte does not react to them — the
+admin checks reachability by hand (README, "Self-hosted transport").
+
+Whenever transport code (`get_challengeurl()`, the endpoints, the setting)
+changes:
+
+1. **Both suites:** `npm test` and `npm run test:ajax` from `tests/e2e/`.
+2. **Endpoints, logged out:** `curl -i` both URLs —
+   `/wp-json/openporte/v1/challenge` and
+   `/wp-admin/admin-ajax.php?action=openporte_challenge`. Each returns HTTP 200,
+   the five-key JSON (`algorithm`, `challenge`, `maxnumber`, `salt`,
+   `signature`) and `Cache-Control: no-cache, no-store, max-age=0`. On the
+   **floor bench (WP 5.6)** this header matters most: core adds `no-store` for
+   logged-out admin-ajax requests only from WP 6.8.
+3. **Settings round trip:** select Ajax and save; switch API Mode to Custom (the
+   transport field is disabled with its note) and save; switch back — Ajax is
+   still selected. Delete the option (`wp option delete
+   openporte_selfhosted_transport`): the field shows REST API.
+4. **Logged-in visitors:** with Ajax selected, solve and submit a protected form
+   as a low-privilege user (subscriber or customer) — the `wp_ajax_` path.
+5. **Activation:** a fresh install stores `rest`; reactivating an existing
+   install, or importing a legacy ALTCHA configuration, keeps or seeds `rest`.
+
 ### Regression focus after verification changes
 
 The security-hardening pass changed the token-verification path in
@@ -455,9 +489,11 @@ at least on the floor (PHP 8.0 / WP 5.6) and ceiling (PHP 8.5 / WP 7.1) benches:
 
 1. The widget renders on a protected form (the `[openporte]` shortcode on
    **Test Page**, plus at least one form integration such as Contact Form 7).
-2. In **self-hosted** mode it fetches the challenge from
-   `/wp-json/openporte/v1/challenge` — confirm in the Network tab, and that there
-   are **no** requests to `*.altcha.org`.
+2. In **self-hosted** mode it fetches the challenge from the selected
+   transport's URL — `/wp-json/openporte/v1/challenge` by default, or
+   `/wp-admin/admin-ajax.php?action=openporte_challenge` with Ajax selected —
+   confirm in the Network tab, and that there are **no** requests to
+   `*.altcha.org`.
 3. Solving succeeds, the form submits, the hidden `altcha` field is populated,
    and our PHP verification accepts it (entry created, no error).
 4. **Negative:** omitting or tampering with the solution is rejected.

@@ -71,6 +71,12 @@ what they map to.
 
 == Upgrade Notice ==
 
+= 1.30.0 =
+New "Self-hosted transport" setting: challenges can be served through
+admin-ajax.php instead of the REST API, for sites whose security plugin blocks
+the REST API for visitors. Nothing changes on upgrade: existing and new sites
+keep the REST API.
+
 = 1.29.0 =
 Solved challenges can no longer be replayed without limit. The new "Replay
 limit" setting (default 5) bounds how often one is accepted; no action needed,
@@ -108,6 +114,15 @@ install and activate OpenPorte — it finds and imports the v1 settings, even
 when the v1 plugin itself has long been deleted. Settings made in v2/v3 are
 not read.
 
+= Self-hosted transport (1.30.0) and downgrading =
+
+Upgrading to 1.30.0 changes nothing: every site keeps serving challenges
+through the REST API until you select Ajax under Settings → OpenPorte. If you
+selected Ajax and later downgrade to a release before 1.30.0, switch back to
+REST API first, or purge your page and CDN caches after downgrading: older
+releases have no Ajax endpoint, so a page cached with the Ajax challenge URL
+cannot load a challenge.
+
 == Deprecations ==
 
 The following ALTCHA-era identifiers are kept as aliases for backward
@@ -141,7 +156,8 @@ OpenPorte verifies submissions in one of two modes, selected in the settings
 (API Mode):
 
 * Self-hosted (default) — a proof-of-work challenge is issued and verified by
-  your own WordPress site through the REST API. Fully self-contained, with no
+  your own WordPress site, served through the REST API (default) or
+  admin-ajax.php (see **Self-hosted transport**). Fully self-contained, with no
   external service and no additional setup beyond enabling the integrations you
   need.
 * Custom — point the Challenge URL at your own ALTCHA-compatible backend (for
@@ -178,6 +194,37 @@ the widget and visitors still have to tick it, but nothing checks the result on
 the server — a bot posting directly to the form's endpoint is not stopped. See
 **Supported Integrations** for the list.
 
+= The widget cannot load a challenge for visitors. What should I check? =
+
+Usually a security or optimization plugin blocks the REST API for logged-out
+visitors; the browser console then shows an error such as `Server responded
+with 401` or `Unexpected token '<'`. Check by hand:
+
+1. Open a private browser window, so you are logged out.
+2. Open `/wp-json/openporte/v1/challenge` on your site (with plain permalinks:
+   `/?rest_route=/openporte/v1/challenge`). A working endpoint shows a short
+   JSON text with `algorithm`, `challenge`, `maxnumber`, `salt` and
+   `signature`. An error, a login page, a redirect or an HTML page means it is
+   blocked for visitors.
+3. If it is blocked, open `/wp-admin/admin-ajax.php?action=openporte_challenge`
+   the same way. If that one works, set **Self-hosted transport** to Ajax under
+   Settings → OpenPorte and save. You can also allow `/openporte/v1/challenge`
+   in the blocking plugin and keep REST API.
+4. Still logged out, open a page with a protected form, solve the widget and
+   submit it. If your forms are also used by logged-in visitors, test once
+   more as a subscriber or customer.
+
+Ajax is not a universal fix either. Plugins that keep visitors out of wp-admin
+("hide" or "lock down" wp-admin, membership plugins) can also block
+`admin-ajax.php`, sometimes only for logged-in subscribers and customers. If
+Ajax fails too, stay on REST API and allow `/openporte/v1/challenge` in the
+plugin that blocks it.
+
+After switching, purge any page or CDN cache: cached pages still contain the
+old challenge URL. Switching does not help a form plugin that submits through
+the REST API itself (Contact Form 7, for example): it still needs the REST API
+for its own submissions.
+
 = Will deleting the plugin remove my settings? =
 
 By default, yes: deleting OpenPorte from the Plugins page permanently removes
@@ -188,9 +235,28 @@ save before deleting the plugin. Temporary data such as replay counters is
 removed either way, and the settings of the original ALTCHA Spam Protection
 plugin are never touched.
 
-== REST API ==
+== Self-hosted transport (REST API or Ajax) ==
 
-This plugin requires the WordPress REST API. If you are using any "Disable REST API" plugins, ensure that the endpoint `/altcha/v1/challenge` (marked for deprecation) and `/openporte/v1/challenge` are allowed.
+In Self-hosted mode the widget fetches each challenge from your own site. The
+**Self-hosted transport** setting (Settings → OpenPorte, below API Mode) chooses
+which endpoint serves it:
+
+* REST API (default): `/wp-json/openporte/v1/challenge`, or
+  `/?rest_route=/openporte/v1/challenge` with plain permalinks.
+* Ajax: `/wp-admin/admin-ajax.php?action=openporte_challenge`.
+
+Both serve the same challenge, are verified the same way, and stay available
+whichever one is selected. The deprecated `/wp-json/altcha/v1/challenge` alias
+is still served too.
+
+Keep REST API unless a security plugin blocks the REST API for logged-out
+visitors; then either allow `/openporte/v1/challenge` in that plugin, or switch
+to Ajax. If `admin-ajax.php` is blocked for visitors instead, stay on REST API.
+OpenPorte does not test this automatically: a check from the server cannot see
+firewall, CDN or browser-side rules. See the FAQ for how to check by hand.
+
+On multisite, each site has its own transport setting; a site where it was
+never saved uses the REST API.
 
 == Supported Integrations ==
 
@@ -227,6 +293,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 
 = 1.30.0 (unreleased) =
 
+* Added a Self-hosted transport setting to serve challenges through the REST API (default) or admin-ajax.php, for sites whose security plugin blocks the REST API for visitors. Thanks to @factor11 for the report and workaround.
 * Shared secret actions now use inline WordPress SVG icons inside the field, with accessible labels, copy feedback, and visible keyboard focus.
 * Fixed the duplicated saved notice when updating OpenPorte settings.
 
