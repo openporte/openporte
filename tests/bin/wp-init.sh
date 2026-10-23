@@ -96,7 +96,7 @@ for entry in "${PLUGINS_SUITE[@]}"; do
 done
 
 echo "wp-init: installing Plugin Check (a WordPress plugin test suite)…"
-wpcli plugin install plugin-check --force
+wpcli plugin install plugin-check --force || echo "Could not install Plugin Check; skipping it." >&2
 
 echo "wp-init: creating fixture pages…"
 existing_slugs="$(wpcli post list --post_type=page --post_status=publish --field=post_name 2>/dev/null || true)"

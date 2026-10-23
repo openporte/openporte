@@ -66,6 +66,7 @@ every other subcommand (`logs`, `stop`, `run`, `status`, …) skips it, so
 |---|---|
 | Clean baseline / switching between floor and ceiling versions | `./wp-env.sh cleanup` |
 | Deploy or update the environment to specific versions | `./wp-env.sh -p "8.5" -w "7.1" -v start --update` |
+| Upgrade `@wordpress/env` on the remote (as `REMOTE_USER`, not your own SSH account) | `./wp-env.sh update` |
 | Check the plugin against Plugin Check | `./wp-env.sh plugin-check openporte` |
 | Tail logs, filtered to the interesting ones | `./wp-env.sh logs --watch false \| egrep -iwv "200\|302\|304\|403"` |
 | One-shot environment/version snapshot | `./wp-env.sh status && ./wp-env.sh run cli wp --info && ./wp-env.sh run cli wp core version` |

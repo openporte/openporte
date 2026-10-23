@@ -40,6 +40,9 @@
 #   # Mixed with wp-env arguments
 #   ./wp-env.sh start --php-version 8.1 --no-cache
 #
+#   # Upgrade @wordpress/env itself on the remote (as REMOTE_USER)
+#   ./wp-env.sh update
+#
 #   # Run plugin check on the remote
 #   ./wp-env.sh plugin-check openporte
 #
@@ -141,6 +144,22 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 set -- "${REMAINING_ARGS[@]}"
+
+# Handle the `update` pseudo-subcommand: upgrade @wordpress/env itself on the
+# remote. This is not a wp-env command, so it must not reach the forwarding
+# logic below. It runs as REMOTE_USER (not the account you may SSH in with
+# manually), whose nvm-managed global npm is the one that actually executes
+# wp-env. Installing @latest is explicit, unlike `npm update -g`, which would
+# also touch every other global package.
+if [[ ${#REMAINING_ARGS[@]} -ge 1 ]] && [[ "${REMAINING_ARGS[0]}" == "update" ]]; then
+  # shellcheck disable=SC2029
+  ssh -i "${REMOTE_RPC_KEY}" -o IdentitiesOnly=yes ${REMOTE_USER}@${REMOTE_HOST} \
+      "source ~/${REMOTE_PATH}/.wpenvrc && \
+       echo \"Before: \$(wp-env --version)\" && \
+       npm install -g @wordpress/env@latest && \
+       echo \"After:  \$(wp-env --version)\""
+  exit 0
+fi
 
 # Detect plugin-check subcommand and rewrite args accordingly
 PLUGIN_CHECK_SLUG=""
