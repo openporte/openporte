@@ -117,11 +117,12 @@ not read.
 = Self-hosted transport (1.30.0) and downgrading =
 
 Upgrading to 1.30.0 changes nothing: every site keeps serving challenges
-through the REST API until you select Ajax under Settings → OpenPorte. If you
-selected Ajax and later downgrade to a release before 1.30.0, switch back to
-REST API first, or purge your page and CDN caches after downgrading: older
-releases have no Ajax endpoint, so a page cached with the Ajax challenge URL
-cannot load a challenge.
+through the REST API until you select Ajax under Settings → OpenPorte.
+
+If you selected Ajax and later downgrade to a release before 1.30.0, switch
+back to REST API first and purge your page and CDN caches. If you have already
+downgraded, purge those caches now: older release have no Ajax endpoint, so a
+page cached with the Ajax challenge URL cannot load a challenge.
 
 == Deprecations ==
 

@@ -237,9 +237,10 @@ whichever transport OpenPorte uses.
 
 **Upgrading and downgrading.** Upgrading to 1.30.0 changes nothing: every site
 keeps the REST API until Ajax is selected. Before downgrading to a release
-older than 1.30.0, switch back to REST API, or purge page and CDN caches after
-the downgrade: older releases have no Ajax endpoint, so a page cached with the
-Ajax challenge URL cannot load a challenge.
+older than 1.30.0, switch back to REST API and purge page and CDN caches.  
+If you have already **downgraded, purge those caches now**: older release have
+no Ajax endpoint, so a page cached with the Ajax challenge URL cannot load a
+challenge.
 
 **Multisite.** Each site has its own transport setting; a site where it was
 never saved uses the REST API.
