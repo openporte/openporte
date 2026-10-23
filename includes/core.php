@@ -732,7 +732,9 @@ class OpenPortePlugin
    * @param array<int,string> $strings Field names that must be strings.
    * @param array<int,string> $scalars Field names that need only be scalar
    *                                   (the salted `number`, which is
-   *                                   concatenated rather than compared).
+   *                                   concatenated rather than compared;
+   *                                   verify_solution() then narrows it to
+   *                                   digits, see is_solution_number()).
    * @return bool True when every named field is present and usable.
    */
   private static function has_payload_fields($data, array $strings, array $scalars = array())
@@ -749,6 +751,31 @@ class OpenPortePlugin
     }
 
     return true;
+  }
+
+  /**
+   * Whether a submitted solution number is a plain non-negative integer.
+   *
+   * The challenge digest covers the salt and the number concatenated, so the
+   * boundary between the two is not signed. The salt carries the signed
+   * expiry; only digits may sit on the number side of that boundary, or the
+   * same signed bytes could be read with a different salt. The widget always
+   * submits a JSON integer; a digit-only string is tolerated for clients that
+   * serialise it as text. Nothing is cast: floats, booleans, signs, spaces and
+   * any other characters are refused.
+   *
+   * @since 1.30.0
+   *
+   * @param mixed $number The decoded `number` field of a proof-of-work payload.
+   * @return bool True for a non-negative int or a non-empty digit-only string.
+   */
+  private static function is_solution_number($number)
+  {
+    if (is_int($number)) {
+      return $number >= 0;
+    }
+
+    return is_string($number) && $number !== '' && ctype_digit($number);
   }
 
   /**
@@ -1257,6 +1284,8 @@ class OpenPortePlugin
    * @since 1.16.0
    * @since 1.29.0 Deprecated for direct use — call verify(), which adds the
    *               replay protection this primitive deliberately does not have.
+   * @since 1.30.0 Refuses a `number` that is not a plain non-negative integer,
+   *               so the signed expiry cannot be read out of the salt.
    * @deprecated 1.29.0 Use verify() instead; removal is scheduled for 2.0.
    */
   public function verify_solution($payload, $hmac_key = null)
@@ -1275,7 +1304,8 @@ class OpenPortePlugin
         $data,
         array('algorithm', 'salt', 'challenge', 'signature'),
         array('number')
-      )) {
+      )
+      || !OpenPortePlugin::is_solution_number($data->number)) {
       return false;
     }
     // Read through payload_expires() so the crypto gate and the reuse

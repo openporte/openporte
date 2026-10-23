@@ -198,4 +198,133 @@ class VerifyPrimitivesTest extends OpenPorteTestCase
     $this->assertSame(0, OpenPortePlugin::salt_expires('abc&'));
     $this->assertSame(0, OpenPortePlugin::salt_expires(null));
   }
+
+  /**
+   * Sign an arbitrary salt/number pair the way the server would, so a test
+   * can isolate the `number` type check from the digest and HMAC checks.
+   *
+   * @since 1.30.0
+   *
+   * @param string $salt      Challenge salt.
+   * @param mixed  $number    Solution number, of any JSON type.
+   * @param string $algorithm ALTCHA algorithm label.
+   * @return string base64(JSON) payload.
+   */
+  private function signed($salt, $number, $algorithm = 'SHA-256')
+  {
+    $ident = OpenPortePlugin::hash_ident($algorithm);
+    $challenge = hash($ident, $salt . $number);
+
+    return $this->encode(array(
+      'algorithm' => $algorithm,
+      'challenge' => $challenge,
+      'number' => $number,
+      'salt' => $salt,
+      'signature' => hash_hmac($ident, $challenge, self::SECRET),
+    ));
+  }
+
+  /**
+   * The widget's JSON integer and a digit-only string are both accepted.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_plain_integer_number_is_accepted()
+  {
+    $salt = bin2hex(random_bytes(12)) . '?expires=' . (time() + 600) . '&';
+
+    $this->assertTrue($this->plugin->verify($this->signed($salt, 12345)));
+    $this->next_request();
+    $this->assertTrue($this->plugin->verify($this->signed($salt, '54321')));
+  }
+
+  /**
+   * Anything but a plain non-negative integer is refused, even when it is
+   * correctly signed, and writes no replay state.
+   *
+   * @since 1.30.0
+   *
+   * @dataProvider non_integer_numbers
+   *
+   * @param mixed $number Solution number of an unaccepted shape.
+   */
+  public function test_a_non_integer_number_is_refused_even_when_signed($number)
+  {
+    $salt = bin2hex(random_bytes(12)) . '?expires=' . (time() + 600) . '&';
+
+    $this->assertFalse($this->plugin->verify($this->signed($salt, $number)));
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+  }
+
+  /** @return array<string,array<int,mixed>> */
+  public function non_integer_numbers()
+  {
+    return array(
+      'negative int' => array(-1),
+      'float' => array(1.5),
+      'boolean' => array(true),
+      'empty string' => array(''),
+      'negative string' => array('-1'),
+      'signed string' => array('+1'),
+      'leading space' => array(' 1'),
+      'trailing space' => array('1 '),
+      'decimal string' => array('1.0'),
+      'exponent string' => array('1e3'),
+      'hex string' => array('0x1F'),
+      'letters' => array('abc'),
+      'digits then letters' => array('12a'),
+      'query characters' => array('?x=1&2'),
+    );
+  }
+
+  /**
+   * A JSON number with a fraction or an exponent decodes to a float, even
+   * when its value is integral, and is refused. json_encode() writes 1000.0
+   * as 1000, so these payloads are spelled out as raw JSON.
+   *
+   * @since 1.30.0
+   */
+  public function test_an_integral_json_float_is_refused()
+  {
+    $salt = bin2hex(random_bytes(12)) . '?expires=' . (time() + 600) . '&';
+    $challenge = hash('sha256', $salt . '1000');
+    $signature = hash_hmac('sha256', $challenge, self::SECRET);
+
+    foreach (array('1000.0', '1e3') as $literal) {
+      $this->next_request();
+      $json = '{"algorithm":"SHA-256","challenge":"' . $challenge . '","number":' . $literal
+        . ',"salt":"' . $salt . '","signature":"' . $signature . '"}';
+
+      $this->assertFalse($this->plugin->verify(base64_encode($json)), $literal);
+    }
+  }
+
+  /**
+   * Regression: the signed bytes of an expired token cannot be re-split
+   * between salt and number so that the salt no longer carries the expiry.
+   * Covered for every allowed algorithm; nothing is written to replay state.
+   *
+   * @since 1.30.0
+   */
+  public function test_moving_the_expiry_out_of_the_salt_is_refused()
+  {
+    foreach (OpenPortePlugin::get_allowed_algorithms() as $algorithm) {
+      update_option(OpenPortePlugin::$option_algorithm, $algorithm);
+      $this->next_request();
+      $random = bin2hex(random_bytes(32));
+      $query = '?expires=' . (time() - 10) . '&';
+      $number = 12345;
+
+      $this->assertFalse(
+        $this->plugin->verify($this->signed($random . $query, $number, $algorithm)),
+        $algorithm . ': the expired original must be refused'
+      );
+      $this->assertFalse(
+        $this->plugin->verify($this->signed($random, $query . $number, $algorithm)),
+        $algorithm . ': the re-split token must be refused'
+      );
+    }
+
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+  }
 }
