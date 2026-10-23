@@ -69,6 +69,14 @@ class OpenPorte_Test_Env
    */
   public static $active_plugins = array();
 
+  /**
+   * What is_user_logged_in() reports.
+   *
+   * @since 1.30.0
+   * @var bool
+   */
+  public static $logged_in = false;
+
   /** @var array|WP_Error Canned response returned by wp_remote_get(). */
   public static $http_response = array();
 
@@ -102,6 +110,7 @@ class OpenPorte_Test_Env
     self::$http_response = array();
     self::$sent_json = null;
     self::$active_plugins = array();
+    self::$logged_in = false;
   }
 
   /**
@@ -246,6 +255,18 @@ function do_action($tag, ...$args)
 }
 
 function do_action_deprecated($tag, $args, $version, $replacement = '') { }
+
+/**
+ * Like core: how many times an action has fired in this request. Backed by
+ * the do_action() log, so a test simulates wp-login.php with
+ * do_action('login_init').
+ *
+ * @since 1.30.0
+ *
+ * @param string $tag Action name.
+ * @return int
+ */
+function did_action($tag) { return count(OpenPorte_Test_Env::actions($tag)); }
 
 function apply_filters($tag, $value, ...$args)
 {
@@ -410,6 +431,7 @@ function add_query_arg( $key, $value = '', $url = null ) {
 function wp_parse_url($url, $component = -1) { return parse_url($url, $component); }
 function is_plugin_active($plugin) { return in_array($plugin, OpenPorte_Test_Env::$active_plugins, true); }
 function get_template() { return 'twentytwentyfive'; }
+function is_user_logged_in() { return OpenPorte_Test_Env::$logged_in; }
 function register_setting($group, $name, $args = array()) { return true; }
 function add_settings_section(...$args) { return true; }
 function add_settings_field(...$args) { return true; }
@@ -419,14 +441,38 @@ function add_options_page(...$args) { return ''; }
 
 class WP_Error
 {
-  private $message;
+  /** @var array<string,array<int,string>> Messages, keyed by error code. */
+  private $errors = array();
 
   public function __construct($code = '', $message = '')
   {
-    $this->message = $message;
+    if ('' !== $code) {
+      $this->errors[$code][] = $message;
+    }
   }
 
-  public function get_error_message() { return $this->message; }
+  public function add($code, $message) { $this->errors[$code][] = $message; }
+  public function get_error_codes() { return array_keys($this->errors); }
+  public function get_error_code() { $codes = $this->get_error_codes(); return $codes ? $codes[0] : ''; }
+  public function has_errors() { return !empty($this->errors); }
+
+  public function get_error_message()
+  {
+    $first = reset($this->errors);
+    return $first ? $first[0] : '';
+  }
+}
+
+/**
+ * Stand-in for an authenticated user, as core's credential checks hand it to
+ * the `authenticate` and `wp_authenticate_user` filters.
+ *
+ * @since 1.30.0
+ */
+class WP_User
+{
+  /** @var int */
+  public $ID = 1;
 }
 
 function is_wp_error($thing) { return $thing instanceof WP_Error; }

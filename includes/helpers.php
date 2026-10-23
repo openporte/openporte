@@ -38,6 +38,36 @@ function openporte_plugin_active($name) {
   }
 }
 
+/**
+ * Whether the current request is a WooCommerce form submission, whose CAPTCHA
+ * check belongs to the WooCommerce integration rather than the WordPress one.
+ *
+ * The WooCommerce nonce field alone proves nothing: it is an ordinary POST
+ * field, anyone can add it to a wp-login.php request, and wp-login.php never
+ * checks it. So it only counts outside wp-login.php: that is the one screen
+ * that fires `login_init`, and WooCommerce's My Account login and lost
+ * password handlers never load it. A wp-login.php request carrying the field
+ * therefore stays with the WordPress integration.
+ *
+ * Both integrations route through this one helper, so their checks stay
+ * mutually exclusive and cannot both stand down on the same request.
+ *
+ * @since 1.30.0
+ *
+ * @param string $nonce_field WooCommerce's nonce field for the form:
+ *                            'woocommerce-login-nonce' or
+ *                            'woocommerce-lost-password-nonce'.
+ * @return bool True when WooCommerce is active, the field is present and the
+ *              request is not wp-login.php.
+ */
+function openporte_is_woocommerce_form_submission( $nonce_field ) {
+  if ( did_action( 'login_init' ) || ! openporte_plugin_active( 'woocommerce' ) ) {
+    return false;
+  }
+  // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Presence check only, to route the submission; WooCommerce verifies its own nonce.
+  return isset( $_POST[ $nonce_field ] );
+}
+
 function openporte_enqueue_styles() {
   wp_enqueue_style(
     'altcha-widget-styles',

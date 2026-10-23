@@ -48,39 +48,50 @@ add_action(
   0
 );
 
-add_filter(
-  'authenticate',
-  function ($user) {
-    if ($user instanceof WP_Error) {
-      return $user;
-    }
-    if(defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST) {
-      return $user; // Skip XMLRPC
-    }
-    if(defined( 'REST_REQUEST' ) && REST_REQUEST) {
-      return $user; // Skip REST API
-    }
-    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Presence check only, to route WooCommerce submissions; the nonce itself is verified by WooCommerce.
-    if(!isset($_POST['woocommerce-login-nonce'])) {
-      return $user; // Only handle WooCommerce form submissions
-    }
-
-    $plugin = OpenPortePlugin::$instance;
-    $active = $plugin->get_integration_woocommerce_login();
-    if ($active) {
-      $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
-        return new WP_Error(
-          'altcha-error',
-          esc_html__('Could not verify you are not a robot.', 'openporte')
-        );
-      }
-    }
+/**
+ * Check the challenge on a WooCommerce login (My Account form).
+ *
+ * Hooked on `authenticate` at priority 20, after core's own credential checks.
+ *
+ * @since 1.26.3
+ * @since 1.30.0 Converted from a closure; acts only when
+ *               openporte_is_woocommerce_form_submission() says WooCommerce
+ *               owns the submission.
+ *
+ * @param WP_User|WP_Error|null $user Result of the earlier callbacks.
+ * @return WP_User|WP_Error|null $user unchanged, or a WP_Error when the
+ *                               challenge fails.
+ */
+function openporte_woocommerce_authenticate( $user ) {
+  if ( $user instanceof WP_Error ) {
     return $user;
-  },
-  20,
-  1
-);
+  }
+  if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
+    return $user; // Skip XMLRPC
+  }
+  if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+    return $user; // Skip REST API
+  }
+  // Only handle WooCommerce form submissions. Same helper as the WordPress
+  // integration, so exactly one of the two owns each login request.
+  if ( ! openporte_is_woocommerce_form_submission( 'woocommerce-login-nonce' ) ) {
+    return $user;
+  }
+
+  $plugin = OpenPortePlugin::$instance;
+  $active = $plugin->get_integration_woocommerce_login();
+  if ( $active ) {
+    $altcha = isset( $_POST['altcha'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['altcha'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+    if ( $plugin->verify( $altcha ) === false ) {
+      return new WP_Error(
+        'altcha-error',
+        esc_html__( 'Could not verify you are not a robot.', 'openporte' )
+      );
+    }
+  }
+  return $user;
+}
+add_filter( 'authenticate', 'openporte_woocommerce_authenticate', 20, 1 );
 
 add_action(
   'woocommerce_lostpassword_form',
@@ -95,33 +106,41 @@ add_action(
   0
 );
 
-add_filter(
-  'lostpassword_post',
-  function ($errors) {
-    if (is_user_logged_in()) {
-      return $errors;
-    }
-    // Only handle WooCommerce form submissions
-    // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Presence check only, to route WooCommerce submissions; the nonce itself is verified by WooCommerce.
-    if(!isset($_POST['woocommerce-lost-password-nonce'])) {
-      return $errors;
-    }
-    $plugin = OpenPortePlugin::$instance;
-    $active = $plugin->get_integration_woocommerce_reset_password();
-    if ($active) {
-      $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
-        $errors->add(
-          'openporte_error_message',
-          esc_html__('Could not verify you are not a robot.', 'openporte')
-        );
-      }
-    }
+/**
+ * Check the challenge on a WooCommerce password-reset request (My Account
+ * lost password form).
+ *
+ * @since 1.26.3
+ * @since 1.30.0 Converted from a closure; acts only when
+ *               openporte_is_woocommerce_form_submission() says WooCommerce
+ *               owns the submission.
+ *
+ * @param WP_Error $errors Errors collected for the reset request.
+ * @return WP_Error $errors, with an error added when the challenge fails.
+ */
+function openporte_woocommerce_lostpassword_post( $errors ) {
+  if ( is_user_logged_in() ) {
     return $errors;
-  },
-  10,
-  1
-);
+  }
+  // Only handle WooCommerce form submissions; see
+  // openporte_woocommerce_authenticate().
+  if ( ! openporte_is_woocommerce_form_submission( 'woocommerce-lost-password-nonce' ) ) {
+    return $errors;
+  }
+  $plugin = OpenPortePlugin::$instance;
+  $active = $plugin->get_integration_woocommerce_reset_password();
+  if ( $active ) {
+    $altcha = isset( $_POST['altcha'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['altcha'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+    if ( $plugin->verify( $altcha ) === false ) {
+      $errors->add(
+        'openporte_error_message',
+        esc_html__( 'Could not verify you are not a robot.', 'openporte' )
+      );
+    }
+  }
+  return $errors;
+}
+add_filter( 'lostpassword_post', 'openporte_woocommerce_lostpassword_post', 10, 1 );
 
 function openporte_woocommerce_comments_render_widget($active, $name = null)
 {
