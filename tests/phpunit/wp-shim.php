@@ -61,6 +61,14 @@ class OpenPorte_Test_Env
   /** @var bool When true, every $wpdb write reports failure — a broken database. */
   public static $broken_database = false;
 
+  /**
+   * Plugin basenames is_plugin_active() reports as active.
+   *
+   * @since 1.30.0
+   * @var array<int,string>
+   */
+  public static $active_plugins = array();
+
   /** @var array|WP_Error Canned response returned by wp_remote_get(). */
   public static $http_response = array();
 
@@ -93,6 +101,7 @@ class OpenPorte_Test_Env
     self::$broken_database = false;
     self::$http_response = array();
     self::$sent_json = null;
+    self::$active_plugins = array();
   }
 
   /**
@@ -229,6 +238,7 @@ function add_action($tag, $callback, $priority = 10, $args = 1)
 }
 function add_filter($tag, $callback, $priority = 10, $args = 1) { return true; }
 function remove_action($tag, $callback, $priority = 10) { return true; }
+function remove_filter($tag, $callback, $priority = 10) { return true; }
 
 function do_action($tag, ...$args)
 {
@@ -398,7 +408,7 @@ function add_query_arg( $key, $value = '', $url = null ) {
   return $url . $separator . $key . '=' . $value;
 }
 function wp_parse_url($url, $component = -1) { return parse_url($url, $component); }
-function is_plugin_active($plugin) { return false; }
+function is_plugin_active($plugin) { return in_array($plugin, OpenPorte_Test_Env::$active_plugins, true); }
 function get_template() { return 'twentytwentyfive'; }
 function register_setting($group, $name, $args = array()) { return true; }
 function add_settings_section(...$args) { return true; }
