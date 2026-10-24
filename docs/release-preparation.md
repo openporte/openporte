@@ -281,6 +281,11 @@ release), using the same `.distignore` filtering the deploy uses:
 wp dist-archive .
 ```
 
+It writes `../openporte.zip`, next to the repository, and stops at a prompt
+when that file already exists (the previous release's zip, normally). Answer
+yes to replace it: the published zip stays attached to its GitHub release, and
+checking out the tag rebuilds it.
+
 Unlike the CI deploy above (which builds from a clean checkout), this command
 reads your local working tree, so anything sitting on disk that `.distignore`
 doesn't exclude — including files git ignores, which never appear in
