@@ -125,10 +125,11 @@ Tests **(a)**, **(b)** and **(c)** are our regression tests.
 6. [ ] CoBlocks with the integration off leaves CoBlocks' own reCAPTCHA alone —
        unit-tested (`CoblocksIntegrationTest`); not run on the bench, CoBlocks is
        not part of the bench plugin set
-7. [X] Replay limit per form: the `openporte_replay_limit` filter receives the form
-       surface (`wordpress_login`, `woocommerce_login`, …) and the hook name
-       (unit-tested in `ReplayLimitTest` and `LoginIntegrationTest`); the strict
-       login replay test still logs in, now through two checks in one request
+7. [X] Replay limit per form: the `openporte_replay_limit` filter preserves its
+       legacy hook/context as argument two and adds the form surface as argument
+       three and the actual running hook as argument four (unit-tested in
+       `ReplayLimitTest` and `LoginIntegrationTest`); the strict login replay
+       test still logs in, now through two checks in one request
 8. [X] "Keep settings when the plugin is deleted" (see (d)6)
 9. [X] Shared-secret in-field actions: Show/Hide, Copy and Regenerate
        (`shared-secret.spec.js`)
@@ -159,3 +160,32 @@ Tests **(a)**, **(b)** and **(c)** are our regression tests.
 
 1. [X] Plugin Check 2.1.0 on the ceiling bench (WP 7.1.3): "Checks complete. No
        errors found." (`./wp-env.sh plugin-check openporte`)
+
+## PR #127 review follow-up (2026-10-24)
+
+- Replay-limit compatibility: the legacy hook/context remains argument two;
+  the surface and actual running hook are additive arguments three and four.
+  The pre-password login gate keeps `authenticate` as the legacy context, and
+  direct `get_replaylimit($context)` calls retain their explicit context.
+- PHPUnit: **209 tests, 475 assertions**, all passing. Regressions cover the
+  existing hook-based comment limit, both login integrations' legacy limits,
+  explicit contexts, unnamed/invalid surfaces and the additive filter arguments.
+- `npm run release:check`: PHP/shell syntax, PHPCS and PHPStan pass. PHPMD
+  retains the same **26 rule/symbol findings** as the unchanged PR head
+  (`b742d8c`); none is newly introduced.
+- PHP **8.5.12** / WordPress **7.1.3** bench: `login-gate.spec.js` and
+  `replay-limit.spec.js` — **12 browser tests passed**. The broader release
+  matrix above was not re-run for this follow-up.
+- Four additional checks through real `wp_authenticate()` and the database
+  replay counter: WordPress and WooCommerce login, each with a legacy
+  two-argument filter and a new three-argument surface filter. With the stored
+  limit at 5 and the filter selecting 1, the first authentication succeeds and
+  the replay fails; the observed arguments are `authenticate`, the expected
+  login surface, and `wp_authenticate_user`. These are WP-CLI authentication
+  checks, separate from the browser tests above.
+- The bench's `includes/core.php` SHA-256 matches the local file. Bench logs
+  contain no PHP warning, notice, fatal, parse error or deprecation. Settings
+  and plugin activation state were restored; temporary check scripts, their
+  counter rows and the settings snapshot were removed.
+- The historical `openporte-v1.29.0.md` acceptance record is restored unchanged
+  from base commit `5c804b5`; the replay-protection document's link resolves.

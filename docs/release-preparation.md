@@ -200,6 +200,11 @@ paths, uninstall, counter concurrency, PHP/WP version combos — is validated by
 hand on the `wp-env` bench (see `docs/maintenance-testing.md`), against the
 release's acceptance record in `docs/acceptance/`.
 
+Each release gets its own record, `docs/acceptance/openporte-vX.Y.Z.md`: copy
+the previous one to the new name and rewrite it, but keep the previous file.
+Never rename it: other documents link to the past records as evidence, and a
+rename breaks those links (it happened with the 1.29.0 record during 1.30.0).
+
 1. **Regression suite.** Run acceptance tests **(a)**, **(b)** and **(c)** from
    `docs/acceptance/` (self-hosted submit-and-verify; custom-mode Challenge URL
    toggle; clean `wp-env logs` / browser console). Add or update an acceptance
