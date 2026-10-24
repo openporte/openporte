@@ -284,7 +284,9 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   wpDiscuz comments), `woocommerce_login`, `woocommerce_register`,
   `woocommerce_reset_password`, `contact_form_7`, `html_forms`, `wpforms`,
   `forminator`, `formidable`, `gravityforms`, `elementor`, `coblocks`,
-  `enfold_theme`, `wpmembers`. `$hook` is the hook currently running, or `''`
+  `enfold_theme`, and `wpmembers`, the one exception to the suffix rule:
+  WP-Members registration is checked when `wordpress_register` is on, but
+  under its own name. `$hook` is the hook currently running, or `''`
   outside any hook; code that calls `verify()` without naming a surface gets
   the hook name as `$context` too, as every caller did in 1.29.0. The counter
   is per token and shared across surfaces; the limit in force is that of the
