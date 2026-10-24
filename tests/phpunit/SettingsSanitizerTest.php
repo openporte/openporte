@@ -130,6 +130,19 @@ class SettingsSanitizerTest extends OpenPorteTestCase
     $this->assertSame(7, openporte_sanitize_replaylimit('custom'));
   }
 
+  /**
+   * A stored array (database tampering only) is not cast to "Array" with a
+   * PHP warning; the guard returns an empty string instead.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_null_complexity_with_a_non_scalar_stored_value_returns_empty()
+  {
+    OpenPorte_Test_Env::$options['openporte_complexity'] = array('high');
+
+    $this->assertSame('', openporte_sanitize_complexity(null));
+  }
+
   public function test_a_null_complexity_preserves_the_stored_value()
   {
     // G1 regression guard: the browser omits the disabled Complexity field in
