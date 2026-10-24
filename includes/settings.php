@@ -183,10 +183,15 @@ function openporte_sanitize_algorithm( $value ) {
  * value.
  *
  * @since 1.29.0
+ * @since 1.30.0 The null guard tolerates a non-scalar stored value.
  */
 function openporte_sanitize_complexity( $value ) {
   if ( null === $value ) {
-    return (string) get_option( OpenPortePlugin::$option_complexity, '' );
+    $stored = get_option( OpenPortePlugin::$option_complexity, '' );
+    // (string) on an array raises "Array to string conversion" on PHP 8. Only
+    // a tampered database row can hold one — this sanitizer is the option's
+    // only writer — but a settings save must not warn because of it.
+    return is_scalar( $stored ) ? (string) $stored : '';
   }
   $value = sanitize_text_field( (string) $value );
   return array_key_exists( $value, OpenPortePlugin::get_complexity_matrix() ) ? $value : 'low';
