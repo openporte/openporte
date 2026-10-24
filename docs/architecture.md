@@ -340,6 +340,8 @@ fallback for a token carrying no expiry at all. The database backend has no
 ceiling. Persistent object-cache TTLs are capped at 30 days because Memcached
 treats a higher value as an absolute Unix timestamp; a longer-lived token is
 therefore bounded per 30-day window instead of becoming silently unlimited.
+Since 1.30.0 only a server-signature token can live that long: a proof-of-work
+token expiring more than a day ahead is refused (security audit #20).
 Storage is an atomic consume on existing infrastructure: `wp_cache_incr()`
 where a persistent object cache is present, otherwise a transient-shaped
 `wp_options` row pair claimed with a guarded `INSERT IGNORE` and spent with a
@@ -466,7 +468,8 @@ code:
   expires longer TTLs immediately, silently resetting the budget on every use.
 - **`expires` must stay covered by the signature** (CVE-2025-68113): keep the
   trailing `&` in `generate_challenge()`, and never sign anything the challenge
-  does not hash.
+  does not hash. Keep `verify_solution()`'s expiry horizon too: it is what
+  protects Custom-mode backends whose salts lack the `&` (security audit #20).
 - **The counter fails open, deliberately.** A broken store must degrade to
   pre-1.29 behaviour, not lock visitors out — but it must stay observable
   (`openporte_replay_store_unavailable` plus the settings-page report).

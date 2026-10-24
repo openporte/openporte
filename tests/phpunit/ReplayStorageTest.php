@@ -112,10 +112,14 @@ class ReplayStorageTest extends OpenPorteTestCase
     $this->assertLessThanOrEqual(602, OpenPorte_Test_Env::$cache_adds[0][3]);
   }
 
+  /**
+   * Only a server-signature token can still carry an expiry this far ahead:
+   * since 1.30.0 a proof-of-work one is refused past $expires_horizon.
+   */
   public function test_a_long_object_cache_ttl_is_capped_at_thirty_days()
   {
     OpenPorte_Test_Env::$external_object_cache = true;
-    $token = $this->token(time() + (40 * DAY_IN_SECONDS));
+    $token = $this->server_token(time() + (40 * DAY_IN_SECONDS));
 
     $this->assertTrue($this->verify_in_new_request($token));
 

@@ -354,6 +354,14 @@ function openporte_evaluate_challenge_response($response, $secret, $configured_a
       'message' => __('The backend returned a challenge whose expiry is already in the past. Its clock may be wrong or it may be serving a cached challenge; correct that before using Custom mode.', 'openporte'),
     );
   }
+  // verify_solution() refuses an expiry past this horizon, so such a backend
+  // would fail every submission; a millisecond timestamp is the likely cause.
+  if ($expires > time() + OpenPortePlugin::$expires_horizon) {
+    return array(
+      'level' => 'error',
+      'message' => __('The backend issues challenges that expire more than a day from now, which OpenPorte refuses: every form submission would fail verification. Check that the backend sets "expires" in seconds, not milliseconds.', 'openporte'),
+    );
+  }
   $message = sprintf(
     /* translators: %s is the algorithm confirmed with the backend */
     __('The Challenge URL responds with a valid %s challenge and the shared secret matches.', 'openporte'),
@@ -364,9 +372,18 @@ function openporte_evaluate_challenge_response($response, $secret, $configured_a
     __('The backend expires its challenges after about %s.', 'openporte'),
     human_time_diff(time(), $expires)
   );
+  $level = 'success';
   if ($expires - time() < MINUTE_IN_SECONDS) {
-    return array('level' => 'warning', 'message' => $message . ' ' . __('That is short enough to expire before a slow device finishes solving, which turns legitimate submissions into failures.', 'openporte'));
+    $level = 'warning';
+    $message .= ' ' . __('That is short enough to expire before a slow device finishes solving, which turns legitimate submissions into failures.', 'openporte');
+  }
+  // A salt that does not end with "&" is the shape behind CVE-2025-68113.
+  // verify_solution()'s expiry horizon keeps it safe here, so this is a
+  // warning, not an error: the backend still works, but is outdated.
+  if (substr((string) $challenge['salt'], -1) !== '&') {
+    $level = 'warning';
+    $message .= ' ' . __('The backend\'s challenge salts do not end with "&". Such challenges can be altered after solving so that they no longer expire (CVE-2025-68113). OpenPorte refuses the altered ones, but other software that checks this backend\'s challenges may not. Check the backend for an update.', 'openporte');
   }
 
-  return array('level' => 'success', 'message' => $message);
+  return array('level' => $level, 'message' => $message);
 }

@@ -29,8 +29,9 @@
 > pass surfaced no new Medium/High issues but added the Info/Low observations
 > #9–#11 below.
 >
-> Findings #13–#19 come from the review of 1.30.0-dev at commit `5c804b5`
-> (2026-10-23). All seven are fixed in 1.30.0. Each records the first release
+> Findings #13–#20 come from the review of 1.30.0-dev at commit `5c804b5`
+> (2026-10-23) and the final review of the release branch (2026-10-24). All
+> eight are fixed in 1.30.0. Each records the first release
 > that carried the defect, so a site can tell whether it was affected; releases
 > before OpenPorte 1.27.0 are those of the original ALTCHA Spam Protection
 > plugin, whose code OpenPorte inherited.
@@ -79,12 +80,13 @@ logic**; the rest are low-severity hardening items.
 | 17 | Site endpoints issue challenges in Custom API mode | CAPTCHA policy bypass | challenge endpoints in `includes/core.php` | Low | **Fixed (1.30.0)** |
 | 18 | Elementor field file ends the whole request | Robustness | `integrations/elementor/field.php` | Info | **Fixed (1.30.0)** |
 | 19 | "Custom" preset without a value saved as 0 | Configuration integrity (admin only) | `includes/settings.php` | Info | **Fixed (1.30.0)** |
+| 20 | Unterminated Custom-mode salts let solved challenges outlive their expiry | Replay / weak verification | `verify_solution()`, `admin/healthcheck.php` | Low | **Fixed (1.30.0)** |
 
 > Findings 9–11 came from the framework review (Appendix A/B). None was
 > exploitable; each was a non-breaking hardening and has now been applied.
 > Finding 12 came from a follow-up hardening pass.
 
-**Affected releases for findings #13–#19.** Every release from the one named
+**Affected releases for findings #13–#20.** Every release from the one named
 below up to and including OpenPorte 1.29.1 carries the defect; 1.30.0 fixes it.
 
 | # | Present since | Affected configuration |
@@ -96,6 +98,7 @@ below up to and including OpenPorte 1.29.1 carries the defect; 1.30.0 fixes it.
 | 17 | ALTCHA Spam Protection 1.21.0 (Custom API mode added) | API mode Custom |
 | 18 | ALTCHA Spam Protection 1.4.0 | Elementor active without Elementor Pro's form field classes |
 | 19 | OpenPorte 1.28.0 (Expiration); 1.29.0 (Replay limit) | Only a hand-crafted settings POST by an administrator |
+| 20 | ALTCHA Spam Protection 1.21.0 (Custom API mode added) | API mode Custom, with a backend whose salts do not end with `&` |
 
 The same review corrected three statements of this document that had been
 inaccurate since its 1.29.0 revision: the claim that the WordPress and
@@ -712,6 +715,43 @@ protection off. Only a hand-crafted `options.php` POST by a `manage_options`
 user produces it. **Fixed:** the stored value is kept. Pinned by
 `SettingsSanitizerTest`.
 
+### 20. Unterminated Custom-mode salts let solved challenges outlive their expiry — Low — Fixed (1.30.0)
+
+**Type:** Replay / weak verification.
+**Location:** `includes/core.php`, `verify_solution()`;
+`admin/healthcheck.php`, `openporte_evaluate_challenge_response()`.
+**Present since:** ALTCHA Spam Protection 1.21.0, which added Custom API mode.
+
+This is the original CVE-2025-68113 case, on the side OpenPorte does not
+control. OpenPorte's own challenges end the salt with `&` (inherited from
+ALTCHA Spam Protection 1.26.3), but in Custom mode the backend builds the salt.
+A backend that does not end it with `&`, such as one built on an ALTCHA library
+older than the CVE fix, issues challenges whose solved token can be reshaped so
+that the signature still verifies while the salt carries a later expiry. The
+`number` check of finding #13 does not stop it, because the reshaping moves
+only digits. A solved challenge then stayed acceptable long after it expired,
+bounded only by the Replay limit; with Replay limit 0, not at all. Found during
+the final review of the 1.30.0 branch, with a proof of concept against
+`verify()`.
+
+**Fix applied.** Refusing unterminated salts outright would have made every
+submission fail on sites whose backend issues them, the login form included,
+from the moment 1.30.0 is installed. Instead `verify_solution()` refuses a token
+whose expiry lies more than `OpenPortePlugin::$expires_horizon` (one day)
+ahead. Moving even one digit onto the expiry multiplies it at least tenfold,
+centuries ahead (on 32-bit PHP the parsed value saturates in January 2038,
+still far past the horizon), while no genuine challenge is valid for anywhere
+near a day (the self-hosted maximum is 4 hours). Staying under 30 days also
+keeps every acceptable token's reuse counter alive as long as the token on the
+object-cache path, whose counter lifetimes are capped at 30 days. Genuine tokens from such a backend
+keep working; reshaped ones are refused. The settings-page backend check
+reports an unterminated salt as a warning that names the risk and advises a
+backend update, and an expiry past the horizon (a backend writing milliseconds,
+whose tokens never expired before) as an error, since every submission would
+now fail. Pinned by `VerifyPrimitivesTest`
+(`test_an_unterminated_salt_cannot_be_given_a_later_expiry`,
+`test_an_expiry_beyond_the_horizon_is_refused`) and `HealthcheckTest`.
+
 ---
 
 ## Appendix C — Coding-standards tooling (WPCS)
@@ -845,7 +885,7 @@ alone:
 
 | Advisory | OpenPorte | Evidence |
 | -------- | --------- | -------- |
-| CVE-2025-68113 — a solved token's `expires` could be edited because the salt's query string was not terminated, letting a crafted secret number splice a later expiry onto it | **Not affected by this transformation**; a related one was fixed in 1.30.0 (finding #13) | `generate_challenge()` appends a trailing `&` to the salt, terminating the query string, and `expires` lives inside the salt that the challenge hashes and the signature covers: editing it breaks the challenge digest. Pinned by `tests/phpunit/VerifyPrimitivesTest.php` (`test_editing_the_salt_expiry_breaks_the_challenge`, `test_appending_a_parameter_to_the_salt_breaks_the_challenge`). The delimiter does not stop the salt/number boundary from being moved the other way; until 1.30.0 that could drop the expiry entirely (finding #13). Since 1.30.0 `verify_solution()` accepts only a digit-only `number`, which closes the class, pinned by `test_moving_the_expiry_out_of_the_salt_is_refused` |
+| CVE-2025-68113 — a solved token's `expires` could be edited because the salt's query string was not terminated, letting a crafted secret number splice a later expiry onto it | **Self-hosted: not affected by this transformation.** Custom mode with a backend whose salts lack the delimiter: affected until 1.30.0 (finding #20). A related transformation was fixed in 1.30.0 (finding #13) | `generate_challenge()` appends a trailing `&` to the salt, terminating the query string, and `expires` lives inside the salt that the challenge hashes and the signature covers: editing it breaks the challenge digest. Pinned by `tests/phpunit/VerifyPrimitivesTest.php` (`test_editing_the_salt_expiry_breaks_the_challenge`, `test_appending_a_parameter_to_the_salt_breaks_the_challenge`). The delimiter does not stop the salt/number boundary from being moved the other way; until 1.30.0 that could drop the expiry entirely (finding #13). Since 1.30.0 `verify_solution()` accepts only a digit-only `number`, pinned by `test_moving_the_expiry_out_of_the_salt_is_refused`. That leaves the original transformation for Custom-mode backends whose salts lack the `&`; since 1.30.0 an expiry more than a day ahead is refused, which closes it (finding #20) |
 
 This matters more since 1.29.0 than it did before: the replay counter's lifetime
 is derived from `expires`, so a token whose expiry could be forged forward would

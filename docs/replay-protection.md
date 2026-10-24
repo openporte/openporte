@@ -360,7 +360,11 @@ Breaking any of these silently removes the protection rather than failing loudly
 - **`expires` must stay covered by the signature** (CVE-2025-68113). The
   signature covers the challenge, the challenge covers the salt, and `expires`
   lives in the salt. Keep the trailing `&` that `generate_challenge()` appends,
-  and never sign anything the challenge does not hash.
+  and never sign anything the challenge does not hash. For Custom-mode
+  backends that omit the `&`, `verify_solution()`'s one-day expiry horizon
+  (`$expires_horizon`) is what refuses a re-split token: keep it above the
+  self-hosted Expiration maximum (4 hours) and under the 30-day object-cache
+  cap, so the counter still outlives every token it accepts.
 - **The memo counts one use per request**, so a strict limit still lets the dual
   `authenticate` login through.
 - **Fail-open, but observable.** A broken store degrades to pre-1.29 behaviour
