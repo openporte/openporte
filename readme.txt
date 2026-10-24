@@ -307,7 +307,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 * Fixed the "Settings saved." message appearing twice on the OpenPorte settings page.
 * Fixed the Elementor integration ending the whole request when Elementor Pro's form fields are missing. Present since ALTCHA Spam Protection 1.4.0.
 * Fixed Expiration and Replay limit being saved as 0 when "Custom" was submitted without a value; the stored value is now kept. Present since OpenPorte 1.28.0.
-* For developers: the `openporte_replay_limit` filter now receives the form surface as its context (`wordpress_login`, `woocommerce_login`, `wordpress_comments`, `contact_form_7`, …), so a site can set a stricter limit on one form than another; the hook name moved to a third argument. `verify()` accepts the surface as an optional third argument.
+* For developers: the `openporte_replay_limit` filter keeps its existing hook/context as the second argument and adds the form surface as the third (`wordpress_login`, `woocommerce_login`, `wordpress_comments`, `contact_form_7`, …), so a site can set a stricter limit on one form than another. The actual running hook is the fourth argument; existing login filters still receive `authenticate` at the earlier login gate. `verify()` accepts the surface as an optional third argument.
 * Translations: 14 fully translated languages updated for the new and changed settings strings.
 
 = 1.29.1 =

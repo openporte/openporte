@@ -121,43 +121,109 @@ class ReplayLimitTest extends OpenPorteTestCase
   }
 
   /**
-   * A caller that names its form surface gets it as the filter's context;
-   * the hook name comes third.
+   * Naming a surface preserves the hook context existing callbacks receive.
    *
    * @since 1.30.0
    */
-  public function test_a_named_surface_is_the_context_and_the_hook_comes_third()
-  {
-    OpenPorte_Test_Env::$current_filter = 'wp_authenticate_user';
+  public function test_a_named_surface_preserves_the_hook_context() {
+    OpenPorte_Test_Env::$current_filter = 'preprocess_comment';
     $captured = null;
-    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context, $hook) use (&$captured) {
-      $captured = array($context, $hook);
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface, $hook ) use ( &$captured ) {
+      $captured = array( $context, $surface, $hook );
       return $limit;
     };
 
-    $this->assertTrue($this->plugin->verify($this->token(time() + 600), null, 'wordpress_login'));
+    $this->assertTrue( $this->plugin->verify( $this->token( time() + 600 ), null, 'wordpress_comments' ) );
 
-    $this->assertSame(array('wordpress_login', 'wp_authenticate_user'), $captured);
+    $this->assertSame( array( 'preprocess_comment', 'wordpress_comments', 'preprocess_comment' ), $captured );
   }
 
   /**
-   * A context that is not a non-empty string falls back to the hook name,
-   * like a caller that names no surface.
+   * A 1.29 hook-based filter still refuses the first comment replay.
    *
    * @since 1.30.0
    */
-  public function test_a_non_string_context_falls_back_to_the_hook()
-  {
+  public function test_a_legacy_comment_filter_still_enforces_its_strict_limit() {
     OpenPorte_Test_Env::$current_filter = 'preprocess_comment';
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context ) {
+      return 'preprocess_comment' === $context ? 1 : $limit;
+    };
+    $token = $this->token( time() + 600 );
+
+    $this->assertTrue( $this->plugin->verify( $token, null, 'wordpress_comments' ) );
+    $this->next_request();
+    $this->assertFalse( $this->plugin->verify( $token, null, 'wordpress_comments' ) );
+  }
+
+  /**
+   * Direct callers retain the explicit context supported since 1.29.
+   *
+   * @since 1.30.0
+   */
+  public function test_an_explicit_legacy_context_is_preserved() {
+    OpenPorte_Test_Env::$current_filter = 'wp_authenticate_user';
     $captured = null;
-    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context, $hook) use (&$captured) {
-      $captured = array($context, $hook);
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface, $hook ) use ( &$captured ) {
+      $captured = array( $context, $surface, $hook );
       return $limit;
     };
 
-    $this->plugin->verify($this->token(time() + 600), null, array('wordpress_comments'));
+    $this->plugin->get_replaylimit( 'custom_login', 'wordpress_login' );
 
-    $this->assertSame(array('preprocess_comment', 'preprocess_comment'), $captured);
+    $this->assertSame( array( 'custom_login', 'wordpress_login', 'wp_authenticate_user' ), $captured );
+  }
+
+  /**
+   * A surface does not manufacture a hook context outside a running hook.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_surface_outside_a_hook_keeps_the_legacy_context_empty() {
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface, $hook ) use ( &$captured ) {
+      $captured = array( $context, $surface, $hook );
+      return $limit;
+    };
+
+    $this->plugin->get_replaylimit( '', 'wordpress_comments' );
+
+    $this->assertSame( array( '', 'wordpress_comments', '' ), $captured );
+  }
+
+  /**
+   * A caller that supplies no surface receives the legacy hook context.
+   *
+   * @since 1.30.0
+   */
+  public function test_an_unnamed_surface_preserves_the_hook_context() {
+    OpenPorte_Test_Env::$current_filter = 'preprocess_comment';
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface, $hook ) use ( &$captured ) {
+      $captured = array( $context, $surface, $hook );
+      return $limit;
+    };
+
+    $this->plugin->verify( $this->token( time() + 600 ) );
+
+    $this->assertSame( array( 'preprocess_comment', '', 'preprocess_comment' ), $captured );
+  }
+
+  /**
+   * An unusable surface is omitted without changing the legacy hook context.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_non_string_surface_is_omitted() {
+    OpenPorte_Test_Env::$current_filter = 'preprocess_comment';
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface, $hook ) use ( &$captured ) {
+      $captured = array( $context, $surface, $hook );
+      return $limit;
+    };
+
+    $this->plugin->verify( $this->token( time() + 600 ), null, array( 'wordpress_comments' ) );
+
+    $this->assertSame( array( 'preprocess_comment', '', 'preprocess_comment' ), $captured );
   }
 
   /**
@@ -166,24 +232,23 @@ class ReplayLimitTest extends OpenPorteTestCase
    *
    * @since 1.30.0
    */
-  public function test_a_site_can_be_strict_on_login_and_lenient_on_comments()
-  {
-    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context) {
-      return $context === 'wordpress_login' ? 1 : 3;
+  public function test_a_site_can_be_strict_on_login_and_lenient_on_comments() {
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface ) {
+      return 'wordpress_login' === $surface ? 1 : 3;
     };
-    $login = $this->token(time() + 600);
-    $comment = $this->token(time() + 600);
+    $login = $this->token( time() + 600 );
+    $comment = $this->token( time() + 600 );
 
-    $this->assertTrue($this->plugin->verify($login, null, 'wordpress_login'));
+    $this->assertTrue( $this->plugin->verify( $login, null, 'wordpress_login' ) );
     $this->next_request();
-    $this->assertFalse($this->plugin->verify($login, null, 'wordpress_login'));
+    $this->assertFalse( $this->plugin->verify( $login, null, 'wordpress_login' ) );
 
-    for ($i = 0; $i < 3; $i++) {
+    for ( $i = 0; $i < 3; $i++ ) {
       $this->next_request();
-      $this->assertTrue($this->plugin->verify($comment, null, 'wordpress_comments'), 'use ' . ($i + 1));
+      $this->assertTrue( $this->plugin->verify( $comment, null, 'wordpress_comments' ), 'use ' . ( $i + 1 ) );
     }
     $this->next_request();
-    $this->assertFalse($this->plugin->verify($comment, null, 'wordpress_comments'));
+    $this->assertFalse( $this->plugin->verify( $comment, null, 'wordpress_comments' ) );
   }
 
   /**
@@ -193,16 +258,15 @@ class ReplayLimitTest extends OpenPorteTestCase
    *
    * @since 1.30.0
    */
-  public function test_the_counter_is_shared_across_surfaces()
-  {
-    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context) {
-      return $context === 'wordpress_login' ? 1 : 5;
+  public function test_the_counter_is_shared_across_surfaces() {
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ( $limit, $context, $surface ) {
+      return 'wordpress_login' === $surface ? 1 : 5;
     };
-    $token = $this->token(time() + 600);
+    $token = $this->token( time() + 600 );
 
-    $this->assertTrue($this->plugin->verify($token, null, 'wordpress_comments'));
+    $this->assertTrue( $this->plugin->verify( $token, null, 'wordpress_comments' ) );
     $this->next_request();
-    $this->assertFalse($this->plugin->verify($token, null, 'wordpress_login'));
+    $this->assertFalse( $this->plugin->verify( $token, null, 'wordpress_login' ) );
   }
 
   public function test_a_filter_returning_a_non_numeric_value_falls_back_to_the_stored_limit()

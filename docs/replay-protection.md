@@ -178,19 +178,23 @@ snapping to the nearest preset. It is active in **both** API modes.
 
 For developers:
 
-- **`openporte_replay_limit`** filter — receives the limit, the form surface
-  as context (since 1.30.0; e.g. `wordpress_login`, `woocommerce_login`,
+- **`openporte_replay_limit`** filter — receives the limit and its existing
+  hook/context name as argument two. Since 1.30.0 it also receives the form
+  surface as argument three (e.g. `wordpress_login`, `woocommerce_login`,
   `wordpress_comments`, `contact_form_7` — the suffix of the matching
-  `openporte_integration_*` setting, full list in the README) and the current
-  hook name, so a site can run strict on login and lenient on comments. Each
-  integration passes its surface to `verify()`; a caller that names none (in
-  1.29.0, every caller) gets the hook name as context. Hook names were the
-  wrong key: a WordPress and a WooCommerce login both run on
-  `wp_authenticate_user` since 1.30.0. The counter stays per token, shared
-  across surfaces, so a token already spent elsewhere counts against a strict
-  login limit. The return value is re-clamped, so a filter returning nonsense
-  cannot silently switch protection off. Called outside any hook the hook name
-  is an empty string, which filters should read as "no hook".
+  `openporte_integration_*` setting, full list in the README), and the actual
+  running hook as argument four. Each integration passes its surface to
+  `verify()`; a caller that names none supplies an empty surface. Existing
+  callbacks keep working: at the earlier `wp_authenticate_user` login gate the
+  legacy context remains `authenticate`, so a 1.29 strict-login policy applies
+  before the password check, even though the memo answers the later check
+  without filtering again. Direct `get_replaylimit($context)` calls retain
+  their explicit context. Surfaces let new callbacks distinguish WordPress
+  from WooCommerce logins while the legacy context stays compatible. The
+  counter stays per token, shared across surfaces, so a token already spent
+  elsewhere counts against a strict login limit. The return value is
+  re-clamped, so a filter returning nonsense cannot silently switch protection
+  off. Outside a hook the default context and actual hook are empty strings.
 - **`openporte_replay_store_unavailable`** action — fires on every fail-open,
   with the counter key, the limit and the TTL.
 
@@ -334,7 +338,7 @@ worker by design. One environmental assumption *was* verified on the bench —
 the guarded `INSERT` an atomic create and the guarded `UPDATE` row-locked. What
 remains open is the behaviour of the whole under load. A design argument catches
 a wrong shape; only parallel workers catch a wrong assumption. The parallel-replay
-stress test is [#102](https://github.com/openporte/openporte/issues/102). Until
+stress test is [#124](https://github.com/openporte/openporte/issues/124). Until
 it lands, nothing here should be read as evidence that atomicity has been
 demonstrated under concurrency. The manual steps, including the object-cache
 path that no harness in this repository exercises, are tracked in the release's
@@ -393,7 +397,8 @@ closes when #105 closes.
 | Issue | Scope |
 | --- | --- |
 | [#101](https://github.com/openporte/openporte/issues/101) | The atomic counter and the advisories — shipped in 1.29.0. |
-| [#102](https://github.com/openporte/openporte/issues/102) | Per-context limits wired through the filter, threshold tuning from real feedback, and the standalone parallel-replay stress script. |
+| [#102](https://github.com/openporte/openporte/issues/102) | Per-context limits wired through the filter and threshold tuning from real feedback — shipped in 1.30.0. |
+| [#124](https://github.com/openporte/openporte/issues/124) | The standalone parallel-replay stress script, split out of #102; no milestone yet. |
 | [#103](https://github.com/openporte/openporte/issues/103) | Enforced expiry bounds (removing "None", closing the `0` residual for good), the operator policy for tokens with no expiry, and visitor-recovery UX. Breaking config. |
 | [#104](https://github.com/openporte/openporte/issues/104) | The optional "delegate to backend" verification path. Blocked by #103. |
 | [#105](https://github.com/openporte/openporte/issues/105) | Removal of the deprecated primitives and expiry shims. Breaking API. |

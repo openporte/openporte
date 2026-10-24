@@ -275,32 +275,38 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   Check if an integration by `$name` is active.  
   **Returns:** `bool`
 
-* `apply_filters('openporte_replay_limit', $limit, $context, $hook)`  
+* `apply_filters('openporte_replay_limit', $limit, $context, $surface, $hook)`  
   Override how many times one solved token may be accepted, so a site can be
-  stricter on login than on comments. Since 1.30.0 `$context` names the form
-  surface: the suffix of the integration setting that turned the check on
-  (`openporte_integration_<context>`) — `wordpress_login`,
+  stricter on login than on comments. `$context` keeps the hook/context name
+  supplied in 1.29.0. On the new pre-password login gate it remains
+  `authenticate`, so existing strict-login callbacks keep working; otherwise
+  it defaults to the current hook, or `''` outside hooks. A direct caller of
+  `get_replaylimit($context)` keeps its explicit context unchanged.
+
+  Since 1.30.0 the additive third argument, `$surface`, names the form:
+  the suffix of the integration setting that turned the check on
+  (`openporte_integration_<surface>`) — `wordpress_login`,
   `wordpress_register`, `wordpress_reset_password`, `wordpress_comments` (also
   wpDiscuz comments), `woocommerce_login`, `woocommerce_register`,
   `woocommerce_reset_password`, `contact_form_7`, `html_forms`, `wpforms`,
   `forminator`, `formidable`, `gravityforms`, `elementor`, `coblocks`,
   `enfold_theme`, and `wpmembers`, the one exception to the suffix rule:
   WP-Members registration is checked when `wordpress_register` is on, but
-  under its own name. `$hook` is the hook currently running, or `''`
-  outside any hook; code that calls `verify()` without naming a surface gets
-  the hook name as `$context` too, as every caller did in 1.29.0. The counter
-  is per token and shared across surfaces; the limit in force is that of the
-  surface the token is submitted on. The return value is re-clamped to the
-  0–100 range, so a filter cannot switch protection off with an out-of-range
-  value. Since 1.29.0; `$hook` and the surface context since 1.30.0. Note the
-  spelling: the filter is `openporte_replay_limit`, the option
+  under its own name. Code that calls `verify()` without naming a surface
+  supplies `''` as `$surface`. The fourth argument, `$hook`, is the actual
+  running hook (including `wp_authenticate_user` at the login gate), or `''`
+  outside hooks. The counter is per token and shared across surfaces; the
+  limit in force is that of the surface the token is submitted on. The return
+  value is re-clamped to the 0–100 range, so a filter cannot switch protection
+  off with an out-of-range value. Since 1.29.0; `$surface` and `$hook` since
+  1.30.0. Note the spelling: the filter is `openporte_replay_limit`, the option
   `openporte_replaylimit`.  
   **Returns:** `int`
 
   ```php
-  add_filter('openporte_replay_limit', function ($limit, $context) {
-    return $context === 'wordpress_login' ? 1 : $limit;
-  }, 10, 2);
+  add_filter('openporte_replay_limit', function ($limit, $context, $surface) {
+    return $surface === 'wordpress_login' ? 1 : $limit;
+  }, 10, 3);
   ```
 
 * `apply_filters('openporte_widget_attrs', $attrs, $mode, $language, $name)`  
