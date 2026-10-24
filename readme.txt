@@ -72,10 +72,10 @@ what they map to.
 == Upgrade Notice ==
 
 = 1.30.0 =
-New "Self-hosted transport" setting: challenges can be served through
-admin-ajax.php instead of the REST API, for sites whose security plugin blocks
-the REST API for visitors. Nothing changes on upgrade: existing and new sites
-keep the REST API.
+Security release: fixes to challenge expiry, login protection and several
+integrations; please update. Also adds a Self-hosted transport setting
+(REST API or admin-ajax.php) for sites whose security plugin blocks the REST
+API. Existing sites keep the REST API.
 
 = 1.29.0 =
 Solved challenges can no longer be replayed without limit. The new "Replay
@@ -293,19 +293,21 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 
 == Changelog ==
 
-= 1.30.0 (unreleased) =
+= 1.30.0 =
 
-* Added a Self-hosted transport setting to serve challenges through the REST API (default) or admin-ajax.php, for sites whose security plugin blocks the REST API for visitors. Thanks to @factor11 for the report and workaround.
-* Shared secret actions now use inline WordPress SVG icons inside the field, with accessible labels, copy feedback, and visible keyboard focus.
-* Fixed the duplicated saved notice when updating OpenPorte settings.
 * Security: solved challenges are now always refused once expired; until now, a submitted challenge could be altered so that its expiry was ignored. Present since ALTCHA Spam Protection 0.3.2.
 * Security: login protection now checks the challenge before the password, so password guessing can no longer skip it, and the error no longer reveals whether a guessed password was right. Present since ALTCHA Spam Protection 0.3.2.
 * Security: on sites running WooCommerce, WordPress login and password-reset protection can no longer be skipped with a forged WooCommerce form field. Present since ALTCHA Spam Protection 1.13.1.
-* Security: fixed CoBlocks forms: with the CoBlocks integration switched off, OpenPorte no longer overrides the form's own reCAPTCHA check. Present since ALTCHA Spam Protection 1.23.0.
+* Security: with the CoBlocks integration switched off, OpenPorte no longer overrides the CoBlocks form's own reCAPTCHA check. Present since ALTCHA Spam Protection 1.23.0.
 * Security: in Custom API mode, the site's own challenge endpoints no longer issue challenges, which let bots bypass the backend's rules; they now answer with an error. Present since ALTCHA Spam Protection 1.21.0. After switching a site to Custom mode, purge page caches.
+* Added a Self-hosted transport setting to serve challenges through the REST API (default) or admin-ajax.php, for sites whose security plugin blocks the REST API for visitors. Thanks to @factor11 for the report and workaround.
+* Added a "Keep settings when the plugin is deleted" option (Settings → OpenPorte → Data), so OpenPorte can be removed and reinstalled without losing its configuration. It is off by default: deleting the plugin still removes all of its settings unless you switch it on.
+* Shared secret actions now use inline WordPress SVG icons inside the field, with accessible labels, copy feedback, and visible keyboard focus.
+* Fixed the "Settings saved." message appearing twice on the OpenPorte settings page.
 * Fixed the Elementor integration ending the whole request when Elementor Pro's form fields are missing. Present since ALTCHA Spam Protection 1.4.0.
 * Fixed Expiration and Replay limit being saved as 0 when "Custom" was submitted without a value; the stored value is now kept. Present since OpenPorte 1.28.0.
 * For developers: the `openporte_replay_limit` filter now receives the form surface as its context (`wordpress_login`, `woocommerce_login`, `wordpress_comments`, `contact_form_7`, …), so a site can set a stricter limit on one form than another; the hook name moved to a third argument. `verify()` accepts the surface as an optional third argument.
+* Translations: 14 fully translated languages updated for the new and changed settings strings.
 
 = 1.29.1 =
 
