@@ -1,10 +1,9 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.30.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-24T02:12:04+00:00\n"
-"PO-Revision-Date: 2026-10-24 00:00+0000\n"
+"POT-Creation-Date: 2026-10-24T10:37:49+00:00\n"
+"PO-Revision-Date: 2026-10-24 10:37+0000\n"
 "Last-Translator: claude-code-2.1.309:claude-opus-5-5 - signed-off by J-C "
 "Berthon\n"
 "Language-Team: Polish\n"
@@ -197,8 +196,18 @@ msgstr ""
 "zły lub może serwować zapisane w pamięci podręcznej wyzwanie; napraw to "
 "przed użyciem trybu Custom."
 
+#: admin/healthcheck.php:362
+msgid ""
+"The backend issues challenges that expire more than a day from now, which "
+"OpenPorte refuses: every form submission would fail verification. Check that "
+"the backend sets \"expires\" in seconds, not milliseconds."
+msgstr ""
+"Backend wydaje wyzwania, które wygasają za ponad dzień, a OpenPorte je "
+"odrzuca: żadne przesłanie formularza nie przejdzie weryfikacji. Sprawdź, czy "
+"backend podaje \"expires\" w sekundach, a nie w milisekundach."
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:359
+#: admin/healthcheck.php:367
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -208,18 +217,31 @@ msgstr ""
 "współdzielony się zgadza."
 
 #. translators: %s is a duration such as "20 mins"
-#: admin/healthcheck.php:364
+#: admin/healthcheck.php:372
 #, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "Backend wygasa wyzwania po około %s."
 
-#: admin/healthcheck.php:368
+#: admin/healthcheck.php:378
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
 msgstr ""
 "Jest to wystarczająco krótkie, aby wygasć, zanim wolniejsze urządzenie "
 "skończy rozwiązywać wyzwanie, co zamienia legitymacyjne przesyłki w błędy."
+
+#: admin/healthcheck.php:385
+msgid ""
+"The backend's challenge salts do not end with \"&\". Such challenges can be "
+"altered after solving so that they no longer expire (CVE-2025-68113). "
+"OpenPorte refuses the altered ones, but other software that checks this "
+"backend's challenges may not. Check the backend for an update."
+msgstr ""
+"Sole wyzwań backendu nie kończą się znakiem \"&\". Takie wyzwania można po "
+"rozwiązaniu zmienić tak, aby przestały wygasać (CVE-2025-68113). OpenPorte "
+"odrzuca zmienione wyzwania, ale inne oprogramowanie sprawdzające wyzwania "
+"tego backendu może tego nie robić. Sprawdź, czy jest dostępna aktualizacja "
+"backendu."
 
 #: admin/options.php:42 integrations/elementor/field.php:22
 msgid "OpenPorte"
@@ -422,38 +444,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: includes/core.php:620 integrations/enfold-theme.php:58
+#: includes/core.php:643 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Weryfikacja nie powiodła się. Spróbuj ponownie później."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:623
+#: includes/core.php:646
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Chronione przez %1$sALTCHA%2$s"
 
-#: includes/core.php:627
+#: includes/core.php:650
 msgid "I'm not a robot"
 msgstr "Nie jestem robotem"
 
-#: includes/core.php:628
+#: includes/core.php:651
 msgid "Verified"
 msgstr "Zweryfikowane"
 
-#: includes/core.php:629
+#: includes/core.php:652
 msgid "Verifying..."
 msgstr "Weryfikacja..."
 
-#: includes/core.php:630
+#: includes/core.php:653
 msgid "Verifying... please wait."
 msgstr "Weryfikacja... proszę czekać."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1503
+#: includes/core.php:1531
 msgid "This form requires JavaScript!"
 msgstr "Ten formularz wymaga JavaScript!"
 
-#: includes/core.php:1570
+#: includes/core.php:1598
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Ta witryna nie wydaje wyzwań w trybie Custom API."
 
