@@ -14,7 +14,7 @@ Unticked boxes were **not run** this cycle; the note says why.
 1. [X] `npm run release:check` — `php -l`/`bash -n` pass (blocking); `phpcs`/`phpstan`
        output reviewed, no unexplained new findings (informative)
 2. [X] PHPUnit unit suite (`npm run test:unit`) **green**, no skipped or risky tests
-       (198 tests, 436 assertions)
+       (203 tests, 460 assertions)
 3. [X] E2E suite (`cd tests/e2e && npm test`, see `tests/e2e/README.md`) **all
        green** on the ceiling bench: 86 tests — the settings matrix for every
        driver with its negative controls, the replay-limit suite, the
@@ -117,7 +117,11 @@ Tests **(a)**, **(b)** and **(c)** are our regression tests.
        protection on (`login-gate.spec.js`)
 5. [X] Expired solved challenges stay refused (unit regression in
        `VerifyPrimitivesTest`; on the bench, an expired GateCHA token is refused on
-       a real comment form in both its original and altered form)
+       a real comment form in both its original and altered form). For a
+       Custom-mode backend whose salts lack the trailing `&` (audit #20), genuine
+       tokens are accepted and re-split ones refused (`VerifyPrimitivesTest`);
+       the backend check warns on such salts (`HealthcheckTest`) and still
+       reports success against GateCHA, whose salts end with `&`
 6. [ ] CoBlocks with the integration off leaves CoBlocks' own reCAPTCHA alone —
        unit-tested (`CoblocksIntegrationTest`); not run on the bench, CoBlocks is
        not part of the bench plugin set
