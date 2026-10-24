@@ -554,3 +554,5 @@ Co-contributors: Mistral (AI), Claude (AI), GPT-OSS (AI).
 
 = 0.1.0 =
 * First version
+
+wp-rankings verification string: [https://wp-rankings.com/plugins/openporte](https://wp-rankings.com/plugins/openporte)
