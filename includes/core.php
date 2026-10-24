@@ -331,18 +331,19 @@ class OpenPortePlugin
    * 0 means unlimited — the pre-1.29 stateless behaviour, kept as an escape
    * hatch for a site that genuinely needs it.
    *
-   * The openporte_replay_limit filter gets the form surface as its context, so
-   * a site can be stricter on login than on comments. Every shipped
-   * integration names its surface with the suffix of the setting that turned
-   * the check on (openporte_integration_<context>): 'wordpress_login',
-   * 'woocommerce_login', 'wordpress_comments', 'contact_form_7', … One
-   * exception: WP-Members registration is 'wpmembers', although the WordPress
-   * registration setting turns it on. Surfaces are stable across releases,
-   * unlike hook names (a WordPress and a WooCommerce login both run on
-   * wp_authenticate_user). The current hook name is passed as a third
-   * argument. A caller that names no surface, such as third-party code
-   * calling verify() with two arguments, gets the hook name as its context, as
-   * every caller did in 1.29.
+   * The openporte_replay_limit filter keeps its 1.29 hook/context name as
+   * argument two. The optional form surface is argument three; the actual
+   * running hook is argument four. On the pre-password login gate the legacy
+   * context stays 'authenticate', so existing strict-login filters still run
+   * before the password check and the memo does not bypass their policy.
+   * An explicit $context from a direct caller is always preserved.
+   *
+   * Every shipped integration names its surface with the suffix of the
+   * setting that turned the check on (openporte_integration_<surface>):
+   * 'wordpress_login', 'woocommerce_login', 'wordpress_comments' (including
+   * wpDiscuz), 'contact_form_7', … WP-Members registration is 'wpmembers',
+   * although the WordPress registration setting turns it on. A caller that
+   * names no surface supplies an empty string in argument three.
    *
    * The option is spelled openporte_replaylimit and the filter
    * openporte_replay_limit, without and with an underscore. The difference is
@@ -350,34 +351,47 @@ class OpenPortePlugin
    * match the other, and grep for both when tracing the setting.
    *
    * The filter's return value is re-clamped: a filter returning nonsense must
-   * not be able to switch protection off by accident.
-   *
-   * Called outside any hook, current_filter() returns false and the hook name
-   * is the empty string. Filters should read that as "no hook", never as a
-   * hook name.
+   * not be able to switch protection off by accident. Outside any hook the
+   * default context and actual hook are both empty strings.
    *
    * @since 1.29.0
-   * @since 1.30.0 The context is the form surface when the caller names one;
-   *               the hook name moved to the filter's third argument.
+   * @since 1.30.0 Added the optional $surface parameter and additive filter
+   *               arguments for the surface and actual hook.
    *
-   * @param mixed $context Optional form surface, a non-empty string; anything
-   *                       else (third-party code passing the wrong type)
-   *                       falls back to the filter currently running.
+   * @param mixed $context Optional legacy hook/context name; defaults to the
+   *                       current hook, or 'authenticate' at a named login gate.
+   * @param mixed $surface Optional form surface; non-string values are omitted.
    * @return int Maximum accepted uses per token; 0 for unlimited.
    */
-  public function get_replaylimit($context = '')
-  {
-    $stored = OpenPortePlugin::clamp_replaylimit(get_option(OpenPortePlugin::$option_replaylimit, null));
-    $limit = $stored === null ? OpenPortePlugin::$replaylimit_default : $stored;
+  public function get_replaylimit( $context = '', $surface = '' ) {
+    $stored = OpenPortePlugin::clamp_replaylimit( get_option( OpenPortePlugin::$option_replaylimit, null ) );
+    $limit = null === $stored ? OpenPortePlugin::$replaylimit_default : $stored;
     $hook = (string) current_filter();
-    if (!is_string($context) || $context === '') {
+    $surface = is_string( $surface ) ? $surface : '';
+    if ( ! is_string( $context ) || '' === $context ) {
       $context = $hook;
+      // The earlier gate must honor policies written for the 1.29 login hook;
+      // the memo answers the later authenticate check without filtering again.
+      if ( 'wp_authenticate_user' === $hook && in_array( $surface, array( 'wordpress_login', 'woocommerce_login' ), true ) ) {
+        $context = 'authenticate';
+      }
     }
+    /**
+     * Filter the maximum accepted uses of a solved token.
+     *
+     * @since 1.29.0
+     * @since 1.30.0 Added the $surface and $hook arguments.
+     *
+     * @param int    $limit   Configured maximum uses; 0 means unlimited.
+     * @param string $context Legacy hook/context name, preserved for existing callbacks.
+     * @param string $surface Form surface, or an empty string when unnamed.
+     * @param string $hook    Actual running hook, or an empty string outside hooks.
+     */
     $filtered = OpenPortePlugin::clamp_replaylimit(
-      apply_filters('openporte_replay_limit', $limit, $context, $hook)
+      apply_filters( 'openporte_replay_limit', $limit, $context, $surface, $hook )
     );
 
-    return $filtered === null ? $limit : $filtered;
+    return null === $filtered ? $limit : $filtered;
   }
 
   /**
@@ -944,33 +958,32 @@ class OpenPortePlugin
    * @param string $context Form surface the token was submitted on, or ''.
    * @return bool True when a use was still available, or protection is off.
    */
-  private function enforce_replay_limit($data, $context = '')
-  {
-    $limit = $this->get_replaylimit($context);
-    if ($limit <= 0) {
+  private function enforce_replay_limit( $data, $context = '' ) {
+    $limit = $this->get_replaylimit( '', $context );
+    if ( $limit <= 0 ) {
       // Unlimited (legacy): pre-1.29 behaviour, and no state is written at all.
       return true;
     }
-    if (!isset($data->signature) || !is_string($data->signature) || $data->signature === '') {
+    if ( ! isset( $data->signature ) || ! is_string( $data->signature ) || '' === $data->signature ) {
       return true;
     }
     // 128 bits of a SHA-256 over the signature: collision-free in practice and
     // short enough to keep the option name well inside WordPress's limit.
-    $key = OpenPortePlugin::$replay_key_prefix . substr(hash('sha256', $data->signature), 0, 32);
-    $expires = $this->payload_expires($data);
+    $key = OpenPortePlugin::$replay_key_prefix . substr( hash( 'sha256', $data->signature ), 0, 32 );
+    $expires = $this->payload_expires( $data );
     // The floor can only make the counter outlive a nearly-expired token,
     // which is harmless — the crypto gate rejects such a token first. The
     // invariant that matters runs the other way: the counter must never expire
     // while the token it tracks is still acceptable.
     $ttl = $expires > 0
-      ? max($expires - time(), MINUTE_IN_SECONDS)
+      ? max( $expires - time(), MINUTE_IN_SECONDS )
       : OpenPortePlugin::$replay_ttl_fallback;
-    $accepted = $this->consume_replay_slot($key, $limit, $ttl);
-    if ($accepted === null) {
+    $accepted = $this->consume_replay_slot( $key, $limit, $ttl );
+    if ( null === $accepted ) {
       // Fail open, but observably: a store that cannot count must degrade to
       // pre-1.29 behaviour rather than lock legitimate visitors out.
       $this->record_replay_failopen();
-      do_action('openporte_replay_store_unavailable', $key, $limit, $ttl);
+      do_action( 'openporte_replay_store_unavailable', $key, $limit, $ttl );
 
       return true;
     }
@@ -1175,12 +1188,12 @@ class OpenPortePlugin
    * @since 1.29.0 Enforces the Replay limit setting and memoises the outcome
    *               for the rest of the request.
    * @since 1.30.0 Added the `$context` parameter (the form surface), passed
-   *               to the openporte_replay_limit filter.
+   *               as argument three to the openporte_replay_limit filter.
    *
    * @param string      $payload  The base64-encoded token from the widget.
    * @param string|null $hmac_key The HMAC key; falls back to the configured secret.
    * @param string      $context  Form surface, e.g. 'wordpress_login'; see
-   *                              get_replaylimit(). Defaults to the hook name.
+   *                              get_replaylimit(). Empty when unnamed.
    * @return bool True if the token is valid and still had a use left.
    */
   public function verify($payload, $hmac_key = null, $context = '')

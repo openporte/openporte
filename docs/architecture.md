@@ -130,12 +130,14 @@ the option directly:
 A fourth knob, and the one that made the expiry advisory-only rather than
 enforced: **`get_replaylimit()`** reads `openporte_replaylimit` (default **5**,
 range 0–100, `0` = unlimited) and bounds how many times one solved challenge is
-accepted. It is filterable via **`openporte_replay_limit`**, which receives the
-form surface as context (since 1.30.0: each integration passes its surface ID,
-the suffix of its `openporte_integration_*` setting, to `verify()`) and the
-current hook name, so a site can be stricter on login than on comments; the
-return value is re-clamped, so a filter that returns nonsense cannot silently
-switch protection off. Enforcement lives in
+accepted. It is filterable via **`openporte_replay_limit`**, which preserves
+its legacy hook/context name as argument two and, since 1.30.0, adds the form
+surface as argument three and the actual running hook as argument four. Each
+integration passes its surface to `verify()`, so new callbacks can distinguish
+WordPress from WooCommerce forms. At the earlier login gate the legacy context
+stays `authenticate`, preserving existing strict-login policies. The return
+value is re-clamped, so a filter that returns nonsense cannot silently switch
+protection off. Enforcement lives in
 `verify()` — see "Stateless primitives, stateful wrapper" below, and
 [`docs/replay-protection.md`](replay-protection.md) for the full design: the
 reasoning behind the mechanism, the residuals it accepts, the alternatives that
