@@ -1,6 +1,6 @@
 # OpenPorte E2E suite
 
-Browser-driven tests against a running wp-env bench. Four spec files, four axes:
+Browser-driven tests against a running wp-env bench. Five spec files, five axes:
 
 - **`settings-matrix.spec.js`** — **integrations × auto-verification mode ×
   Floating UI**, so combinations too numerous to click through by hand get
@@ -17,6 +17,14 @@ Browser-driven tests against a running wp-env bench. Four spec files, four axes:
   answers "incorrect password" or logs the user in. With WooCommerce active and
   only WordPress protection on, a forged WooCommerce nonce field on wp-login.php
   no longer skips the login or the lost-password check.
+- **`admin-settings.spec.js`** — the settings page's live behaviour (issue
+  #102): API Mode enables and disables the mode-specific fields
+  (Challenge URL, Complexity, Expiration, Self-hosted transport) and their
+  notes, a "Custom" preset reveals its number input, and a save in Custom
+  mode keeps the stored values of the fields the browser did not submit. It
+  saves settings, so it restores the options it touches afterwards, and it
+  switches WordPress login protection off while it runs so the admin can log
+  in without solving a challenge.
 
 ## The settings matrix (`settings-matrix.spec.js`)
 
