@@ -64,6 +64,16 @@ class OPENPORTE_GFForms_Field extends GF_Field
 		return count($pages) + 1 === (int) $this->pageNumber;
 	}
 
+	/**
+	 * Verify the challenge when Gravity Forms validates the field.
+	 *
+	 * @since 1.26.3
+	 * @since 1.30.0 Names its surface ('gravityforms') for the replay limit.
+	 *
+	 * @param mixed $value The field's submitted value; unused.
+	 * @param array $form  The form being validated.
+	 * @return void Sets failed_validation and validation_message on failure.
+	 */
 	public function validate($value, $form)
 	{
 		if (GFFormDisplay::is_last_page($form) && !$this->is_on_last_page($form)) {
@@ -73,7 +83,7 @@ class OPENPORTE_GFForms_Field extends GF_Field
 		$active = $plugin->get_integration_gravityforms();
     if ($active) {
 			$altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			if ($plugin->verify($altcha) === false) {
+			if ($plugin->verify($altcha, null, 'gravityforms') === false) {
 					$this->failed_validation  = true;
 					$this->validation_message = __('Could not verify you are not a robot.', 'openporte');
 			}

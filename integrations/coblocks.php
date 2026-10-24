@@ -126,7 +126,8 @@ if (openporte_plugin_active('coblocks')) {
      *
      * @since 1.26.3
      * @since 1.30.0 Returns $response unchanged while the CoBlocks integration
-     *               is off, instead of a faked success.
+     *               is off, instead of a faked success; names its surface
+     *               ('coblocks') for the replay limit.
      *
      * @param false|array|WP_Error $response    The short-circuit response so far.
      * @param array                $parsed_args HTTP request arguments.
@@ -152,7 +153,7 @@ if (openporte_plugin_active('coblocks')) {
         return $response;
       }
       $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
+      if ($plugin->verify($altcha, null, 'coblocks') === false) {
         return [
           'body'     => '{"success":false}',
           'response' =>

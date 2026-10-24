@@ -63,13 +63,24 @@ class OpenPorte_Elementor_Form_Field extends \ElementorPro\Modules\Forms\Fields\
 		return $control_data;
 	}
 
+  /**
+   * Verify the challenge when Elementor Pro validates the form.
+   *
+   * @since 1.26.3
+   * @since 1.30.0 Names its surface ('elementor') for the replay limit.
+   *
+   * @param array  $field        The field being validated.
+   * @param object $record       Elementor Pro's form record; unused.
+   * @param object $ajax_handler Elementor Pro's AJAX handler, for errors.
+   * @return void
+   */
   public function validation($field, $record, $ajax_handler)
   {
     $plugin = OpenPortePlugin::$instance;
     $active = $plugin->get_integration_elementor();
     if ($active) {
       $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
+      if ($plugin->verify($altcha, null, 'elementor') === false) {
         $ajax_handler->add_error(
           $field['id'],
           esc_html__('Verification failed.', 'openporte')

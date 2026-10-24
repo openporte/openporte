@@ -310,30 +310,48 @@ class OpenPortePlugin
    * 0 means unlimited — the pre-1.29 stateless behaviour, kept as an escape
    * hatch for a site that genuinely needs it.
    *
-   * The openporte_replay_limit filter is passed the current hook name as its
-   * context, so a site can be stricter on login than on comments without
-   * touching any call site. Its return value is re-clamped: a filter returning
-   * nonsense must not be able to switch protection off by accident.
+   * The openporte_replay_limit filter gets the form surface as its context, so
+   * a site can be stricter on login than on comments. Every shipped
+   * integration names its surface with the suffix of the setting that turned
+   * the check on (openporte_integration_<context>): 'wordpress_login',
+   * 'woocommerce_login', 'wordpress_comments', 'contact_form_7', … — stable
+   * across releases, unlike hook names (a WordPress and a WooCommerce login
+   * both run on wp_authenticate_user). The current hook name is passed as a
+   * third argument. A caller that names no surface, such as third-party code
+   * calling verify() with two arguments, gets the hook name as its context, as
+   * every caller did in 1.29.
    *
-   * Called outside any hook, current_filter() returns false and the context is
-   * the empty string. Filters should read that as "no hook context", never as a
+   * The option is spelled openporte_replaylimit and the filter
+   * openporte_replay_limit, without and with an underscore. The difference is
+   * deliberate and both names are public since 1.29.0: do not "fix" one to
+   * match the other, and grep for both when tracing the setting.
+   *
+   * The filter's return value is re-clamped: a filter returning nonsense must
+   * not be able to switch protection off by accident.
+   *
+   * Called outside any hook, current_filter() returns false and the hook name
+   * is the empty string. Filters should read that as "no hook", never as a
    * hook name.
    *
    * @since 1.29.0
+   * @since 1.30.0 The context is the form surface when the caller names one;
+   *               the hook name moved to the filter's third argument.
    *
-   * @param string $context Optional hook/context name; defaults to the filter
-   *                        currently running.
+   * @param mixed $context Optional form surface, a non-empty string; anything
+   *                       else (third-party code passing the wrong type)
+   *                       falls back to the filter currently running.
    * @return int Maximum accepted uses per token; 0 for unlimited.
    */
   public function get_replaylimit($context = '')
   {
     $stored = OpenPortePlugin::clamp_replaylimit(get_option(OpenPortePlugin::$option_replaylimit, null));
     $limit = $stored === null ? OpenPortePlugin::$replaylimit_default : $stored;
-    if ($context === '') {
-      $context = (string) current_filter();
+    $hook = (string) current_filter();
+    if (!is_string($context) || $context === '') {
+      $context = $hook;
     }
     $filtered = OpenPortePlugin::clamp_replaylimit(
-      apply_filters('openporte_replay_limit', $limit, $context)
+      apply_filters('openporte_replay_limit', $limit, $context, $hook)
     );
 
     return $filtered === null ? $limit : $filtered;
@@ -898,12 +916,15 @@ class OpenPortePlugin
    *
    * @since 1.29.0
    *
-   * @param object $data Decoded token payload, already verified.
+   * @since 1.30.0 Added the `$context` parameter.
+   *
+   * @param object $data    Decoded token payload, already verified.
+   * @param string $context Form surface the token was submitted on, or ''.
    * @return bool True when a use was still available, or protection is off.
    */
-  private function enforce_replay_limit($data)
+  private function enforce_replay_limit($data, $context = '')
   {
-    $limit = $this->get_replaylimit();
+    $limit = $this->get_replaylimit($context);
     if ($limit <= 0) {
       // Unlimited (legacy): pre-1.29 behaviour, and no state is written at all.
       return true;
@@ -1131,12 +1152,16 @@ class OpenPortePlugin
    * @since 1.16.0
    * @since 1.29.0 Enforces the Replay limit setting and memoises the outcome
    *               for the rest of the request.
+   * @since 1.30.0 Added the `$context` parameter (the form surface), passed
+   *               to the openporte_replay_limit filter.
    *
    * @param string      $payload  The base64-encoded token from the widget.
    * @param string|null $hmac_key The HMAC key; falls back to the configured secret.
+   * @param string      $context  Form surface, e.g. 'wordpress_login'; see
+   *                              get_replaylimit(). Defaults to the hook name.
    * @return bool True if the token is valid and still had a use left.
    */
-  public function verify($payload, $hmac_key = null)
+  public function verify($payload, $hmac_key = null, $context = '')
   {
     if ($hmac_key === null) {
       $hmac_key = $this->get_secret();
@@ -1169,7 +1194,7 @@ class OpenPortePlugin
     $this->in_verify = false;
 
     return $this->emit_verify_result(
-      $this->settle_verify_result($data, $payload_key, $result)
+      $this->settle_verify_result($data, $payload_key, $result, $context)
     );
   }
 
@@ -1183,22 +1208,27 @@ class OpenPortePlugin
    * verified signature, and that has to keep counting as a single use.
    * Enforcement runs last, and is the only step here that writes shared state.
    *
+   * A memo hit returns the first verification's outcome, whatever context the
+   * second call names: one submission is one use, decided once.
+   *
    * @since 1.29.0
+   * @since 1.30.0 Added the `$context` parameter.
    *
    * @param object $data        Decoded token payload; verify() has already
    *                            bailed out on a malformed one, so never null.
    * @param string $payload_key Memo key for the submitted bytes.
    * @param bool   $result      Outcome of the cryptographic dispatch.
+   * @param string $context     Form surface, passed on to the reuse counter.
    * @return bool The final outcome, memoised under both keys.
    */
-  private function settle_verify_result($data, $payload_key, $result)
+  private function settle_verify_result($data, $payload_key, $result, $context = '')
   {
     $signature_key = null;
     if ($result === true && isset($data->signature) && is_string($data->signature)) {
       $signature_key = 'signature:' . hash('sha256', $data->signature);
       $result = isset($this->verify_memo[$signature_key])
         ? $this->verify_memo[$signature_key]
-        : $this->enforce_replay_limit($data);
+        : $this->enforce_replay_limit($data, $context);
     }
     $this->verify_memo[$payload_key] = $result;
     if ($signature_key !== null) {

@@ -23,7 +23,7 @@ if (openporte_plugin_active('wpforms')) {
       $active = $plugin->get_integration_wpforms();
       if ($active) {
         $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if ($plugin->verify($altcha) === false) {
+        if ($plugin->verify($altcha, null, 'wpforms') === false) {
           wpforms()->process->errors[$form_data['id']]['header'] = esc_html__('Could not verify you are not a robot.', 'openporte');
         }
       }

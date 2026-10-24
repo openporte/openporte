@@ -54,7 +54,7 @@ add_filter( 'avf_form_send', function ($proceed, $new_post, $form_params, $that)
   $active = $plugin->get_integration_enfold_theme();
   if ($active) {
     $altcha = isset($_POST['altcha']) ? trim(urldecode(sanitize_text_field(wp_unslash($_POST['altcha'])))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-    if ($plugin->verify($altcha) === false) {
+    if ($plugin->verify($altcha, null, 'enfold_theme') === false) {
       $that->submit_error = __('Verification failed. Try again later.', 'openporte');
       return null;
     }
@@ -69,7 +69,7 @@ add_filter( 'avf_mailchimp_subscriber_data', function ($data, $that)
   $active = $plugin->get_integration_enfold_theme();
   if ( $active ) {
     $altcha = isset($_POST['altcha']) ? trim(urldecode(sanitize_text_field(wp_unslash($_POST['altcha'])))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-    if ($plugin->verify($altcha) === false) {
+    if ($plugin->verify($altcha, null, 'enfold_theme') === false) {
       /* Only changing the email_address promts the user to enter a valid email address, which would confuse them. */
       $data['email_address'] = 'captcha failed';
       $data['status'] = 'THIS STATUS DOES NOT EXIST';

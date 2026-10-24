@@ -43,6 +43,15 @@ class OpenPorteFieldType extends FrmFieldType
 		return 'text';
 	}
 
+	/**
+	 * Verify the challenge when Formidable validates the form.
+	 *
+	 * @since 1.26.3
+	 * @since 1.30.0 Names its surface ('formidable') for the replay limit.
+	 *
+	 * @param array $args Formidable's validation arguments; `id` is the field ID.
+	 * @return array Errors keyed by field, empty when the challenge passes.
+	 */
 	public function validate($args)
 	{
     $plugin = OpenPortePlugin::$instance;
@@ -50,7 +59,7 @@ class OpenPorteFieldType extends FrmFieldType
 		$errors = array();
     if ($active) {
 			$altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			if ($plugin->verify($altcha) === false) {
+			if ($plugin->verify($altcha, null, 'formidable') === false) {
 				$errors['field' . $args['id']] = esc_html__('Verification failed.', 'openporte');
 			}
     }
