@@ -322,7 +322,13 @@ requirements and will abort the `afterStart` hook unless adjusted:
   WordPress-version requirement on older cores. Pin a compatible version with
   `--version=`, e.g. `--version=5.3.2` for WP 5.6. (`wp-cli`'s
   `--ignore-requirements` flag is too recent to rely on in the bundled wp-env
-  CLI, so an explicit `--version` is the dependable approach.)
+  CLI, so an explicit `--version` is the dependable approach.) The same holds
+  for the other integration plugins `wp-init.sh` installs; its comment table
+  lists the floor versions. `--version=` works inside `wp-init.sh`, but not
+  through `./wp-env.sh run cli …`, which drops the flag's value: from your
+  machine, install the versioned zip URL instead
+  (`https://downloads.wordpress.org/plugin/contact-form-7.5.4.2.zip`), then run
+  `start` again with the same `-p`/`-w` to finish provisioning.
 
 On a minimum-version bench, run the **fresh-install verification only** — skip
 the ALTCHA → OpenPorte upgrade scenario.

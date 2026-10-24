@@ -90,6 +90,64 @@ that reliably lands on the versions asked for.
 - An SSH agent holding the keys named in `.wp-env.conf`
   (`REMOTE_RPC_KEY`/`REMOTE_RSYNC_KEY`) must be reachable via `SSH_AUTH_SOCK`
   for every `wp-env.sh` call — there is no interactive fallback.
+- **A bare `./wp-env.sh start` falls back to `.wp-env.json`'s versions**, even
+  on a bench brought up with other ones: `-p`/`-w` are environment variables
+  for that one call, not stored anywhere. To sync code onto a PHP 8.5 / WP
+  7.1.3 bench, repeat the flags (`./wp-env.sh -p 8.5 -w 7.1.3 start`), and
+  check `wp core version` afterwards. The database survives either way.
+- **Quoting does not survive `wp-env.sh`.** It joins its arguments into one
+  string for `ssh`, so the remote shell strips a layer of quotes: an argument
+  with spaces or quotes (SQL above all) arrives split, and a flag value such
+  as `wp plugin install … --version=5.4.2` is lost. SSH directly instead:
+
+  ```sh
+  source ./.wp-env.conf
+  ssh -i "$REMOTE_RPC_KEY" "$REMOTE_USER@$REMOTE_HOST" \
+    "cd ~/$REMOTE_PATH && source ./.wpenvrc && wp-env run cli -- wp db query 'SHOW INDEX FROM wp_options'"
+  ```
+
+  For a specific plugin version, install its versioned zip URL instead
+  (`./wp-env.sh run cli wp plugin install https://downloads.wordpress.org/plugin/contact-form-7.5.4.2.zip --force`).
+- **Arbitrary PHP on the bench**, without a `start`: copy the file into the
+  remote tree over the rsync key (that tree is what the container maps), run
+  it by its container path, then delete it. This is the way to read plugin
+  state as PHP sees it, or to set an option to an empty string, which
+  `wp option update x ''` cannot do through the quoting above.
+
+  ```sh
+  source ./.wp-env.conf
+  ssh -i "$REMOTE_RSYNC_KEY" "$REMOTE_USER@$REMOTE_HOST" "cat > ~/$REMOTE_PATH/.tmp-snippet.php" < snippet.php
+  ssh -i "$REMOTE_RPC_KEY" "$REMOTE_USER@$REMOTE_HOST" \
+    "cd ~/$REMOTE_PATH && source ./.wpenvrc && wp-env run cli -- wp eval-file wp-content/plugins/openporte/.tmp-snippet.php"
+  ssh -i "$REMOTE_RSYNC_KEY" "$REMOTE_USER@$REMOTE_HOST" "rm ~/$REMOTE_PATH/.tmp-snippet.php"
+  ```
+
+  The next `start` would delete a leftover anyway (`rsync --delete`).
+
+### Simulating a plugin update from an older release
+
+The working tree is mapped live onto `wp-content/plugins/openporte`, so starting
+the bench at an older tag does not give you an older OpenPorte to upgrade from.
+Install the published older build **next to** the mapping instead, in its own
+folder, with a `wp eval-file` snippet (see above):
+
+1. Deactivate `openporte` and, for a clean start, delete its `openporte_*`
+   options.
+2. `download_url('https://downloads.wordpress.org/plugin/openporte.1.29.1.zip')`,
+   `unzip_file()` it into a temporary directory, and move its `openporte/`
+   folder to `wp-content/plugins/openporte-1291/`. Never install it into
+   `openporte/`: that folder is the working tree.
+3. Activate `openporte-1291/openporte.php` and set up the scenario (settings,
+   options) on the old version.
+4. Simulate the update: rewrite `active_plugins`, replacing
+   `openporte-1291/openporte.php` with `openporte/openporte.php`, through
+   `update_option()`. No activation hook runs, exactly as with a real update;
+   the next request runs `openporte_upgrade()`.
+5. Check the result, then delete `wp-content/plugins/openporte-1291/`.
+
+The WordPress.org zip is the same build as the one attached to the GitHub
+release, so neither a checkout of the old tag nor a local `wp dist-archive` is
+needed.
 
 ## The ALTCHA → OpenPorte migration test
 

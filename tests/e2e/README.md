@@ -208,3 +208,46 @@ npx playwright test shared-secret.spec.js
 
 Also check screen-reader announcements, 200% zoom, and admin colour schemes
 manually; DOM assertions alone cannot establish those behaviours.
+
+## Debugging techniques
+
+Three tricks for investigating timing or `public/script.js` behaviour on the
+bench, without changing what the bench serves.
+
+**Widen the solve window.** A submit that lands mid-solve is hard to hit by
+hand: even at `complexity=high` a desktop solves in well under 2 s. Hold the
+challenge response instead:
+
+```js
+await page.route('**/openporte/v1/challenge**', async (route) => {
+  await new Promise((r) => setTimeout(r, 4000));
+  await route.continue();
+});
+```
+
+The widget stays in `data-state="verifying"` for the whole delay and still
+gets the server's own signed challenge, so verification passes for real (a
+faked challenge would fail the HMAC). Over the Ajax transport, match
+`**/admin-ajax.php?action=openporte_challenge**` instead.
+
+**A/B a `public/script.js` change without a bench sync.** Only `start` syncs
+the tree (see `tests/README.md`), so serve another build per page:
+
+```js
+const body = fs.readFileSync(oldScript, 'utf8'); // git show <sha>^:public/script.js > oldScript
+await page.route('**/openporte/public/script.js*', (route) =>
+  route.fulfill({ status: 200, contentType: 'application/javascript', body })
+);
+```
+
+Use it with a historical version (does the test actually catch the bug the
+fix is for?) or a local variant with one guard removed (which guard does the
+work?).
+
+**Scratch specs outside `tests/e2e`.** `playwright.config.js` sets
+`testDir: __dirname`, so a spec elsewhere is "not found". Give the scratch
+directory its own config with `testDir: __dirname`, and symlink
+`tests/e2e/node_modules` next to it so `@playwright/test` resolves.
+
+Timing results vary between runs: sample more than twice before calling a
+race settled.
