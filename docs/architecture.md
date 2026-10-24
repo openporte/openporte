@@ -131,9 +131,11 @@ A fourth knob, and the one that made the expiry advisory-only rather than
 enforced: **`get_replaylimit()`** reads `openporte_replaylimit` (default **5**,
 range 0–100, `0` = unlimited) and bounds how many times one solved challenge is
 accepted. It is filterable via **`openporte_replay_limit`**, which receives the
-current hook name as context so a site can be stricter on login than on comments
-without touching any call site; the return value is re-clamped, so a filter that
-returns nonsense cannot silently switch protection off. Enforcement lives in
+form surface as context (since 1.30.0: each integration passes its surface ID,
+the suffix of its `openporte_integration_*` setting, to `verify()`) and the
+current hook name, so a site can be stricter on login than on comments; the
+return value is re-clamped, so a filter that returns nonsense cannot silently
+switch protection off. Enforcement lives in
 `verify()` — see "Stateless primitives, stateful wrapper" below, and
 [`docs/replay-protection.md`](replay-protection.md) for the full design: the
 reasoning behind the mechanism, the residuals it accepts, the alternatives that

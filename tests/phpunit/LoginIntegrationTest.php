@@ -369,4 +369,89 @@ class LoginIntegrationTest extends OpenPorteTestCase
     $this->next_request();
     $this->assertInstanceOf(WP_Error::class, $this->authenticate_user());
   }
+
+  /* -------------------------------------------------------- replay context */
+
+  /**
+   * Capture the context the replay-limit filter receives during $run.
+   *
+   * @since 1.30.0
+   *
+   * @param callable $run Code that verifies a token.
+   * @return string|null The context, or null when the filter never ran.
+   */
+  private function replay_context(callable $run)
+  {
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context) use (&$captured) {
+      $captured = $context;
+      return $limit;
+    };
+    $run();
+
+    return $captured;
+  }
+
+  /**
+   * A wp-login.php login names its surface 'wordpress_login', although it now
+   * runs on the same hook as a WooCommerce one.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_wordpress_login_names_its_surface()
+  {
+    $this->request(array(
+      'wordpress' => true,
+      'wp_login' => true,
+      'post' => array('altcha' => $this->token(time() + 600)),
+    ));
+
+    $this->assertSame('wordpress_login', $this->replay_context(function () {
+      $this->authenticate_user();
+    }));
+  }
+
+  /**
+   * A WooCommerce My Account login names its surface 'woocommerce_login'.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_woocommerce_login_names_its_surface()
+  {
+    $this->request(array(
+      'woocommerce' => true,
+      'post' => array('altcha' => $this->token(time() + 600), 'woocommerce-login-nonce' => 'x'),
+    ));
+
+    $this->assertSame('woocommerce_login', $this->replay_context(function () {
+      $this->authenticate_user();
+    }));
+  }
+
+  /**
+   * Password-reset requests name their surface too.
+   *
+   * @since 1.30.0
+   */
+  public function test_lost_password_requests_name_their_surface()
+  {
+    $this->request(array(
+      'wordpress' => true,
+      'wp_login' => true,
+      'post' => array('altcha' => $this->token(time() + 600)),
+    ));
+    $this->assertSame('wordpress_reset_password', $this->replay_context(function () {
+      $this->lostpassword_refused();
+    }));
+
+    $this->next_request();
+    OpenPorte_Test_Env::$actions = array();
+    $this->request(array(
+      'woocommerce' => true,
+      'post' => array('altcha' => $this->token(time() + 600), 'woocommerce-lost-password-nonce' => 'x'),
+    ));
+    $this->assertSame('woocommerce_reset_password', $this->replay_context(function () {
+      $this->lostpassword_refused();
+    }));
+  }
 }

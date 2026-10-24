@@ -33,7 +33,7 @@ if (openporte_plugin_active('html-forms')) {
         return $error_code;
       }
       $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
+      if ($plugin->verify($altcha, null, 'html_forms') === false) {
         return "openporte_invalid";
       }
       return $error_code;

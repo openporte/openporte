@@ -28,7 +28,7 @@ if (openporte_plugin_active('forminator')) {
       $active = $plugin->get_integration_forminator();
       if ($active) {
         $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        if ($plugin->verify($altcha) === false) {
+        if ($plugin->verify($altcha, null, 'forminator') === false) {
           return [
             'can_submit' => false,
             'error' => __('Could not verify you are not a robot.', 'openporte'),

@@ -120,6 +120,91 @@ class ReplayLimitTest extends OpenPorteTestCase
     $this->assertSame('authenticate', $captured);
   }
 
+  /**
+   * A caller that names its form surface gets it as the filter's context;
+   * the hook name comes third.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_named_surface_is_the_context_and_the_hook_comes_third()
+  {
+    OpenPorte_Test_Env::$current_filter = 'wp_authenticate_user';
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context, $hook) use (&$captured) {
+      $captured = array($context, $hook);
+      return $limit;
+    };
+
+    $this->assertTrue($this->plugin->verify($this->token(time() + 600), null, 'wordpress_login'));
+
+    $this->assertSame(array('wordpress_login', 'wp_authenticate_user'), $captured);
+  }
+
+  /**
+   * A context that is not a non-empty string falls back to the hook name,
+   * like a caller that names no surface.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_non_string_context_falls_back_to_the_hook()
+  {
+    OpenPorte_Test_Env::$current_filter = 'preprocess_comment';
+    $captured = null;
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context, $hook) use (&$captured) {
+      $captured = array($context, $hook);
+      return $limit;
+    };
+
+    $this->plugin->verify($this->token(time() + 600), null, array('wordpress_comments'));
+
+    $this->assertSame(array('preprocess_comment', 'preprocess_comment'), $captured);
+  }
+
+  /**
+   * The use case the context exists for: one site, strict on login and
+   * lenient on comments, decided per surface by one filter.
+   *
+   * @since 1.30.0
+   */
+  public function test_a_site_can_be_strict_on_login_and_lenient_on_comments()
+  {
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context) {
+      return $context === 'wordpress_login' ? 1 : 3;
+    };
+    $login = $this->token(time() + 600);
+    $comment = $this->token(time() + 600);
+
+    $this->assertTrue($this->plugin->verify($login, null, 'wordpress_login'));
+    $this->next_request();
+    $this->assertFalse($this->plugin->verify($login, null, 'wordpress_login'));
+
+    for ($i = 0; $i < 3; $i++) {
+      $this->next_request();
+      $this->assertTrue($this->plugin->verify($comment, null, 'wordpress_comments'), 'use ' . ($i + 1));
+    }
+    $this->next_request();
+    $this->assertFalse($this->plugin->verify($comment, null, 'wordpress_comments'));
+  }
+
+  /**
+   * The counter is per token, not per surface: a token already used on a
+   * lenient surface counts against a strict one. Otherwise a strict login
+   * limit could be dodged by spending the token elsewhere first.
+   *
+   * @since 1.30.0
+   */
+  public function test_the_counter_is_shared_across_surfaces()
+  {
+    OpenPorte_Test_Env::$filters['openporte_replay_limit'] = function ($limit, $context) {
+      return $context === 'wordpress_login' ? 1 : 5;
+    };
+    $token = $this->token(time() + 600);
+
+    $this->assertTrue($this->plugin->verify($token, null, 'wordpress_comments'));
+    $this->next_request();
+    $this->assertFalse($this->plugin->verify($token, null, 'wordpress_login'));
+  }
+
   public function test_a_filter_returning_a_non_numeric_value_falls_back_to_the_stored_limit()
   {
     OpenPorte_Test_Env::$options['openporte_replaylimit'] = 7;

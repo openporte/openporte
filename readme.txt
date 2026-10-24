@@ -305,6 +305,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 * Security: in Custom API mode, the site's own challenge endpoints no longer issue challenges, which let bots bypass the backend's rules; they now answer with an error. Present since ALTCHA Spam Protection 1.21.0. After switching a site to Custom mode, purge page caches.
 * Fixed the Elementor integration ending the whole request when Elementor Pro's form fields are missing. Present since ALTCHA Spam Protection 1.4.0.
 * Fixed Expiration and Replay limit being saved as 0 when "Custom" was submitted without a value; the stored value is now kept. Present since OpenPorte 1.28.0.
+* For developers: the `openporte_replay_limit` filter now receives the form surface as its context (`wordpress_login`, `woocommerce_login`, `wordpress_comments`, `contact_form_7`, …), so a site can set a stricter limit on one form than another; the hook name moved to a third argument. `verify()` accepts the surface as an optional third argument.
 
 = 1.29.1 =
 

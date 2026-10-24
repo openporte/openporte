@@ -275,13 +275,31 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   Check if an integration by `$name` is active.  
   **Returns:** `bool`
 
-* `apply_filters('openporte_replay_limit', $limit, $context)`  
-  Override how many times one solved token may be accepted. `$context` is the
-  hook currently running (e.g. `wp_authenticate`), or `''` outside any hook, so
-  a site can be stricter on login than on comments. The return value is
-  re-clamped to the 0–100 range, so a filter cannot switch protection off with
-  an out-of-range value. Since 1.29.0.  
+* `apply_filters('openporte_replay_limit', $limit, $context, $hook)`  
+  Override how many times one solved token may be accepted, so a site can be
+  stricter on login than on comments. Since 1.30.0 `$context` names the form
+  surface: the suffix of the integration setting that turned the check on
+  (`openporte_integration_<context>`) — `wordpress_login`,
+  `wordpress_register`, `wordpress_reset_password`, `wordpress_comments` (also
+  wpDiscuz comments), `woocommerce_login`, `woocommerce_register`,
+  `woocommerce_reset_password`, `contact_form_7`, `html_forms`, `wpforms`,
+  `forminator`, `formidable`, `gravityforms`, `elementor`, `coblocks`,
+  `enfold_theme`, `wpmembers`. `$hook` is the hook currently running, or `''`
+  outside any hook; code that calls `verify()` without naming a surface gets
+  the hook name as `$context` too, as every caller did in 1.29.0. The counter
+  is per token and shared across surfaces; the limit in force is that of the
+  surface the token is submitted on. The return value is re-clamped to the
+  0–100 range, so a filter cannot switch protection off with an out-of-range
+  value. Since 1.29.0; `$hook` and the surface context since 1.30.0. Note the
+  spelling: the filter is `openporte_replay_limit`, the option
+  `openporte_replaylimit`.  
   **Returns:** `int`
+
+  ```php
+  add_filter('openporte_replay_limit', function ($limit, $context) {
+    return $context === 'wordpress_login' ? 1 : $limit;
+  }, 10, 2);
+  ```
 
 * `apply_filters('openporte_widget_attrs', $attrs, $mode, $language, $name)`  
   Override widget attributes.  

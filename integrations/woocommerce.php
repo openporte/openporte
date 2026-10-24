@@ -22,7 +22,7 @@ add_action(
     $active = $plugin->get_integration_woocommerce_register();
     if ($active) {
       $altcha = isset($_POST['openporte_register']) ? trim(sanitize_text_field(wp_unslash($_POST['openporte_register']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha) === false) {
+      if ($plugin->verify($altcha, null, 'woocommerce_register') === false) {
         return $errors->add(
           'openporte_error_message',
           esc_html__('Could not verify you are not a robot.', 'openporte')
@@ -79,7 +79,7 @@ function openporte_woocommerce_check_login( $user ) {
   $active = $plugin->get_integration_woocommerce_login();
   if ( $active ) {
     $altcha = isset( $_POST['altcha'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['altcha'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-    if ( $plugin->verify( $altcha ) === false ) {
+    if ( $plugin->verify( $altcha, null, 'woocommerce_login' ) === false ) {
       return new WP_Error(
         'altcha-error',
         esc_html__( 'Could not verify you are not a robot.', 'openporte' )
@@ -173,7 +173,7 @@ function openporte_woocommerce_lostpassword_post( $errors ) {
   $active = $plugin->get_integration_woocommerce_reset_password();
   if ( $active ) {
     $altcha = isset( $_POST['altcha'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['altcha'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-    if ( $plugin->verify( $altcha ) === false ) {
+    if ( $plugin->verify( $altcha, null, 'woocommerce_reset_password' ) === false ) {
       $errors->add(
         'openporte_error_message',
         esc_html__( 'Could not verify you are not a robot.', 'openporte' )

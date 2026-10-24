@@ -178,12 +178,19 @@ snapping to the nearest preset. It is active in **both** API modes.
 
 For developers:
 
-- **`openporte_replay_limit`** filter — receives the limit and the current hook
-  name as context, so a site can run strict on login and lenient on comments
-  without touching a call site. The return value is re-clamped, so a filter
-  returning nonsense cannot silently switch protection off. Called outside any
-  hook the context is an empty string, which filters should read as "no
-  context", never as a hook name.
+- **`openporte_replay_limit`** filter — receives the limit, the form surface
+  as context (since 1.30.0; e.g. `wordpress_login`, `woocommerce_login`,
+  `wordpress_comments`, `contact_form_7` — the suffix of the matching
+  `openporte_integration_*` setting, full list in the README) and the current
+  hook name, so a site can run strict on login and lenient on comments. Each
+  integration passes its surface to `verify()`; a caller that names none (in
+  1.29.0, every caller) gets the hook name as context. Hook names were the
+  wrong key: a WordPress and a WooCommerce login both run on
+  `wp_authenticate_user` since 1.30.0. The counter stays per token, shared
+  across surfaces, so a token already spent elsewhere counts against a strict
+  login limit. The return value is re-clamped, so a filter returning nonsense
+  cannot silently switch protection off. Called outside any hook the hook name
+  is an empty string, which filters should read as "no hook".
 - **`openporte_replay_store_unavailable`** action — fires on every fail-open,
   with the counter key, the limit and the TTL.
 

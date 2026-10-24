@@ -67,7 +67,7 @@ if (openporte_plugin_active('contact-form-7')) {
         }
       }
       $altcha = isset($_POST['altcha']) ? trim(sanitize_text_field(wp_unslash($_POST['altcha']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      return $plugin->verify($altcha) === false;
+      return $plugin->verify($altcha, null, 'contact_form_7') === false;
     },
     9,
     2
