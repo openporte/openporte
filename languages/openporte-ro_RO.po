@@ -1,11 +1,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.29.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-09-16T12:00:39+00:00\n"
-"PO-Revision-Date: 2026-09-08 00:00+0000\n"
-"Last-Translator: Mistral Vibe-3.5:mistral-medium - signed-off by J-C "
+"POT-Creation-Date: 2026-10-24T02:12:04+00:00\n"
+"PO-Revision-Date: 2026-10-24 00:00+0000\n"
+"Last-Translator: claude-code-2.1.309:claude-opus-5-5 - signed-off by J-C "
 "Berthon\n"
 "Language-Team: Romanian\n"
 "Language: ro\n"
@@ -227,28 +227,28 @@ msgstr ""
 "lent să termine de rezolvat, ceea ce transformă trimiterile legitime în "
 "eșecuri."
 
-#: admin/options.php:35 integrations/elementor/field.php:18
+#: admin/options.php:42 integrations/elementor/field.php:22
 msgid "OpenPorte"
 msgstr "OpenPorte"
 
-#: admin/options.php:36
+#: admin/options.php:43
 msgid "A Privacy-Friendly Captcha Alternative."
 msgstr "O alternativă CAPTCHA prietenoasă cu intimitatea."
 
-#: admin/options.php:40
+#: admin/options.php:47
 msgid "Do you like OpenPorte?"
 msgstr "Vă place OpenPorte?"
 
-#: admin/options.php:42
+#: admin/options.php:49
 msgid "Review OpenPorte on WordPress.org"
-msgstr ""
+msgstr "Evaluați OpenPorte pe WordPress.org"
 
-#: admin/options.php:43
+#: admin/options.php:50
 msgid "Review it!"
 msgstr "Evaluează-l!"
 
 #. translators: %1$s is the plugin version, and %2$s is the ALTCHA widget version
-#: admin/options.php:66
+#: admin/options.php:78
 #, php-format
 msgid ""
 "OpenPorte Spam Protection for WordPress, plugin version %1$s, ALTCHA widget "
@@ -257,132 +257,173 @@ msgstr ""
 "OpenPorte Spam Protection pentru WordPress, versiunea plugin %1$s, versiunea "
 "widget ALTCHA %2$s"
 
-#. translators: the placeholders are opening and closing tags for a link (<a> tag)
-#: admin/options.php:77
-#, fuzzy, php-format
-#| msgid "Please rate OpenPorte on WordPress.org to help us get the word out."
+#. translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte plugin page.
+#: admin/options.php:90
+#, php-format
 msgid ""
 "Please rate %1$sOpenPorte on WordPress.org%2$s to help us get the word out."
 msgstr ""
-"Vă rugăm să evaluați OpenPorte pe WordPress.org pentru a ne ajuta să ne "
-"facem cunoscut."
+"Vă rugăm să evaluați %1$sOpenPorte pe WordPress.org%2$s pentru a ne ajuta să-"
+"l facem cunoscut."
 
 #. translators: %1$s and %2$s are the opening and closing tags of a link to the ALTCHA project.
-#: admin/options.php:90
+#: admin/options.php:102
 #, php-format
 msgid "Powered by the %1$sALTCHA%2$s proof-of-work open-source project."
 msgstr ""
 "Alimentat de proiectul %1$sALTCHA%2$s open-source bazat pe dovada de muncă."
 
-#: admin/options.php:96 admin/options.php:97
-#, fuzzy
-#| msgid "Star OpenPorte on GitHub!"
+#: admin/options.php:108 admin/options.php:109
 msgid "Check OpenPorte on GitHub!"
-msgstr "Dă stea OpenPorte pe GitHub!"
+msgstr "Descoperiți OpenPorte pe GitHub!"
 
-#: admin/options.php:109
+#: admin/options.php:121
 msgid "Choose the mode of operation for OpenPorte:"
 msgstr "Alegeți modul de funcționare pentru OpenPorte:"
 
 #. translators: the placeholders are opening and closing tags for bold
-#: admin/options.php:114
+#: admin/options.php:126
 #, php-format
-msgid "%1$sSelf-hosted%2$s generates challenges via the WordPress REST API."
-msgstr "%1$sAuto-găzduit%2$s generează provocări prin API REST WordPress."
+msgid "%1$sSelf-hosted%2$s generates challenges on this site."
+msgstr "%1$sAuto-găzduit%2$s generează provocările pe acest site."
 
 #. translators: the placeholders are opening and closing tags for bold
-#: admin/options.php:122
+#: admin/options.php:134
 #, php-format
 msgid "%1$sCustom%2$s lets you point to your own ALTCHA-compatible backend."
 msgstr ""
 "%1$sPersonalizat%2$s vă permite să indicați propriul backend compatibil "
 "ALTCHA."
 
-#: admin/options.php:128
+#: admin/options.php:140
 msgid "Both modes run without any external paid service."
 msgstr "Ambele moduri rulează fără niciun serviciu extern plătit."
 
-#: admin/options.php:138
+#: admin/options.php:150
 msgid "Customise the widget look and feel to fit your needs."
 msgstr ""
 "Personalizați aspectul și simțul widget-ului în funcție de nevoile dvs."
 
-#: admin/options.php:147
+#: admin/options.php:159
 msgid "Activate OpenPorte for the core WordPress functionalities."
 msgstr "Activează OpenPorte pentru funcționalitățile principale WordPress."
 
 #. translators: the placeholder will be replaced with the shortcode
-#: admin/options.php:150
+#: admin/options.php:162
 #, php-format
 msgid "Use %s shortcode anywhere in your HTML, Post, or Page content."
 msgstr ""
 "Utilizați shortcode-ul %s oriunde în conținutul HTML, Articol sau Pagină."
 
-#: admin/options.php:161
+#: admin/options.php:173
 msgid "Activate OpenPorte for these integrations."
 msgstr "Activează OpenPorte pentru aceste integrare."
 
 #. translators: the placeholder will be replaced with the shortcode
-#: admin/options.php:164
+#: admin/options.php:176
 #, php-format
 msgid "Use %s shortcode anywhere in your integrated plugins content."
 msgstr ""
 "Utilizați shortcode-ul %s oriunde în conținutul plugin-urilor integrate."
 
-#: admin/options.php:267 admin/options.php:269 admin/options.php:435
-#: admin/options.php:437
-msgid "Show"
-msgstr "Arată"
+#: admin/options.php:198
+msgid ""
+"Choose what happens to the OpenPorte settings when the plugin is deleted."
+msgstr ""
+"Alegeți ce se întâmplă cu setările OpenPorte atunci când pluginul este șters."
 
-#: admin/options.php:268 admin/options.php:436
-msgid "Hide"
-msgstr "Ascunde"
+#. translators: %1$s and %2$s are opening and closing tags for bold
+#: admin/options.php:202
+#, php-format
+msgid ""
+"%1$sWarning:%2$s while \"Keep settings\" is off, deleting the plugin "
+"permanently removes all OpenPorte settings, including the shared secret. "
+"This cannot be undone. If you plan to reinstall OpenPorte, switch it on and "
+"save before deleting the plugin."
+msgstr ""
+"%1$sAtenție:%2$s cât timp \"Păstrați setările\" este dezactivat, ștergerea "
+"pluginului elimină definitiv toate setările OpenPorte, inclusiv secretul "
+"partajat. Această acțiune nu poate fi anulată. Dacă intenționați să "
+"reinstalați OpenPorte, activați opțiunea și salvați înainte de a șterge "
+"pluginul."
 
-#: admin/options.php:275 admin/options.php:278
-msgid "Copy"
-msgstr "Copiază"
-
-#: admin/options.php:276
+#: admin/options.php:373
 msgid "Copied!"
 msgstr "Copiat!"
 
-#: admin/options.php:277
+#: admin/options.php:374
 msgid "Copy failed"
 msgstr "Copia a eșuat"
 
-#: admin/options.php:284
-msgid "Regenerate"
-msgstr "Regenerează"
+#: admin/options.php:379
+msgid "Show shared secret"
+msgstr "Afișați secretul partajat"
 
-#: admin/options.php:577 includes/settings.php:282
+#: admin/options.php:380
+msgid "Hide shared secret"
+msgstr "Ascundeți secretul partajat"
+
+#: admin/options.php:381
+msgid "Copy shared secret"
+msgstr "Copiați secretul partajat"
+
+#: admin/options.php:382
+msgid "Generate new shared secret"
+msgstr "Generați un nou secret partajat"
+
+#: admin/options.php:388
+msgid "Show password"
+msgstr "Afișați parola"
+
+#: admin/options.php:389
+msgid "Hide password"
+msgstr "Ascundeți parola"
+
+#: admin/options.php:390
+msgid "Copy password"
+msgstr "Copiați parola"
+
+#: admin/options.php:391
+msgid "Generate new password"
+msgstr "Generați o parolă nouă"
+
+#: admin/options.php:694 admin/options.php:696
+msgid "Show"
+msgstr "Arată"
+
+#: admin/options.php:695
+msgid "Hide"
+msgstr "Ascunde"
+
+#: admin/options.php:846 includes/settings.php:341
 msgid "Custom"
 msgstr "Personalizat"
 
-#: admin/options.php:607
+#: admin/options.php:876
 msgid "5 minutes"
 msgstr "5 minute"
 
-#: admin/options.php:608
+#: admin/options.php:877
 msgid "30 minutes"
 msgstr "30 minute"
 
-#: admin/options.php:609
+#: admin/options.php:878
 msgid "1 hour"
 msgstr "1 oră"
 
-#: admin/options.php:638
+#: admin/options.php:907
 msgid "Unlimited (pre-1.29 behaviour)"
 msgstr "Nelimitat (comportament anterior la 1.29)"
 
-#: admin/options.php:639
+#: admin/options.php:908
 msgid "Single use (strict)"
 msgstr "Utilizare unică (strictă)"
 
-#: admin/options.php:640
+#: admin/options.php:909
 msgid "5 uses (recommended)"
 msgstr "5 utilizări (recomandat)"
 
-#: admin/options.php:641
+#: admin/options.php:910
 msgid "10 uses"
 msgstr "10 utilizări"
 
@@ -394,38 +435,42 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Setări"
 
-#: includes/core.php:474 integrations/enfold-theme.php:58
+#: includes/core.php:620 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verificarea a eșuat. Încercați din nou mai târziu."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:477
+#: includes/core.php:623
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Protejat de %1$sALTCHA%2$s"
 
-#: includes/core.php:481
+#: includes/core.php:627
 msgid "I'm not a robot"
 msgstr "Nu sunt un robot"
 
-#: includes/core.php:482
+#: includes/core.php:628
 msgid "Verified"
 msgstr "Verificat"
 
-#: includes/core.php:483
+#: includes/core.php:629
 msgid "Verifying..."
 msgstr "Se verifică..."
 
-#: includes/core.php:484
+#: includes/core.php:630
 msgid "Verifying... please wait."
 msgstr "Se verifică... vă rugăm să așteptați."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1315
+#: includes/core.php:1503
 msgid "This form requires JavaScript!"
 msgstr "Acest formular necesită JavaScript!"
 
-#: includes/settings.php:110
+#: includes/core.php:1570
+msgid "This site does not issue challenges in Custom API mode."
+msgstr "Acest site nu emite provocări în Modul API Personalizat."
+
+#: includes/settings.php:118
 msgid ""
 "An Expiration of 0 means a solved challenge never expires. This value is "
 "being evaluated for deprecation; the recommended range is 60-14400 seconds."
@@ -435,7 +480,7 @@ msgstr ""
 "60-14400 secunde."
 
 #. translators: %d is the saved Expiration value, in seconds
-#: includes/settings.php:118
+#: includes/settings.php:126
 #, php-format
 msgid ""
 "An Expiration of %d seconds can elapse before a slow device finishes solving "
@@ -447,32 +492,63 @@ msgstr ""
 "de evaluare pentru deprecation; intervalul recomandat este de 60-14400 "
 "secunde."
 
-#: includes/settings.php:266
+#: includes/settings.php:325
 msgid "General"
 msgstr "General"
 
-#: includes/settings.php:273
+#: includes/settings.php:332
 msgid "API Mode"
 msgstr "Mod API"
 
-#: includes/settings.php:279
+#: includes/settings.php:338
 msgid ""
-"Select the API Mode. Use Self-hosted for the built-in WordPress REST API, or "
+"Select the API Mode. Use Self-hosted to generate challenges on this site, or "
 "Custom to point to your own ALTCHA-compatible backend."
 msgstr ""
-"Selectați Modul API. Utilizați Auto-găzduit pentru API REST integrat "
-"WordPress, sau Personalizat pentru a indica propriul backend compatibil "
+"Selectați Modul API. Folosiți Auto-găzduit pentru a genera provocările pe "
+"acest site, sau Personalizat pentru a indica propriul backend compatibil "
 "ALTCHA."
 
-#: includes/settings.php:281
+#: includes/settings.php:340
 msgid "Self-hosted"
 msgstr "Auto-găzduit"
 
-#: includes/settings.php:291
+#: includes/settings.php:355
+msgid "REST API"
+msgstr "REST API"
+
+#: includes/settings.php:356
+msgid "Ajax (admin-ajax.php)"
+msgstr "Ajax (admin-ajax.php)"
+
+#: includes/settings.php:367
+msgid "Self-hosted transport"
+msgstr "Transport auto-găzduit"
+
+#: includes/settings.php:378
+msgid "Only used in Self-hosted API Mode."
+msgstr "Folosit doar în Modul API Auto-găzduit."
+
+#. translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte documentation.
+#: includes/settings.php:385
+#, php-format
+msgid ""
+"Choose how this site serves challenges to visitors. REST API is the default; "
+"use Ajax if a security plugin blocks the REST API for logged-out visitors. "
+"After changing it, test a protected form in a private window.<br/>%1$sHow to "
+"choose and check the transport%2$s"
+msgstr ""
+"Alegeți cum furnizează acest site provocările vizitatorilor. REST API este "
+"implicit; folosiți Ajax dacă un plugin de securitate blochează REST API "
+"pentru vizitatorii neautentificați. După modificare, testați un formular "
+"protejat într-o fereastră privată.<br/>%1$sCum alegeți și verificați "
+"transportul%2$s"
+
+#: includes/settings.php:399
 msgid "Challenge URL"
 msgstr "URL Provocare"
 
-#: includes/settings.php:299
+#: includes/settings.php:407
 msgid ""
 "Only available when API Mode is set to Custom.<br/>The URL is made up of the "
 "domain and path to your <strong>custom ALTCHA-compatible backend</strong>, "
@@ -482,15 +558,15 @@ msgstr ""
 "format din domeniu și calea către <strong>backend-ul personalizat compatibil "
 "ALTCHA</strong>, și opțional o cheie API (îcepe cu <code>gk_</code>)."
 
-#: includes/settings.php:308
+#: includes/settings.php:416
 msgid "Shared secret"
 msgstr "Secret partajat"
 
-#: includes/settings.php:314
+#: includes/settings.php:424
 msgid "A secret key used to sign and verify challenges."
 msgstr "O cheie secretă folosită pentru a semna și a verifica provocările."
 
-#: includes/settings.php:317
+#: includes/settings.php:427
 msgid ""
 "OpenPorte generates a random secret automatically. Change it only if another "
 "application needs to use the same secret.<br/>In Custom API Mode, this value "
@@ -502,30 +578,32 @@ msgstr ""
 "Personalizat, această valoare <strong>trebuie să corespundă exact</strong> "
 "cu secretul partajat (uneori numit secret HMAC) configurat în backend."
 
-#: includes/settings.php:319
+#: includes/settings.php:429
 msgid ""
-"Copy places the current secret on the clipboard. Regenerate fills in a fresh "
+"The \"Copy shared secret\" icon button copies the current secret to the "
+"clipboard. The \"Generate new shared secret\" icon button fills in a fresh "
 "random secret; it only takes effect when you save changes, and challenges "
 "already issued with the old secret then stop verifying. In Custom API Mode, "
 "saving a new secret also breaks verification of new submissions until you "
 "update the secret on your backend to match."
 msgstr ""
-"Copierea pune secretul curent în clipboard. Regenerarea completează un nou "
-"secret aleatoriu; acesta are efect doar atunci când salvați modificările, "
-"iar provocările deja emise cu vechiul secret încetează să mai fie "
-"verificate. În Modul API Personalizat, salvarea unui nou secret întrerupe și "
-"verificarea noilor trimiteri până când actualizați secretul pe backend "
-"pentru a corespunde."
+"Butonul cu pictogramă \"Copiați secretul partajat\" copiază secretul curent "
+"în clipboard. Butonul cu pictogramă \"Generați un nou secret partajat\" "
+"completează un nou secret aleatoriu; acesta intră în vigoare doar când "
+"salvați modificările, iar provocările deja emise cu vechiul secret nu mai "
+"sunt apoi verificate. În Modul API Personalizat, salvarea unui nou secret "
+"blochează și verificarea noilor trimiteri până când actualizați "
+"corespunzător secretul pe backend-ul dvs."
 
-#: includes/settings.php:329 includes/settings.php:335
+#: includes/settings.php:439 includes/settings.php:445
 msgid "Hash algorithm for the challenges."
 msgstr "Algoritmul hash pentru provocări."
 
-#: includes/settings.php:329
+#: includes/settings.php:439
 msgid "Algorithm"
 msgstr "Algoritm"
 
-#: includes/settings.php:336
+#: includes/settings.php:446
 msgid ""
 "In Self-hosted API Mode this is the algorithm used to generate and verify "
 "the proof-of-work challenges.<br/>In Custom API Mode it must match the "
@@ -537,29 +615,29 @@ msgstr ""
 "să corespundă cu algoritmul pe care backend-ul dvs. îl folosește: "
 "majoritatea backend-urilor compatibile ALTCHA folosesc SHA-256 implicit."
 
-#: includes/settings.php:346
+#: includes/settings.php:456
 msgid "Low"
 msgstr "Scăzută"
 
-#: includes/settings.php:347
+#: includes/settings.php:457
 msgid "Medium"
 msgstr "Medie"
 
-#: includes/settings.php:348
+#: includes/settings.php:458
 msgid "High"
 msgstr "Ridicată"
 
-#: includes/settings.php:358
+#: includes/settings.php:468
 msgid "Complexity"
 msgstr "Complexitate"
 
-#: includes/settings.php:368
+#: includes/settings.php:478
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
 msgstr ""
 "Dezactivat în modul Personalizat: backend-ul setează complexitatea "
 "provocării."
 
-#: includes/settings.php:369
+#: includes/settings.php:479
 msgid ""
 "Select the PoW complexity for the widget: the higher the complexity, the "
 "longer visitors (and bots) work to solve the challenge.<br/>Even High is "
@@ -572,16 +650,16 @@ msgstr ""
 "secundă pe un computer recent; pe telefoanele vechi poate dura câteva "
 "secunde. Ridicată este aproximativ de 2-3 ori munca lui Scăzută."
 
-#: includes/settings.php:376
+#: includes/settings.php:486
 msgid "Expiration"
 msgstr "Expirare"
 
-#: includes/settings.php:387
+#: includes/settings.php:497
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
 msgstr ""
 "Dezactivat în modul Personalizat: backend-ul setează expirarea provocării."
 
-#: includes/settings.php:390
+#: includes/settings.php:500
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
 "no expiry and 14400 is 4 hours."
@@ -591,7 +669,7 @@ msgstr ""
 "de viață a unei provocări. Personalizat acceptă de la 0 la 14400 de secunde, "
 "unde 0 înseamnă fără expirare și 14400 sunt 4 ore."
 
-#: includes/settings.php:392
+#: includes/settings.php:502
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
@@ -606,11 +684,11 @@ msgstr ""
 "niciodată — ambele sunt descurajate și sunt în curs de evaluare pentru "
 "deprecation."
 
-#: includes/settings.php:398
+#: includes/settings.php:508
 msgid "Replay limit"
 msgstr "Limită de replay"
 
-#: includes/settings.php:404
+#: includes/settings.php:514
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
@@ -618,7 +696,7 @@ msgstr ""
 "De câte ori o provocare rezolvată poate fi acceptată. Acest lucru se aplică "
 "în ambele moduri API."
 
-#: includes/settings.php:406
+#: includes/settings.php:516
 msgid ""
 "A visitor whose form comes back with an unrelated error (a missing field, a "
 "mistyped password) resubmits the same challenge, so a small allowance keeps "
@@ -635,39 +713,39 @@ msgstr ""
 "validă — comportamentul versiunilor de dinainte de 1.29.0, și nu este "
 "recomandat."
 
-#: includes/settings.php:415
+#: includes/settings.php:525
 msgid "Widget Customisation"
 msgstr "Personalizare Widget"
 
-#: includes/settings.php:422
+#: includes/settings.php:532
 msgid "Auto verification"
 msgstr "Verificare automată"
 
-#: includes/settings.php:428
+#: includes/settings.php:538
 msgid "Select auto-verification behaviour."
 msgstr "Selectați comportamentul de verificare automată."
 
-#: includes/settings.php:430
+#: includes/settings.php:540
 msgid "Disabled"
 msgstr "Dezactivat"
 
-#: includes/settings.php:431
+#: includes/settings.php:541
 msgid "On page load"
 msgstr "La încărcarea paginii"
 
-#: includes/settings.php:432
+#: includes/settings.php:542
 msgid "On form focus"
 msgstr "La focusul formularului"
 
-#: includes/settings.php:433
+#: includes/settings.php:543
 msgid "On form submit"
 msgstr "La trimiterea formularului"
 
-#: includes/settings.php:440
+#: includes/settings.php:550
 msgid "Display Mode"
 msgstr "Mod de afișare"
 
-#: includes/settings.php:446
+#: includes/settings.php:556
 msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
@@ -675,19 +753,19 @@ msgstr ""
 "Alegeți dacă widget-ul este încorporat în pagină sau plutește lângă butonul "
 "de trimitere."
 
-#: includes/settings.php:448
+#: includes/settings.php:558
 msgid "Inline"
 msgstr "Incorporat"
 
-#: includes/settings.php:449
+#: includes/settings.php:559
 msgid "Floating"
 msgstr "Plutitor"
 
-#: includes/settings.php:456
+#: includes/settings.php:566
 msgid "Verification Delay"
 msgstr "Întârziere verificare"
 
-#: includes/settings.php:465
+#: includes/settings.php:575
 msgid ""
 "Some visitors perceive a slower check as more trustworthy, and that is this "
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
@@ -699,16 +777,16 @@ msgstr ""
 "creșteți Complexitatea."
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:468
+#: includes/settings.php:578
 #, php-format
 msgid "Add %s second delay"
 msgstr "Adaugă o întârziere de %s secunde"
 
-#: includes/settings.php:476
+#: includes/settings.php:586
 msgid "Acknowledgement"
 msgstr "Recunoaștere"
 
-#: includes/settings.php:482
+#: includes/settings.php:592
 msgid ""
 "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is "
 "free, open-source software — we would appreciate you keeping it visible, but "
@@ -718,11 +796,11 @@ msgstr ""
 "software gratuit, open-source: v-am ruga să îl păstrați vizibil, dar decizia "
 "vă aparține."
 
-#: includes/settings.php:483
+#: includes/settings.php:593
 msgid "Hide the ALTCHA logo"
 msgstr "Ascunde logo-ul ALTCHA"
 
-#: includes/settings.php:498
+#: includes/settings.php:608
 msgid ""
 "This applies to the text shown inside the widget. Same as the logo: keeping "
 "it visible helps credit the project this plugin is built on, but it has no "
@@ -732,168 +810,168 @@ msgstr ""
 "vizibil ajută la creditat proiectul pe care se baza acest plugin, dar nu are "
 "niciun efect asupra modului în care funcționează OpenPorte."
 
-#: includes/settings.php:499
+#: includes/settings.php:609
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr "Ascunde antetul \"Protejat de ALTCHA\""
 
-#: includes/settings.php:508
+#: includes/settings.php:618
 msgid "WordPress"
 msgstr "WordPress"
 
-#: includes/settings.php:517
+#: includes/settings.php:627
 msgid "Register page"
 msgstr "Pagină de înregistrare"
 
-#: includes/settings.php:518
+#: includes/settings.php:628
 msgid "Protect WordPress registration page."
 msgstr "Protejează pagina de înregistrare WordPress."
 
-#: includes/settings.php:521
+#: includes/settings.php:631
 msgid "Reset password page"
 msgstr "Pagină de resetare parolă"
 
-#: includes/settings.php:522
+#: includes/settings.php:632
 msgid "Protect WordPress password reset page."
 msgstr "Protejează pagina de resetare a parolei WordPress."
 
-#: includes/settings.php:525
+#: includes/settings.php:635
 msgid "Login page"
 msgstr "Pagină de autentificare"
 
-#: includes/settings.php:526
+#: includes/settings.php:636
 msgid "Protect WordPress login page."
 msgstr "Protejează pagina de autentificare WordPress."
 
-#: includes/settings.php:529
+#: includes/settings.php:639
 msgid "Comments"
 msgstr "Comentarii"
 
-#: includes/settings.php:530
+#: includes/settings.php:640
 msgid "Protect WordPress comments section."
 msgstr "Protejează secțiunea de comentarii WordPress."
 
-#: includes/settings.php:557
+#: includes/settings.php:667
 msgid "Integrations"
 msgstr "Integrări"
 
-#: includes/settings.php:573
+#: includes/settings.php:683
 msgid "CoBlocks"
 msgstr "CoBlocks"
 
-#: includes/settings.php:574
+#: includes/settings.php:684
 msgid "Protect CoBlocks forms."
 msgstr "Protejează formularele CoBlocks."
 
-#: includes/settings.php:578
+#: includes/settings.php:688
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: includes/settings.php:579
+#: includes/settings.php:689
 msgid "Protect Contact Form 7 forms."
 msgstr "Protejează formularele Contact Form 7."
 
-#: includes/settings.php:583
+#: includes/settings.php:693
 msgid "Elementor Pro Forms"
 msgstr "Elementor Pro Forms"
 
-#: includes/settings.php:584
+#: includes/settings.php:694
 msgid "Protect Elementor Pro forms."
 msgstr "Protejează formularele Elementor Pro."
 
-#: includes/settings.php:588
+#: includes/settings.php:698
 msgid "Enfold Theme"
 msgstr "Enfold Theme"
 
-#: includes/settings.php:589
+#: includes/settings.php:699
 msgid "Protect Enfold theme forms."
 msgstr "Protejează formularele temei Enfold."
 
-#: includes/settings.php:591
+#: includes/settings.php:701
 msgid "Theme not active."
 msgstr "Tema nu este activă."
 
-#: includes/settings.php:594
+#: includes/settings.php:704
 msgid "Formidable Forms"
 msgstr "Formidable Forms"
 
-#: includes/settings.php:595
+#: includes/settings.php:705
 msgid "Protect Formidable Forms submissions."
 msgstr "Protejează trimiterea formularelor Formidable Forms."
 
-#: includes/settings.php:599
+#: includes/settings.php:709
 msgid "Forminator"
 msgstr "Forminator"
 
-#: includes/settings.php:600
+#: includes/settings.php:710
 msgid "Protect Forminator forms."
 msgstr "Protejează formularele Forminator."
 
-#: includes/settings.php:604
+#: includes/settings.php:714
 msgid "Gravity Forms"
 msgstr "Gravity Forms"
 
-#: includes/settings.php:605
+#: includes/settings.php:715
 msgid "Protect Gravity Forms submissions."
 msgstr "Protejează trimiterea formularelor Gravity Forms."
 
-#: includes/settings.php:609
+#: includes/settings.php:719
 msgid "HTML Forms"
 msgstr "HTML Forms"
 
-#: includes/settings.php:610
+#: includes/settings.php:720
 msgid "Protect HTML Forms submissions."
 msgstr "Protejează trimiterea formularelor HTML Forms."
 
-#: includes/settings.php:614
+#: includes/settings.php:724
 msgid "wpDiscuz"
 msgstr "wpDiscuz"
 
-#: includes/settings.php:615
+#: includes/settings.php:725
 msgid "Protect wpDiscuz comments section."
 msgstr "Protejează secțiunea de comentarii wpDiscuz."
 
-#: includes/settings.php:619
+#: includes/settings.php:729
 msgid "WPForms"
 msgstr "WPForms"
 
-#: includes/settings.php:620
+#: includes/settings.php:730
 msgid "Protect WPForms submissions."
 msgstr "Protejează trimiterea formularelor WPForms."
 
-#: includes/settings.php:624
+#: includes/settings.php:734
 msgid "WooCommerce register page"
 msgstr "Pagina de înregistrare WooCommerce"
 
-#: includes/settings.php:625
+#: includes/settings.php:735
 msgid "Protect the WooCommerce register page."
 msgstr "Protejează pagina de înregistrare WooCommerce."
 
-#: includes/settings.php:629
+#: includes/settings.php:739
 msgid "WooCommerce reset password page"
 msgstr "Pagina de resetare parolă WooCommerce"
 
-#: includes/settings.php:630
+#: includes/settings.php:740
 msgid "Protect the WooCommerce reset password page."
 msgstr "Protejează pagina de resetare a parolei WooCommerce."
 
-#: includes/settings.php:634
+#: includes/settings.php:744
 msgid "WooCommerce login page"
 msgstr "Pagina de autentificare WooCommerce"
 
-#: includes/settings.php:635
+#: includes/settings.php:745
 msgid "Protect the WooCommerce login page."
 msgstr "Protejează pagina de autentificare WooCommerce."
 
-#: includes/settings.php:642
+#: includes/settings.php:752
 msgid "Custom HTML"
 msgstr "HTML Personalizat"
 
-#: includes/settings.php:643
+#: includes/settings.php:753
 msgid "Configure hand-written widget tags."
 msgstr "Configurare etichete widget scrise manual."
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:647
+#: includes/settings.php:757
 #, php-format
 msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
@@ -902,20 +980,44 @@ msgstr ""
 "%1$sDepășit%2$s, și programat pentru eliminare în următoarea versune majoră: "
 "plasați shortcode-ul %3$s în conținutul dvs. în loc."
 
-#: includes/settings.php:668
+#: includes/settings.php:778
 msgid "Plugin not active."
 msgstr "Plugin-ul nu este activ."
 
-#: integrations/elementor/field.php:71
-#: integrations/formidable/OpenPorteFieldType.php:54
+#: includes/settings.php:815
+msgid "Data"
+msgstr "Date"
+
+#: includes/settings.php:822
+msgid "Plugin deletion"
+msgstr "Ștergerea pluginului"
+
+#: includes/settings.php:828
+msgid "Keep settings when the plugin is deleted."
+msgstr "Păstrați setările atunci când pluginul este șters."
+
+#: includes/settings.php:829
+msgid ""
+"When on, deleting OpenPorte leaves its settings, including the shared "
+"secret, in the database, and a later reinstall picks them up again. "
+"Temporary data (replay counters, cached checks) is always removed. "
+"Deactivating the plugin never removes anything."
+msgstr ""
+"Când este activat, ștergerea OpenPorte lasă setările sale, inclusiv secretul "
+"partajat, în baza de date, iar o reinstalare ulterioară le preia din nou. "
+"Datele temporare (contoare de reutilizare, verificări din cache) sunt "
+"întotdeauna eliminate. Dezactivarea pluginului nu elimină niciodată nimic."
+
+#: integrations/elementor/field.php:86
+#: integrations/formidable/OpenPorteFieldType.php:63
 msgid "Verification failed."
 msgstr "Verificarea a eșuat."
 
-#: integrations/forminator.php:34 integrations/gravityforms/field.php:78
+#: integrations/forminator.php:34 integrations/gravityforms/field.php:88
 #: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:75 integrations/woocommerce.php:116
-#: integrations/wordpress.php:28 integrations/wordpress.php:72
-#: integrations/wordpress.php:111 integrations/wordpress.php:163
+#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/wordpress.php:28 integrations/wordpress.php:83
+#: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
 msgid "Could not verify you are not a robot."
 msgstr "Nu se poate verifica că nu sunteți un robot."
@@ -924,8 +1026,8 @@ msgstr "Nu se poate verifica că nu sunteți un robot."
 msgid "OpenPorte placeholder"
 msgstr "Marcaj de poziție OpenPorte"
 
-#: integrations/wordpress.php:28 integrations/wordpress.php:72
-#: integrations/wordpress.php:111 integrations/wordpress.php:163
+#: integrations/wordpress.php:28 integrations/wordpress.php:83
+#: integrations/wordpress.php:179 integrations/wordpress.php:229
 msgid "Error"
 msgstr "Eroare"
 
@@ -954,6 +1056,12 @@ msgstr "OpenPorte nu poate fi activat"
 #: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Mergeți la pagina Plugin-uri"
+
+#~ msgid "Copy"
+#~ msgstr "Copiază"
+
+#~ msgid "Regenerate"
+#~ msgstr "Regenerează"
 
 #~ msgid ""
 #~ "OpenPorte is an open-source anti-spam plugin that protects sites from "
