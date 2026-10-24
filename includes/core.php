@@ -335,10 +335,12 @@ class OpenPortePlugin
    * a site can be stricter on login than on comments. Every shipped
    * integration names its surface with the suffix of the setting that turned
    * the check on (openporte_integration_<context>): 'wordpress_login',
-   * 'woocommerce_login', 'wordpress_comments', 'contact_form_7', … — stable
-   * across releases, unlike hook names (a WordPress and a WooCommerce login
-   * both run on wp_authenticate_user). The current hook name is passed as a
-   * third argument. A caller that names no surface, such as third-party code
+   * 'woocommerce_login', 'wordpress_comments', 'contact_form_7', … One
+   * exception: WP-Members registration is 'wpmembers', although the WordPress
+   * registration setting turns it on. Surfaces are stable across releases,
+   * unlike hook names (a WordPress and a WooCommerce login both run on
+   * wp_authenticate_user). The current hook name is passed as a third
+   * argument. A caller that names no surface, such as third-party code
    * calling verify() with two arguments, gets the hook name as its context, as
    * every caller did in 1.29.
    *
@@ -936,7 +938,6 @@ class OpenPortePlugin
    * is bounded to N uses over its whole life rather than N uses per window.
    *
    * @since 1.29.0
-   *
    * @since 1.30.0 Added the `$context` parameter.
    *
    * @param object $data    Decoded token payload, already verified.
