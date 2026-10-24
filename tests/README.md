@@ -117,7 +117,10 @@ as a silent in-place update. Because the entry file was renamed
    - On **Test Page**, both `[altcha]` and `[openporte]` render the widget.
    - `/wp-json/altcha/v1/challenge`, `/wp-json/openporte/v1/challenge` and
      `/wp-admin/admin-ajax.php?action=openporte_challenge` all return a
-     challenge.
+     challenge in Self-hosted mode. If the imported configuration is in Custom
+     API mode, all three answer **403** instead (since 1.30.0 the site issues
+     no challenges of its own in Custom mode): switch `openporte_api` to
+     `selfhosted` to check them.
    - `wp option get openporte_selfhosted_transport` is `rest`: an imported
      configuration keeps the historical REST transport.
    - `./wp-env.sh logs` (or `wp-env logs`) is clean — no PHP warnings/notices.
