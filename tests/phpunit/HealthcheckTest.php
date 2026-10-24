@@ -114,6 +114,57 @@ class HealthcheckTest extends OpenPorteTestCase
     $this->assertStringContainsString('short enough to expire', $result['message']);
   }
 
+  /**
+   * A salt without the trailing "&" still verifies, so it is a warning that
+   * names the risk, not an error.
+   *
+   * @since 1.30.0
+   */
+  public function test_the_endpoint_check_warns_on_an_unterminated_salt()
+  {
+    $response = $this->endpoint_response('abcd?expires=' . (time() + 1200), self::SECRET);
+
+    $result = openporte_evaluate_challenge_response($response, self::SECRET, 'SHA-256');
+
+    $this->assertSame('warning', $result['level']);
+    $this->assertStringContainsString('valid SHA-256 challenge', $result['message']);
+    $this->assertStringContainsString('CVE-2025-68113', $result['message']);
+    $this->assertStringContainsString('Check the backend for an update', $result['message']);
+  }
+
+  /**
+   * Both warnings are reported when both apply, rather than the first hiding
+   * the second.
+   *
+   * @since 1.30.0
+   */
+  public function test_the_endpoint_check_reports_a_short_expiry_and_an_unterminated_salt()
+  {
+    $response = $this->endpoint_response('abcd?expires=' . (time() + 20), self::SECRET);
+
+    $result = openporte_evaluate_challenge_response($response, self::SECRET, 'SHA-256');
+
+    $this->assertSame('warning', $result['level']);
+    $this->assertStringContainsString('short enough to expire', $result['message']);
+    $this->assertStringContainsString('CVE-2025-68113', $result['message']);
+  }
+
+  /**
+   * An expiry past the verifier's horizon, typically a millisecond timestamp,
+   * would make every submission fail, so it is an error.
+   *
+   * @since 1.30.0
+   */
+  public function test_the_endpoint_check_reports_an_expiry_beyond_the_horizon()
+  {
+    $response = $this->endpoint_response('abcd?expires=' . (time() * 1000) . '&', self::SECRET);
+
+    $result = openporte_evaluate_challenge_response($response, self::SECRET, 'SHA-256');
+
+    $this->assertSame('error', $result['level']);
+    $this->assertStringContainsString('milliseconds', $result['message']);
+  }
+
   public function test_the_endpoint_check_still_reports_a_secret_mismatch()
   {
     $response = $this->endpoint_response('abcd?expires=' . (time() + 1200) . '&', str_repeat('b', 64));

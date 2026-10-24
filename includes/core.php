@@ -133,6 +133,27 @@ class OpenPortePlugin
   public static $replay_ttl_fallback = 14400;
 
   /**
+   * Furthest ahead, in seconds, that a proof-of-work token may expire.
+   *
+   * A salt that does not end with the `&` delimiter lets a solved challenge
+   * be re-split without breaking its signature. That can only append digits
+   * to its `expires`, multiplying it at least tenfold: centuries ahead, or
+   * January 2038 where 32-bit PHP saturates the parsed value. Refusing
+   * anything past this horizon closes that gap for Custom-mode backends that
+   * still issue such salts, without refusing their genuine tokens.
+   *
+   * One day: well above any genuine challenge (the self-hosted maximum is
+   * 4 hours, backends issue minutes) and any clock skew, and below the 30-day
+   * cap on object-cache counter lifetimes, so every acceptable token's reuse
+   * counter outlives it on both replay stores. Never lower it below the
+   * self-hosted Expiration maximum.
+   *
+   * @since 1.30.0
+   * @var int
+   */
+  public static $expires_horizon = 86400;
+
+  /**
    * Self-hosted challenge transports, in settings-page order.
    *
    * The single allowlist shared by the getter, the URL builder and the
@@ -1316,7 +1337,8 @@ class OpenPortePlugin
    * @since 1.29.0 Deprecated for direct use — call verify(), which adds the
    *               replay protection this primitive deliberately does not have.
    * @since 1.30.0 Refuses a `number` that is not a plain non-negative integer,
-   *               so the signed expiry cannot be read out of the salt.
+   *               so the signed expiry cannot be read out of the salt, and an
+   *               expiry more than $expires_horizon ahead.
    * @deprecated 1.29.0 Use verify() instead; removal is scheduled for 2.0.
    */
   public function verify_solution($payload, $hmac_key = null)
@@ -1343,6 +1365,11 @@ class OpenPortePlugin
     // counter's lifetime come from the very same number.
     $expires = $this->payload_expires($data);
     if ($expires > 0 && $expires < time()) {
+      return false;
+    }
+    // An expiry this far ahead was not issued by any backend: it is what a
+    // re-split unterminated salt looks like (see $expires_horizon).
+    if ($expires > time() + OpenPortePlugin::$expires_horizon) {
       return false;
     }
     // The payload must use the configured algorithm (see get_algorithm(); in

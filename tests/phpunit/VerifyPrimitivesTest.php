@@ -327,4 +327,52 @@ class VerifyPrimitivesTest extends OpenPorteTestCase
 
     $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
   }
+
+  /**
+   * Regression: a Custom-mode backend whose salts lack the trailing "&" still
+   * has its genuine tokens accepted, but digits moved from the number onto
+   * the salt's expiry put it past the horizon, so the re-split token is
+   * refused, expired or not. Covered for every allowed algorithm.
+   *
+   * @since 1.30.0
+   */
+  public function test_an_unterminated_salt_cannot_be_given_a_later_expiry()
+  {
+    foreach (OpenPortePlugin::get_allowed_algorithms() as $algorithm) {
+      update_option(OpenPortePlugin::$option_algorithm, $algorithm);
+      foreach (array(time() - 10, time() + 600) as $expires) {
+        $this->next_request();
+        $salt = bin2hex(random_bytes(32)) . '?expires=' . $expires;
+        $label = $algorithm . ', expires ' . ($expires < time() ? 'past' : 'future');
+
+        $this->assertSame(
+          $expires > time(),
+          $this->plugin->verify($this->signed($salt, 12345, $algorithm)),
+          $label . ': the original must be judged on its own expiry'
+        );
+        $this->assertFalse(
+          $this->plugin->verify($this->signed($salt . '1', '2345', $algorithm)),
+          $label . ': the re-split token must be refused'
+        );
+      }
+    }
+  }
+
+  /**
+   * The horizon itself: an expiry just inside it is accepted, one just past
+   * it is refused and writes no replay state.
+   *
+   * @since 1.30.0
+   */
+  public function test_an_expiry_beyond_the_horizon_is_refused()
+  {
+    $random = bin2hex(random_bytes(12));
+    $inside = $random . '?expires=' . (time() + OpenPortePlugin::$expires_horizon - 60) . '&';
+    $beyond = $random . '?expires=' . (time() + OpenPortePlugin::$expires_horizon + 60) . '&';
+
+    $this->assertFalse($this->plugin->verify($this->signed($beyond, 12345)));
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+    $this->next_request();
+    $this->assertTrue($this->plugin->verify($this->signed($inside, 12345)));
+  }
 }
