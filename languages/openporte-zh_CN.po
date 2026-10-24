@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.30.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-24T02:12:04+00:00\n"
-"PO-Revision-Date: 2026-10-24 00:00+0000\n"
+"POT-Creation-Date: 2026-10-24T10:37:49+00:00\n"
+"PO-Revision-Date: 2026-10-24 10:37+0000\n"
 "Last-Translator: claude-code-2.1.309:claude-opus-5-5 - signed-off by J-C "
 "Berthon\n"
 "Language-Team: Chinese (simplified)\n"
@@ -181,8 +181,18 @@ msgstr ""
 "后端返回的 challenge 的过期时间已过去。其时钟可能不准，也可能在提供缓存的 "
 "challenge；在使用自定义模式之前请修正该问题。"
 
+#: admin/healthcheck.php:362
+msgid ""
+"The backend issues challenges that expire more than a day from now, which "
+"OpenPorte refuses: every form submission would fail verification. Check that "
+"the backend sets \"expires\" in seconds, not milliseconds."
+msgstr ""
+"后端发出的 challenge 要在一天多以后才过期，OpenPorte 会拒绝此类 challenge：所"
+"有表单提交都将无法通过验证。请检查后端设置的 \"expires\" 是以秒而不是毫秒为单"
+"位。"
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:359
+#: admin/healthcheck.php:367
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -190,16 +200,27 @@ msgid ""
 msgstr "Challenge URL 返回了有效的 %s challenge，且共享密钥匹配。"
 
 #. translators: %s is a duration such as "20 mins"
-#: admin/healthcheck.php:364
+#: admin/healthcheck.php:372
 #, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "后端的 challenge 会在约 %s 后过期。"
 
-#: admin/healthcheck.php:368
+#: admin/healthcheck.php:378
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
 msgstr "这一时长太短，可能在较慢设备完成解题前就已到期，使合法提交变成失败。"
+
+#: admin/healthcheck.php:385
+msgid ""
+"The backend's challenge salts do not end with \"&\". Such challenges can be "
+"altered after solving so that they no longer expire (CVE-2025-68113). "
+"OpenPorte refuses the altered ones, but other software that checks this "
+"backend's challenges may not. Check the backend for an update."
+msgstr ""
+"后端 challenge 的 salt 不以 \"&\" 结尾。此类 challenge 在解决后可被篡改，从而"
+"不再过期（CVE-2025-68113）。OpenPorte 会拒绝被篡改的 challenge，但检查该后端 "
+"challenge 的其他软件可能不会。请检查后端是否有更新。"
 
 #: admin/options.php:42 integrations/elementor/field.php:22
 msgid "OpenPorte"
@@ -398,38 +419,38 @@ msgstr "OpenPorte 反垃圾邮件"
 msgid "Settings"
 msgstr "设置"
 
-#: includes/core.php:620 integrations/enfold-theme.php:58
+#: includes/core.php:643 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "验证失败。请稍后重试。"
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:623
+#: includes/core.php:646
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "由 %1$sALTCHA%2$s 提供保护"
 
-#: includes/core.php:627
+#: includes/core.php:650
 msgid "I'm not a robot"
 msgstr "我不是机器人"
 
-#: includes/core.php:628
+#: includes/core.php:651
 msgid "Verified"
 msgstr "已验证"
 
-#: includes/core.php:629
+#: includes/core.php:652
 msgid "Verifying..."
 msgstr "验证中..."
 
-#: includes/core.php:630
+#: includes/core.php:653
 msgid "Verifying... please wait."
 msgstr "验证中... 请稍候。"
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1503
+#: includes/core.php:1531
 msgid "This form requires JavaScript!"
 msgstr "此表单需要 JavaScript！"
 
-#: includes/core.php:1570
+#: includes/core.php:1598
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "在自定义 API 模式下，本站点不签发 challenge。"
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenPorte Spam Protection 1.30.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-24T02:12:04+00:00\n"
-"PO-Revision-Date: 2026-10-24 00:00+0000\n"
+"POT-Creation-Date: 2026-10-24T10:37:49+00:00\n"
+"PO-Revision-Date: 2026-10-24 10:37+0000\n"
 "Last-Translator: claude-code-2.1.309:claude-opus-5-5 - signed-off by J-C "
 "Berthon\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -200,8 +200,19 @@ msgstr ""
 "het verleden ligt. De klok kan verkeerd staan of hij kan een gecachete "
 "challenge aanbieden; corrigeer dit voordat u de Aangepaste modus gebruikt."
 
+#: admin/healthcheck.php:362
+msgid ""
+"The backend issues challenges that expire more than a day from now, which "
+"OpenPorte refuses: every form submission would fail verification. Check that "
+"the backend sets \"expires\" in seconds, not milliseconds."
+msgstr ""
+"De backend geeft challenges uit die pas over meer dan een dag verlopen, wat "
+"OpenPorte weigert: elke formulierverzending zou de verificatie niet "
+"doorstaan. Controleer of de backend \"expires\" in seconden opgeeft en niet "
+"in milliseconden."
+
 #. translators: %s is the algorithm confirmed with the backend
-#: admin/healthcheck.php:359
+#: admin/healthcheck.php:367
 #, php-format
 msgid ""
 "The Challenge URL responds with a valid %s challenge and the shared secret "
@@ -211,18 +222,31 @@ msgstr ""
 "geheim komt overeen."
 
 #. translators: %s is a duration such as "20 mins"
-#: admin/healthcheck.php:364
+#: admin/healthcheck.php:372
 #, php-format
 msgid "The backend expires its challenges after about %s."
 msgstr "De backend laat zijn challenges na ongeveer %s verlopen."
 
-#: admin/healthcheck.php:368
+#: admin/healthcheck.php:378
 msgid ""
 "That is short enough to expire before a slow device finishes solving, which "
 "turns legitimate submissions into failures."
 msgstr ""
 "Dat is kort genoeg om te verlopen voordat een traag apparaat de oplossing "
 "heeft voltooid, wat legitieme inzendingen in mislukkingen verandert."
+
+#: admin/healthcheck.php:385
+msgid ""
+"The backend's challenge salts do not end with \"&\". Such challenges can be "
+"altered after solving so that they no longer expire (CVE-2025-68113). "
+"OpenPorte refuses the altered ones, but other software that checks this "
+"backend's challenges may not. Check the backend for an update."
+msgstr ""
+"De salts van de challenges van de backend eindigen niet op \"&\". Zulke "
+"challenges kunnen na het oplossen worden gewijzigd zodat ze niet meer "
+"verlopen (CVE-2025-68113). OpenPorte weigert de gewijzigde, maar andere "
+"software die de challenges van deze backend controleert misschien niet. "
+"Controleer of er een update voor de backend is."
 
 #: admin/options.php:42 integrations/elementor/field.php:22
 msgid "OpenPorte"
@@ -429,38 +453,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Instellingen"
 
-#: includes/core.php:620 integrations/enfold-theme.php:58
+#: includes/core.php:643 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verificatie mislukt. Probeer het later opnieuw."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:623
+#: includes/core.php:646
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Beschermd door %1$sALTCHA%2$s"
 
-#: includes/core.php:627
+#: includes/core.php:650
 msgid "I'm not a robot"
 msgstr "Ik ben geen robot"
 
-#: includes/core.php:628
+#: includes/core.php:651
 msgid "Verified"
 msgstr "Geverifieerd"
 
-#: includes/core.php:629
+#: includes/core.php:652
 msgid "Verifying..."
 msgstr "Verifiëren..."
 
-#: includes/core.php:630
+#: includes/core.php:653
 msgid "Verifying... please wait."
 msgstr "Verifiëren... een moment geduld."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1503
+#: includes/core.php:1531
 msgid "This form requires JavaScript!"
 msgstr "Dit formulier vereist JavaScript!"
 
-#: includes/core.php:1570
+#: includes/core.php:1598
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Deze site geeft geen challenges uit in de Aangepaste API-modus."
 
