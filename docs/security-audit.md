@@ -81,6 +81,7 @@ logic**; the rest are low-severity hardening items.
 | 18 | Elementor field file ends the whole request | Robustness | `integrations/elementor/field.php` | Info | **Fixed (1.30.0)** |
 | 19 | "Custom" preset without a value saved as 0 | Configuration integrity (admin only) | `includes/settings.php` | Info | **Fixed (1.30.0)** |
 | 20 | Unterminated Custom-mode salts let solved challenges outlive their expiry | Replay / weak verification | `verify_solution()`, `admin/healthcheck.php` | Low | **Fixed (1.30.0)** |
+| 21 | Gravity Forms field before the last page never checked at submission | CAPTCHA bypass | `integrations/gravityforms/field.php` | Low | **Fixed (1.30.1)** |
 
 > Findings 9–11 came from the framework review (Appendix A/B). None was
 > exploitable; each was a non-breaking hardening and has now been applied.
@@ -99,6 +100,13 @@ below up to and including OpenPorte 1.29.1 carries the defect; 1.30.0 fixes it.
 | 18 | ALTCHA Spam Protection 1.4.0 | Elementor active without Elementor Pro's form field classes |
 | 19 | OpenPorte 1.28.0 (Expiration); 1.29.0 (Replay limit) | Only a hand-crafted settings POST by an administrator |
 | 20 | ALTCHA Spam Protection 1.21.0 (Custom API mode added) | API mode Custom, with a backend whose salts do not end with `&` |
+
+**Affected releases for finding #21 onwards.** Every release from the one named
+below up to and including OpenPorte 1.30.0 carries the defect; 1.30.1 fixes it.
+
+| # | Present since | Affected configuration |
+| - | ------------- | ---------------------- |
+| 21 | ALTCHA Spam Protection 0.3.2 (the first release) | Gravity Forms active, its integration on, a multi-page form with the OpenPorte field before the last page |
 
 The same review corrected three statements of this document that had been
 inaccurate since its 1.29.0 revision: the claim that the WordPress and
@@ -751,6 +759,29 @@ whose tokens never expired before) as an error, since every submission would
 now fail. Pinned by `VerifyPrimitivesTest`
 (`test_an_unterminated_salt_cannot_be_given_a_later_expiry`,
 `test_an_expiry_beyond_the_horizon_is_refused`) and `HealthcheckTest`.
+
+### 21. Gravity Forms field before the last page never checked at submission — Low — Fixed (1.30.1)
+
+**Type:** CAPTCHA bypass.
+**Location:** `integrations/gravityforms/field.php`, `validate()`.
+**Present since:** ALTCHA Spam Protection 0.3.2.
+
+On a multi-page form, the OpenPorte field was checked when the visitor left
+its own page, and skipped at the final submission, because the widget on an
+earlier page is no longer solved by then. The final submission is what creates
+the entry, so on such a form the challenge protected nothing. Forms with the
+field on the last page, and single-page forms, were not affected.
+
+**Fix applied.** The field is verified only on the form's last page, decided
+from the form's layout rather than from the page numbers a submission posts. A
+field placed on an earlier page is refused at every submission with a message
+asking for it to be moved, which the form editor also shows on the field: such
+a form stays closed until it is fixed, rather than open. Remembering a passed
+check across pages would keep these forms working, but cannot be tested
+without a Gravity Forms install, which the bench does not have (paid plugin,
+scheduled for removal, see `AGENTS.md`). Pinned by `GravityFormsFieldTest`, on
+stand-ins for the Gravity Forms classes; not run against a real Gravity Forms
+release.
 
 ---
 
