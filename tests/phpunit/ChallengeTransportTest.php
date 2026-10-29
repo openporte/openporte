@@ -2,7 +2,8 @@
 /**
  * Self-hosted challenge transport (issue #100): the normalized getter, the
  * URL selection in get_challengeurl(), the always-registered admin-ajax
- * actions, and the admin-ajax endpoint itself.
+ * actions, the admin-ajax endpoint itself, and both endpoints' page-cache
+ * opt-out (issue #133).
  *
  * What these tests cannot prove — real HTTP dispatch, the Cache-Control
  * header on the wire, cookies and a security plugin blocking a transport —
@@ -440,5 +441,92 @@ class ChallengeTransportTest extends OpenPorteTestCase
 
     $this->assertNull(OpenPorte_Test_Env::$sent_json_status);
     $this->assertArrayHasKey('signature', $sent);
+  }
+
+  /* --------------------------------------------------------- page caches */
+
+  /**
+   * Assert that the current request told page-caching plugins not to store
+   * its response, through both signals (issue #133).
+   *
+   * DONOTCACHEPAGE cannot be undefined between tests, so once one test has
+   * defined it the constant check alone proves nothing for later tests; the
+   * LiteSpeed action is logged per test and carries the per-call proof.
+   *
+   * @since 1.30.1
+   *
+   * @param string $context What was called, for the failure message.
+   */
+  private function assertPageCachingRefused($context)
+  {
+    $this->assertCount(
+      1,
+      OpenPorte_Test_Env::actions('litespeed_control_set_nocache'),
+      $context . ' must tell LiteSpeed Cache not to cache it, exactly once.'
+    );
+    $this->assertTrue(
+      defined('DONOTCACHEPAGE') && DONOTCACHEPAGE,
+      $context . ' must define DONOTCACHEPAGE.'
+    );
+  }
+
+  /**
+   * The REST endpoint opts its challenge out of page caches and keeps its
+   * Cache-Control header.
+   *
+   * LiteSpeed Cache caches REST responses by default and ignores
+   * Cache-Control, so it served one challenge to every visitor until long
+   * after it expired, and no login went through (#133).
+   *
+   * @since 1.30.1
+   */
+  public function test_rest_endpoint_opts_out_of_page_caches()
+  {
+    $response = openporte_generate_challenge_endpoint();
+
+    $this->assertInstanceOf(WP_REST_Response::class, $response);
+    $this->assertArrayHasKey('signature', $response->get_data());
+    $this->assertSame(
+      array('Cache-Control' => 'no-cache, no-store, max-age=0'),
+      $response->get_headers()
+    );
+    $this->assertPageCachingRefused('The REST challenge endpoint');
+  }
+
+  /**
+   * The Ajax endpoint opts its challenge out of page caches too.
+   *
+   * LiteSpeed Cache can be set to cache chosen admin-ajax actions; both
+   * transports must follow one policy whatever a site configures.
+   *
+   * @since 1.30.1
+   */
+  public function test_ajax_endpoint_opts_out_of_page_caches()
+  {
+    $sent = $this->call_ajax_endpoint();
+
+    $this->assertArrayHasKey('signature', $sent);
+    $this->assertPageCachingRefused('The Ajax challenge endpoint');
+  }
+
+  /**
+   * Both Custom-mode refusals opt out of page caches as well.
+   *
+   * A cached 403 would keep refusing after the site switches back to
+   * Self-hosted mode.
+   *
+   * @since 1.30.1
+   */
+  public function test_custom_mode_refusals_opt_out_of_page_caches()
+  {
+    update_option(OpenPortePlugin::$option_api, 'custom');
+
+    $this->assertInstanceOf(WP_Error::class, openporte_generate_challenge_endpoint());
+    $this->assertPageCachingRefused('The REST refusal');
+
+    OpenPorte_Test_Env::$actions = array();
+    $this->call_ajax_endpoint();
+    $this->assertSame(403, OpenPorte_Test_Env::$sent_json_status);
+    $this->assertPageCachingRefused('The Ajax refusal');
   }
 }

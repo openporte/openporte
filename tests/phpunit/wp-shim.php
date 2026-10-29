@@ -496,6 +496,25 @@ class WP_User
   public $ID = 1;
 }
 
+/**
+ * Stand-in for a REST response: the data and the headers set on it.
+ *
+ * @since 1.30.1
+ */
+class WP_REST_Response
+{
+  /** @var mixed */
+  public $data;
+
+  /** @var array<string,string> */
+  public $headers = array();
+
+  public function __construct($data = null) { $this->data = $data; }
+  public function set_headers($headers) { $this->headers = $headers; }
+  public function get_data() { return $this->data; }
+  public function get_headers() { return $this->headers; }
+}
+
 function is_wp_error($thing) { return $thing instanceof WP_Error; }
 function wp_remote_get($url, $args = array()) { return OpenPorte_Test_Env::$http_response; }
 function wp_remote_retrieve_response_code($response)

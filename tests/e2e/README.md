@@ -156,6 +156,64 @@ npm run report                                 # open the HTML report
 Tests run **serially with one worker** — the settings under test are global
 WordPress options.
 
+## Running against the OpenLiteSpeed bench (issue #133)
+
+The suite also runs against the optional OpenLiteSpeed bench (see
+[`tests/README.md`](../README.md#optional-openlitespeed-bench-issue-133)),
+through its tunnel on `localhost:8888`. Point the wp-cli bridge at the
+`litespeed` container instead of wp-env:
+
+```sh
+export WP_BASE_URL=http://localhost:8888
+export WP_CLI_CMD="ssh YOUR_PI_LOGIN@YOUR_PI_HOST docker exec litespeed wp --allow-root --path=/var/www/vhosts/localhost/html"
+```
+
+`ssh` joins its arguments into one remote command line, so the
+[wp-cli quoting caveat](#known-caveats) applies unchanged.
+
+That bench has no third-party plugins and no `tests/bin/wp-init.sh`
+fixtures, so run only the specs that WordPress core alone can serve:
+
+```sh
+npx playwright test login-gate.spec.js --grep-invert "WooCommerce"
+npx playwright test replay-limit.spec.js --grep-invert "AJAX resubmission|still logs a user in"
+MATRIX_DRIVERS=wordpress-comments npx playwright test settings-matrix.spec.js
+MATRIX_DRIVERS=wordpress-comments npm run test:ajax
+```
+
+These specs create their own fixtures there (the `e2e-gate-user` editor and
+the `E2E-Comments` post). `admin-settings.spec.js` and `shared-secret.spec.js`
+additionally need `WP_ADMIN_PASSWORD` set to this bench's admin password;
+they have not been run there yet.
+
+On 2026-10-29, with the #133 fix deployed and LiteSpeed Cache 7.9.2 on its
+default REST caching, all four commands passed: 4, 3, 11 and 11 tests.
+
+LiteSpeed-specific pitfalls:
+
+- **Purge before every run.** The suite changes settings through wp-cli,
+  which LiteSpeed Cache never sees, so a page cached under the previous
+  run's settings is still served. Running the Ajax matrix straight after the
+  REST one failed 6 acceptance tests on the suite's own `challengeurl` check:
+  the comments post still carried the REST URL. Within a run this does not
+  happen, because each submitted or purged comment makes LiteSpeed Cache
+  purge the post.
+- **A wp-cli purge only takes effect on the next request that reaches PHP.**
+  `wp litespeed-purge all` reports "Could not notify the web server to
+  purge", and cache hits bypass PHP, so they keep serving the old response.
+  Follow it with one request that misses the cache:
+
+  ```sh
+  sh -c "$WP_CLI_CMD litespeed-purge all"
+  curl -sS -o /dev/null 'http://localhost:8888/wp-login.php?purge=1'
+  ```
+
+  `sh -c` because zsh does not word-split `$WP_CLI_CMD` on its own.
+- **The suite leaves its baseline settings behind.** After the runs above,
+  WordPress login protection was off (`openporte_integration_wordpress_login`
+  `0`) and the transport was `ajax`. Restore both, then purge, before using
+  the bench for manual LiteSpeed testing.
+
 ## Adding an integration
 
 Create `drivers/<name>.js` exporting

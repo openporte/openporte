@@ -1614,15 +1614,45 @@ function openporte_challenge_unavailable()
 }
 
 /**
+ * Tell page-caching plugins not to store the current challenge response.
+ *
+ * A cached challenge is handed to every visitor: each solves the same one,
+ * so the replay limit refuses it after a few submissions, and once it
+ * expires every protected form fails until the cache is purged (#133).
+ * Our Cache-Control header is not enough on its own: LiteSpeed Cache caches
+ * REST responses by default, for seven days, and decides through its own
+ * X-LiteSpeed-Cache-Control header instead. DONOTCACHEPAGE is the
+ * convention most page-caching plugins honour, LiteSpeed Cache included;
+ * litespeed_control_set_nocache is LiteSpeed Cache's own API. Both are inert
+ * when no such plugin is active.
+ *
+ * Runs on the refusal paths too: a cached Custom-mode 403 would outlive a
+ * switch back to Self-hosted mode.
+ *
+ * @since 1.30.1
+ */
+function openporte_prevent_page_caching()
+{
+  if (!defined('DONOTCACHEPAGE')) {
+    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- The shared constant page-caching plugins read; a prefixed name would be ignored.
+    define('DONOTCACHEPAGE', true);
+  }
+  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LiteSpeed Cache's own API hook, invoked rather than defined here.
+  do_action('litespeed_control_set_nocache', 'OpenPorte challenge');
+}
+
+/**
  * REST endpoint serving a self-hosted challenge.
  *
  * @since 1.26.3
  * @since 1.30.0 Refuses with a 403 error in Custom API mode.
+ * @since 1.30.1 Opts out of page caches, see openporte_prevent_page_caching().
  *
  * @return WP_REST_Response|WP_Error The challenge, or the Custom-mode refusal.
  */
 function openporte_generate_challenge_endpoint()
 {
+  openporte_prevent_page_caching();
   $unavailable = openporte_challenge_unavailable();
   if ($unavailable !== null) {
     return new WP_Error($unavailable['code'], $unavailable['message'], array('status' => $unavailable['status']));
@@ -1663,9 +1693,14 @@ add_action(
  * endpoint's error (see openporte_challenge_unavailable()).
  *
  * @since 1.30.0
+ * @since 1.30.1 Opts out of page caches, see openporte_prevent_page_caching().
  */
 function openporte_generate_challenge_ajax_endpoint()
 {
+  // LiteSpeed Cache leaves admin-ajax alone unless an admin lists this
+  // action under its AJAX cache TTL setting; this keeps the action uncached
+  // even then, and keeps both transports under the same policy.
+  openporte_prevent_page_caching();
   // Set explicitly for parity with the REST endpoint across the whole
   // supported floor: admin-ajax.php already calls nocache_headers(), but
   // cores before 6.8 do not include no-store for anonymous visitors.
