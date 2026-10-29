@@ -209,6 +209,16 @@ the outbound HTTP verification call via `pre_http_request`. This is deliberate. 
 intercept matches on `CoBlocks_Form::GCAPTCHA_VERIFY_URL` — if that constant changes
 in a CoBlocks update, all CoBlocks forms silently break.
 
+**Challenge endpoints — `Cache-Control` alone does not stop page caches.**
+LiteSpeed Cache caches REST responses by default (7 days) and decides through
+its own `X-LiteSpeed-Cache-Control` header, ignoring ours. One cached challenge
+then serves every visitor until long past its expiry, and no protected form
+goes through (#133). Both challenge endpoints therefore call
+`openporte_prevent_page_caching()` (`DONOTCACHEPAGE` plus LiteSpeed's
+`litespeed_control_set_nocache` action) before anything else. Any new code
+path that serves a challenge must call it too. wp-env runs Apache, where
+LiteSpeed Cache never caches, so the bench cannot reproduce this.
+
 **`has_active_integrations()` / `get_integrations()` are deprecated dead code.**
 Both deprecated in 1.28.0, removal at the next major (#62). The "only enqueue scripts
 on pages with active integrations" gate they served was removed upstream in 1.21.0,
