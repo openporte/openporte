@@ -183,11 +183,71 @@ MATRIX_DRIVERS=wordpress-comments npm run test:ajax
 
 These specs create their own fixtures there (the `e2e-gate-user` editor and
 the `E2E-Comments` post). `admin-settings.spec.js` and `shared-secret.spec.js`
-additionally need `WP_ADMIN_PASSWORD` set to this bench's admin password;
-they have not been run there yet.
+additionally need `WP_ADMIN_USER` and `WP_ADMIN_PASSWORD` set to an
+administrator on this bench.
 
 On 2026-10-29, with the #133 fix deployed and LiteSpeed Cache 7.9.2 on its
 default REST caching, all four commands passed: 4, 3, 11 and 11 tests.
+
+### Running the full suite there
+
+The whole suite runs on this bench too, once it has the third-party plugins
+and fixtures, and once the cache is purged after every settings change.
+Without that purge, each matrix driver passes its first combo and fails every
+later one: the page is still the one cached under the first combo's settings
+(no auto-verification, no floating widget, no WooCommerce register form).
+
+1. **Install the plugins** the drivers activate (Contact Form 7, WPForms Lite,
+   WooCommerce, wpDiscuz), leaving them inactive. The drivers create the
+   comments post and the WooCommerce account page themselves.
+2. **Create the fixtures `tests/bin/wp-init.sh` would**: a `contact-us` page
+   holding a Contact Form 7 form, and the WPForms form plus its `wpforms-test`
+   page. Pass content containing spaces on stdin (`docker exec -i … wp post
+   create - …`), never as an argument: see the [wp-cli quoting caveat](#known-caveats).
+3. **Switch LiteSpeed Cache's Object Cache off** (`wp litespeed-option set
+   object false`), as `tests/README.md` asks. With it on and no Redis running,
+   every wp-cli call prints a Redis warning on stdout, and the suite reads
+   that warning back as part of each post ID.
+4. **Sync the code under test** with `./wp-env.sh start` from the checkout
+   you want to test, then `docker restart litespeed` to clear the opcode
+   cache. Both benches mount the same remote directory, so the LiteSpeed
+   bench serves whichever checkout last ran `start` or `plugin-check`. Check
+   with `md5sum` on a changed file inside the container. Do not let another
+   checkout sync while a run is in progress.
+5. **Point `WP_CLI_CMD` at a wrapper that purges after every write**, and
+   set an administrator for the admin specs:
+
+   ```sh
+   #!/bin/sh
+   # lw-purge: wp-cli in the litespeed container, purging after each write.
+   W() { ssh YOUR_PI_LOGIN@YOUR_PI_HOST docker exec litespeed wp --allow-root --path=/var/www/vhosts/localhost/html "$@"; }
+   W "$@"; rc=$?
+   case "$1 $2" in
+     "option update"|"option delete"|"plugin activate"|"plugin deactivate"|"post update"|"post create"|"user create"|"user delete")
+       W litespeed-purge all >/dev/null 2>&1
+       curl -sS -o /dev/null 'http://localhost:8888/wp-login.php?purge=1' ;;
+   esac
+   exit $rc
+   ```
+
+   ```sh
+   export WP_BASE_URL=http://localhost:8888
+   export WP_CLI_CMD=/path/to/lw-purge
+   export WP_ADMIN_USER=e2e-admin WP_ADMIN_PASSWORD=…
+   npx playwright test
+   npm run test:ajax
+   ```
+
+   Purge once before each of the two commands as well.
+
+On 2026-10-30, with 1.30.1 (I-09 included), LiteSpeed Cache 7.9.2 on its
+default page and REST caching, and the wrapper above, the full suite passed
+85 of 86 tests and the Ajax matrix 60 of 61. Both failures were the same
+combo, `contact-form-7 › auto=onload floating=on`: the test submits without
+waiting, and on this fast bench the form went out about 70 ms after the
+challenge request, before a token existed, and was refused as spam. The
+same code passes that combo on wp-env. It is a timing race in the held-submit
+glue in `public/script.js`, not a cache effect.
 
 LiteSpeed-specific pitfalls:
 
@@ -211,8 +271,11 @@ LiteSpeed-specific pitfalls:
   `sh -c` because zsh does not word-split `$WP_CLI_CMD` on its own.
 - **The suite leaves its baseline settings behind.** After the runs above,
   WordPress login protection was off (`openporte_integration_wordpress_login`
-  `0`) and the transport was `ajax`. Restore both, then purge, before using
-  the bench for manual LiteSpeed testing.
+  `0`) and the transport was `ajax`. A full run also changes the complexity,
+  expiry, delay and replay limit, sets per-integration options, and leaves
+  the drivers' plugins active. Record `wp option list --search='openporte_*'`
+  and the active plugins before a run, restore them afterwards, then purge,
+  before using the bench for manual LiteSpeed testing.
 
 ## Adding an integration
 
