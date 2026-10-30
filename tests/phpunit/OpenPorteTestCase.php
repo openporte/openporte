@@ -67,14 +67,18 @@ abstract class OpenPorteTestCase extends TestCase
   }
 
   /**
-   * Build a valid server-signature (ALTCHA Sentinel) token.
+   * Build a validly signed server-signature (ALTCHA Sentinel) token.
    *
-   * @param int|null $expire_at Absolute expiry, or null to omit the field.
+   * @param int|null   $expire_at Absolute expiry, or null to omit the field.
+   * @param mixed|null $verified  The `verified` value, or null to omit it.
    * @return string base64(JSON) payload.
    */
-  protected function server_token($expire_at = null)
+  protected function server_token($expire_at = null, $verified = 'true')
   {
-    $fields = array('verified' => 'true');
+    $fields = array();
+    if ($verified !== null) {
+      $fields['verified'] = $verified;
+    }
     if ($expire_at !== null) {
       $fields['expire'] = $expire_at;
     }

@@ -463,10 +463,10 @@ cases the bench cannot drive:
   produce **no** PHP warnings in `wp-env logs` (the point of the `decode_payload`
   hardening — previously these emitted "Attempt to read property on null").
 - **Custom mode** (`custom` API mode with a signed
-  `verificationData` backend): an **expired** (`expire` in the past) or
-  not-**verified** payload is rejected; a normal unexpired/verified one is
-  accepted; a **minimal** backend payload that omits `expire`/`verified`
-  altogether still verifies (the checks are defensive, only-when-present).
+  `verificationData` backend): an **expired** (`expire` in the past),
+  not-**verified**, or more-than-a-day-ahead payload is rejected; a normal
+  unexpired/verified one is accepted; since 1.30.1 a payload that omits
+  `expire` or `verified` is rejected too.
 - **Secret continuity:** a fresh install gets a 256-bit signing secret; an
   upgraded install keeps its existing secret unchanged (covered by the
   ALTCHA → OpenPorte migration test in `tests/README.md` — a changed secret

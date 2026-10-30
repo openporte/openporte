@@ -368,7 +368,8 @@ Breaking any of these silently removes the protection rather than failing loudly
   backends that omit the `&`, `verify_solution()`'s one-day expiry horizon
   (`$expires_horizon`) is what refuses a re-split token: keep it above the
   self-hosted Expiration maximum (4 hours) and under the 30-day object-cache
-  cap, so the counter still outlives every token it accepts.
+  cap, so the counter still outlives every token it accepts. Since 1.30.1
+  `verify_server_signature()` applies the same horizon and requires `expire`.
 - **The memo counts one use per request**, so a strict limit still lets the dual
   `authenticate` login through.
 - **Fail-open, but observable.** A broken store degrades to pre-1.29 behaviour

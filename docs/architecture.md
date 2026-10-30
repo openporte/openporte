@@ -285,12 +285,13 @@ Each method re-checks that the fields it needs are present before using them.
 
 `verify_server_signature()` checks the HMAC signature against the site secret
 (`get_secret()`), then parses `verificationData`. It returns `true` only when the
-signature is valid, the payload is unexpired (`expire`, when present) and
-explicitly verified (`verified`, when present). The `expire`/`verified` checks
-mirror the ALTCHA reference implementation and are applied defensively — only
-when the backend actually supplies the field — so minimal custom backends keep
-working. It no longer inspects a `classification` field: the spam-filter
-plumbing was removed in 1.28.0 (see below).
+signature is valid, the payload is explicitly verified (`verified` is `true` or
+`1`) and it carries an `expire` that is neither past nor more than
+`$expires_horizon` (one day) ahead — the same horizon as proof-of-work tokens.
+The checks mirror the ALTCHA reference implementation; until 1.30.1 each applied
+only when the backend supplied the field. It no longer inspects a
+`classification` field: the spam-filter plumbing was removed in 1.28.0 (see
+below).
 
 `verify_solution()` performs proof-of-work verification: it validates the
 challenge hash, its signature, and expiration, returning `true` only if all
@@ -342,8 +343,9 @@ fallback for a token carrying no expiry at all. The database backend has no
 ceiling. Persistent object-cache TTLs are capped at 30 days because Memcached
 treats a higher value as an absolute Unix timestamp; a longer-lived token is
 therefore bounded per 30-day window instead of becoming silently unlimited.
-Since 1.30.0 only a server-signature token can live that long: a proof-of-work
-token expiring more than a day ahead is refused (security audit #20).
+Since 1.30.1 no accepted token lives that long: a token of either kind expiring
+more than a day ahead is refused (security audit #20 and #2), so the cap is a
+guard in case that horizon is ever raised.
 Storage is an atomic consume on existing infrastructure: `wp_cache_incr()`
 where a persistent object cache is present, otherwise a transient-shaped
 `wp_options` row pair claimed with a guarded `INSERT IGNORE` and spent with a
