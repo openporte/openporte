@@ -1,5 +1,5 @@
 === OpenPorte Spam Protection ===
-Tags: captcha, spam, anti-spam, anti-bot, altcha
+Tags: captcha, security, anti-spam, gdpr, protect
 Stable tag: 1.30.0
 Requires at least: 5.6
 Requires PHP: 8.0
@@ -231,6 +231,23 @@ After switching, purge any page or CDN cache: cached pages still contain the
 old challenge URL. Switching does not help a form plugin that submits through
 the REST API itself (Contact Form 7, for example): it still needs the REST API
 for its own submissions.
+
+= Logins or forms fail on a site using LiteSpeed Cache. What can I do? =
+
+LiteSpeed Cache caches REST API responses by default and ignores the
+"do not cache" headers OpenPorte sends, so every visitor gets the same
+challenge: logins and protected forms fail after five uses (the Replay limit)
+and for everyone once that challenge expires. This is fixed in 1.30.1. Until
+you can update, use either workaround:
+
+1. Set **Self-hosted transport** to Ajax under Settings → OpenPorte, or
+2. in LiteSpeed Cache → Cache → Excludes → Do Not Cache URIs, add
+   `/wp-json/openporte/`.
+
+Then run LiteSpeed Cache → Purge All once: the stale challenge stays cached
+until it is purged. If you are already locked out, purge the cache from your
+hosting panel or with WP-CLI (`wp litespeed-purge all`), log in, and apply one
+of the workarounds.
 
 = Will deleting the plugin remove my settings? =
 
