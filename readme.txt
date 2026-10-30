@@ -302,6 +302,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 = 1.30.1 =
 
 * Security: in Gravity Forms, an OpenPorte field placed before the last page of a multi-page form was not checked when the form was submitted. Such a form now refuses submissions until the field is moved to the last page; the form editor shows a notice on the field. Present since ALTCHA Spam Protection 0.3.2.
+* Security hardening: a server-signed verification payload from a custom backend is now accepted only when it is marked verified and carries an expiry no more than a day ahead; a backend that omits either field has its payloads refused. The bundled widget does not use these payloads.
 * Fixed logins and protected forms failing on sites using LiteSpeed Cache, which caches REST API responses by default: every visitor got the same challenge, refused after five uses by the replay limit and for everyone once it expired. Challenge responses now tell page-caching plugins not to store them. After updating, purge the page cache once. Present since ALTCHA Spam Protection 0.3.2. Thanks to Nico (@gooloode) for the report.
 
 = 1.30.0 =

@@ -113,15 +113,23 @@ class ReplayStorageTest extends OpenPorteTestCase
   }
 
   /**
-   * Only a server-signature token can still carry an expiry this far ahead:
-   * since 1.30.0 a proof-of-work one is refused past $expires_horizon.
+   * No accepted token lives this long since 1.30.1 ($expires_horizon covers
+   * both token kinds), so the cap is driven directly: it stays as a guard in
+   * case the horizon is ever raised past Memcached's 30-day limit.
+   *
+   * @since 1.30.1 Calls consume_replay_slot() directly; a server-signature
+   *               token 40 days ahead is now refused before it gets there.
    */
   public function test_a_long_object_cache_ttl_is_capped_at_thirty_days()
   {
     OpenPorte_Test_Env::$external_object_cache = true;
-    $token = $this->server_token(time() + (40 * DAY_IN_SECONDS));
+    $consume = new ReflectionMethod(OpenPortePlugin::class, 'consume_replay_slot');
+    if (PHP_VERSION_ID < 80100) {
+      // Needed before PHP 8.1 only, and deprecated since 8.5.
+      $consume->setAccessible(true);
+    }
 
-    $this->assertTrue($this->verify_in_new_request($token));
+    $this->assertTrue($consume->invoke($this->plugin, 'openporte_replay_cap', 5, 40 * DAY_IN_SECONDS));
 
     $this->assertCount(1, OpenPorte_Test_Env::$cache_adds);
     $this->assertSame(30 * DAY_IN_SECONDS, OpenPorte_Test_Env::$cache_adds[0][3]);

@@ -133,7 +133,7 @@ class OpenPortePlugin
   public static $replay_ttl_fallback = 14400;
 
   /**
-   * Furthest ahead, in seconds, that a proof-of-work token may expire.
+   * Furthest ahead, in seconds, that a token may expire.
    *
    * A salt that does not end with the `&` delimiter lets a solved challenge
    * be re-split without breaking its signature. That can only append digits
@@ -148,7 +148,11 @@ class OpenPortePlugin
    * counter outlives it on both replay stores. Never lower it below the
    * self-hosted Expiration maximum.
    *
+   * Server-signature tokens are held to the same horizon, so no token the
+   * crypto gate accepts can outlive its reuse counter on either store.
+   *
    * @since 1.30.0
+   * @since 1.30.1 Also applies to server-signature tokens.
    * @var int
    */
   public static $expires_horizon = 86400;
@@ -1283,11 +1287,14 @@ class OpenPortePlugin
    * @since 1.16.0
    * @since 1.29.0 Deprecated for direct use — call verify(), which adds the
    *               replay protection this primitive deliberately does not have.
+   * @since 1.30.1 Requires `verified` (`true` or `1`) and an `expire` that
+   *               lies in the future, within $expires_horizon.
    * @deprecated 1.29.0 Use verify() instead; removal is scheduled for 2.0.
    *
    * @param string      $payload  The base64-encoded token from the widget.
    * @param string|null $hmac_key The HMAC key; falls back to the configured secret.
-   * @return bool True if the payload is signed, unexpired and marked verified.
+   * @return bool True if the payload is signed, marked verified, and carries
+   *              an expiry that is neither past nor beyond the horizon.
    */
   public function verify_server_signature($payload, $hmac_key = null)
   {
@@ -1316,26 +1323,28 @@ class OpenPortePlugin
     if (!($alg_ok && $signature_ok)) {
       return false;
     }
-    // The spam-filter classification is gone (issue #6), but expire/verified
-    // are protocol-level validity checks, not spam plumbing. Mirror the ALTCHA
-    // reference (verified === true && expire > now): a signed server payload is
-    // only valid while unexpired and explicitly verified — without the expire
-    // check a once-valid token could be replayed forever. Each check applies
-    // only when the backend supplies the field, so a minimal custom backend
-    // that omits them keeps working.
+    // Mirror the ALTCHA reference (verified === true && expire > now). Both
+    // fields are required: the bundled widget never produces this payload, so
+    // the only backends affected are custom ones, and a signed payload without
+    // an expiry would stay acceptable forever. Only an explicit true counts;
+    // any other value, or none, is refused.
     $verification = array();
     parse_str($data->verificationData, $verification);
-    // Read through payload_expires() so the crypto gate and the reuse
-    // counter's lifetime come from the very same number.
-    $expire = $this->payload_expires($data);
-    if ($expire > 0 && $expire < time()) {
+    if (!isset($verification['verified'])
+      || !in_array($verification['verified'], array('true', '1'), true)) {
       return false;
     }
-    if (isset($verification['verified'])) {
-      $verified_flag = strtolower((string) $verification['verified']);
-      if (in_array($verified_flag, array('', '0', 'false', 'no'), true)) {
-        return false;
-      }
+    // Read through payload_expires() so the crypto gate and the reuse
+    // counter's lifetime come from the very same number. A missing or
+    // non-numeric expire reads as 0, which is in the past: refused here too.
+    $expire = $this->payload_expires($data);
+    if ($expire < time()) {
+      return false;
+    }
+    // Same horizon as verify_solution(): it keeps every accepted token inside
+    // the reuse counter's 30-day object-cache cap.
+    if ($expire > time() + OpenPortePlugin::$expires_horizon) {
+      return false;
     }
     return true;
   }

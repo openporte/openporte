@@ -126,9 +126,74 @@ class VerifyPrimitivesTest extends OpenPorteTestCase
     $this->assertFalse($this->plugin->verify($this->server_token(time() - 10)));
   }
 
-  public function test_the_server_signature_path_accepts_a_payload_with_no_expiry()
+  /**
+   * A signed payload without an expiry would stay acceptable forever.
+   *
+   * @since 1.30.1
+   */
+  public function test_the_server_signature_path_refuses_a_payload_with_no_expiry()
   {
-    $this->assertTrue($this->plugin->verify($this->server_token(null)));
+    $this->assertFalse($this->plugin->verify($this->server_token(null)));
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+  }
+
+  /**
+   * Only an explicit `verified` of "true" or "1" is accepted.
+   *
+   * @since 1.30.1
+   *
+   * @dataProvider server_verified_values
+   *
+   * @param mixed $verified The `verified` value; null omits the field.
+   * @param bool  $accepted Expected outcome.
+   */
+  public function test_the_server_signature_path_requires_an_explicit_verified($verified, $accepted)
+  {
+    $this->assertSame($accepted, $this->plugin->verify($this->server_token(time() + 600, $verified)));
+  }
+
+  /** @return array<string,array{0:mixed,1:bool}> */
+  public function server_verified_values()
+  {
+    return array(
+      'true' => array('true', true),
+      '1' => array('1', true),
+      'omitted' => array(null, false),
+      'empty' => array('', false),
+      'false' => array('false', false),
+      '0' => array('0', false),
+      'no' => array('no', false),
+      'yes' => array('yes', false),
+      'TRUE (not the reference spelling)' => array('TRUE', false),
+      'array' => array(array('true'), false),
+    );
+  }
+
+  /**
+   * A non-numeric expire reads as no expiry, and is refused.
+   *
+   * @since 1.30.1
+   */
+  public function test_the_server_signature_path_refuses_a_non_numeric_expiry()
+  {
+    $this->assertFalse($this->plugin->verify($this->server_token('soon')));
+  }
+
+  /**
+   * The proof-of-work horizon applies here too: just inside is accepted, just
+   * past is refused and writes no replay state.
+   *
+   * @since 1.30.1
+   */
+  public function test_the_server_signature_path_refuses_an_expiry_beyond_the_horizon()
+  {
+    $beyond = $this->server_token(time() + OpenPortePlugin::$expires_horizon + 60);
+    $inside = $this->server_token(time() + OpenPortePlugin::$expires_horizon - 60);
+
+    $this->assertFalse($this->plugin->verify($beyond));
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+    $this->next_request();
+    $this->assertTrue($this->plugin->verify($inside));
   }
 
   public function test_the_server_signature_path_refuses_object_verification_data()

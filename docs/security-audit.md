@@ -62,7 +62,7 @@ logic**; the rest are low-severity hardening items.
 | # | Title | Type | Location | Risk | Status |
 | - | ----- | ---- | -------- | ---- | ------ |
 | 1 | Solved tokens are not single-use (replay) | Replay | `verify()` / `verify_solution()` | Medium | **Mitigated (1.29.0)** — bounded reuse, residuals documented |
-| 2 | Server-signature path skips `expire` / `verified` | Replay / weak verification | `verify_server_signature()` | Medium | **Fixed** |
+| 2 | Server-signature path skips `expire` / `verified` | Replay / weak verification | `verify_server_signature()` | Medium | **Fixed** (tightened 1.30.1) |
 | 3 | Decoded payload not validated before use | Input validation / robustness | `verify()` + sub-methods | Low | **Fixed** |
 | 4 | Broken `autocomplete` attribute on settings inputs | Info exposure / best practice | `admin/options.php` | Low | **Fixed** |
 | 5 | No rate limiting on the public challenge endpoint | DoS / abuse | REST route | Low | Accepted (documented) |
@@ -354,6 +354,17 @@ spam-filter plumbing is gone (#6) — `$this->spamfilter_result` is a local
 `$verification` array and the trailing `classification !== 'BAD'` return became
 a plain `return true`. `verify_server_signature()` in `includes/core.php` is the
 current reference.
+
+**Since 1.30.1.** The only-when-present leniency is gone (#128): a payload must
+carry `verified` as `true` or `1` and an `expire` that is in the future and no
+more than `OpenPortePlugin::$expires_horizon` (one day) ahead, the horizon of
+finding #20. Any other `verified` value, or none, is refused, where only `''`,
+`0`, `false` and `no` were before. A valid HMAC was always required, so this
+was no forgery: it closes a permissive contract that let a backend's signed
+payload without an expiry stay acceptable forever, bounded only by the Replay
+limit to N uses per 4-hour window. The bundled widget never produces these
+payloads; a custom backend that omits either field now has its tokens refused.
+Pinned by `VerifyPrimitivesTest`.
 
 ---
 
