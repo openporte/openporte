@@ -237,6 +237,16 @@ universal fix: plugins that keep visitors out of wp-admin ("hide" or "lock
 down" wp-admin, membership plugins) often block `admin-ajax.php` too, sometimes
 only for logged-in subscribers and customers.
 
+A second cause is a page cache or CDN that stores REST API responses: every
+visitor then gets the same challenge, refused once the Replay limit is spent
+and for everyone once it expires (#133). Since 1.30.1 both challenge endpoints
+opt out of LiteSpeed Cache and of caching plugins that honour
+`DONOTCACHEPAGE`, besides sending `Cache-Control: no-store`. A cache that
+ignores all three, such as a host- or CDN-level rule caching `/wp-json/`,
+still needs `/openporte/v1/challenge` excluded from it, or the transport
+switched to Ajax. To spot it, open the challenge URL twice, logged out: two
+identical responses mean it is cached.
+
 **How to check, by hand.** OpenPorte does not test this automatically: a check
 run from the server cannot see firewall, CDN or browser-side rules, so only a
 real visitor request is conclusive.
