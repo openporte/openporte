@@ -440,4 +440,62 @@ class VerifyPrimitivesTest extends OpenPorteTestCase
     $this->next_request();
     $this->assertTrue($this->plugin->verify($this->signed($inside, 12345)));
   }
+
+  /**
+   * A valid proof-of-work token padded with an ignored field to exactly
+   * `$length` bytes once encoded.
+   *
+   * @since 1.30.1
+   *
+   * @param int $length Encoded length; a multiple of 4, as base64 is.
+   * @return string base64(JSON) payload.
+   */
+  private function token_of_length($length)
+  {
+    $payload = $this->decode($this->token(time() + 600));
+    $payload['pad'] = '';
+    // base64 turns every 3 bytes of JSON into 4 characters.
+    $payload['pad'] = str_repeat('x', $length / 4 * 3 - strlen(json_encode($payload)));
+    $token = $this->encode($payload);
+    $this->assertSame($length, strlen($token));
+
+    return $token;
+  }
+
+  /**
+   * The size limit itself: a valid token of exactly the limit is accepted.
+   *
+   * @since 1.30.1
+   */
+  public function test_a_token_at_the_size_limit_is_accepted()
+  {
+    $this->assertTrue($this->plugin->verify($this->token_of_length(OpenPortePlugin::$payload_max_bytes)));
+  }
+
+  /**
+   * One step over the limit, a valid token is refused and writes no state.
+   * The step is 4 bytes: a base64 token one byte longer could not be valid.
+   *
+   * @since 1.30.1
+   */
+  public function test_a_token_over_the_size_limit_is_refused_and_writes_no_state()
+  {
+    $token = $this->token_of_length(OpenPortePlugin::$payload_max_bytes + 4);
+
+    $this->assertFalse($this->plugin->verify($token));
+    $this->assertSame(array(), OpenPorte_Test_Env::replay_rows());
+    $this->assertCount(1, OpenPorte_Test_Env::actions('openporte_verify_result'));
+  }
+
+  /**
+   * The deprecated primitives, called directly, enforce the limit too.
+   *
+   * @since 1.30.1
+   */
+  public function test_the_primitives_refuse_a_token_over_the_size_limit()
+  {
+    $this->assertFalse($this->plugin->verify_solution(
+      $this->token_of_length(OpenPortePlugin::$payload_max_bytes + 4)
+    ));
+  }
 }
