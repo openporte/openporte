@@ -1,6 +1,6 @@
 === OpenPorte Spam Protection ===
 Tags: captcha, security, anti-spam, gdpr, protect
-Stable tag: 1.30.0
+Stable tag: 1.30.1
 Requires at least: 5.6
 Requires PHP: 8.0
 Tested up to: 7.1
@@ -72,10 +72,9 @@ what they map to.
 == Upgrade Notice ==
 
 = 1.30.1 =
-Fixes logins and forms failing on sites using LiteSpeed Cache, which served one
-cached challenge to every visitor. After updating, purge your page cache once
-(LiteSpeed Cache → Purge All): a challenge cached before the update is served
-until purged.
+Security release; please update. Gravity Forms: move the OpenPorte field of a
+multi-page form to its last page, or the form refuses submissions. LiteSpeed
+Cache: purge your page cache once after updating (LiteSpeed Cache → Purge All).
 
 = 1.30.0 =
 Security release: fixes to challenge expiry, login protection and several
@@ -255,19 +254,21 @@ for its own submissions.
 = Logins or forms fail on a site using LiteSpeed Cache. What can I do? =
 
 LiteSpeed Cache caches REST API responses by default and ignores the
-"do not cache" headers OpenPorte sends, so every visitor gets the same
-challenge: logins and protected forms fail after five uses (the Replay limit)
-and for everyone once that challenge expires. This is fixed in 1.30.1. Until
-you can update, use either workaround:
+"do not cache" headers OpenPorte sends, so with OpenPorte 1.30.0 or older every
+visitor gets the same challenge: logins and protected forms fail after five
+uses (the Replay limit) and for everyone once that challenge expires.
+
+Since 1.30.1, OpenPorte tells LiteSpeed Cache not to cache its challenges.
+Update, then run LiteSpeed Cache → Purge All once: a challenge cached before
+the update stays cached until it is purged. If you cannot update yet, use
+either workaround, then purge:
 
 1. Set **Self-hosted transport** to Ajax under Settings → OpenPorte, or
 2. in LiteSpeed Cache → Cache → Excludes → Do Not Cache URIs, add
    `/wp-json/openporte/`.
 
-Then run LiteSpeed Cache → Purge All once: the stale challenge stays cached
-until it is purged. If you are already locked out, purge the cache from your
-hosting panel or with WP-CLI (`wp litespeed-purge all`), log in, and apply one
-of the workarounds.
+If you are already locked out, purge the cache from your hosting panel or with
+WP-CLI (`wp litespeed-purge all`) and log in.
 
 = Will deleting the plugin remove my settings? =
 
@@ -350,6 +351,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 * The Self-hosted transport setting's help now names page caches and CDNs that store REST API responses as a reason to switch to Ajax.
 * Docs: new screenshots of the current widget, settings page, login protection, WooCommerce and Floating UI, and a clearer plugin description.
 * Docs: a new FAQ entry explains that login protection does not cover XML-RPC or REST API authentication, and how to turn those off when a site does not need them.
+* Translations: 14 fully translated languages updated for the new and changed strings.
 
 = 1.30.0 =
 
