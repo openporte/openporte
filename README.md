@@ -102,6 +102,32 @@ directly tested.
 * Many other plugins and your own content (via the `[openporte]`
   shortcode, or the deprecated `[altcha]` alias)
 
+### What login protection does not cover
+
+The WordPress and WooCommerce login protection covers the login forms:
+`wp-login.php`, WooCommerce's My Account login, and any form that signs in
+through `wp_signon()`.
+
+Two other ways of logging in are deliberately left alone, because the apps and
+services that use them cannot solve a challenge:
+
+* XML-RPC (`xmlrpc.php`);
+* REST API authentication with application passwords.
+
+An attacker can try passwords there without meeting the widget. If your site
+does not need them, disable them:
+
+```php
+// Disable XML-RPC authentication.
+add_filter( 'xmlrpc_enabled', '__return_false' );
+// Disable application passwords.
+add_filter( 'wp_is_application_passwords_available', '__return_false' );
+```
+
+OpenPorte does not limit login attempts or add two-factor authentication. Use a
+dedicated plugin for those; it also protects XML-RPC and the REST API if you
+keep them.
+
 ## Floating UI
 
 The plugin supports the [Floating UI](https://altcha.org/docs/v2/floating-ui/),

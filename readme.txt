@@ -201,6 +201,26 @@ the widget and visitors still have to tick it, but nothing checks the result on
 the server — a bot posting directly to the form's endpoint is not stopped. See
 **Supported Integrations** for the list.
 
+= Does login protection also cover XML-RPC and the REST API? =
+
+No. The WordPress and WooCommerce login protection covers the login forms:
+`wp-login.php`, WooCommerce's My Account login and any form that signs in
+through WordPress's own login function. Logins through XML-RPC (`xmlrpc.php`)
+and REST API authentication with application passwords are deliberately left
+alone, because the apps and services that use them cannot solve a challenge.
+An attacker can try passwords there without meeting the widget.
+
+If your site does not need them:
+
+1. Disable XML-RPC authentication, with a security plugin or with
+   `add_filter( 'xmlrpc_enabled', '__return_false' );`.
+2. Disable application passwords, with
+   `add_filter( 'wp_is_application_passwords_available', '__return_false' );`.
+
+OpenPorte does not limit login attempts or add two-factor authentication. Use a
+dedicated plugin for those; it also protects XML-RPC and the REST API where you
+keep them.
+
 = The widget cannot load a challenge for visitors. What should I check? =
 
 Usually a security or optimization plugin blocks the REST API for logged-out
@@ -322,6 +342,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 * Security hardening: a server-signed verification payload from a custom backend is now accepted only when it is marked verified and carries an expiry no more than a day ahead; a backend that omits either field has its payloads refused. The bundled widget does not use these payloads.
 * Security hardening: a submitted verification token longer than 4 KiB is now refused before it is decoded. Genuine tokens are well under 1 KiB.
 * Fixed logins and protected forms failing on sites using LiteSpeed Cache, which caches REST API responses by default: every visitor got the same challenge, refused after five uses by the replay limit and for everyone once it expired. Challenge responses now tell page-caching plugins not to store them. After updating, purge the page cache once. Present since ALTCHA Spam Protection 0.3.2. Thanks to Nico (@gooloode) for the report.
+* Docs: a new FAQ entry explains that login protection does not cover XML-RPC or REST API authentication, and how to turn those off when a site does not need them.
 
 = 1.30.0 =
 
