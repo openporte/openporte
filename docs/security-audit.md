@@ -63,7 +63,7 @@ logic**; the rest are low-severity hardening items.
 | - | ----- | ---- | -------- | ---- | ------ |
 | 1 | Solved tokens are not single-use (replay) | Replay | `verify()` / `verify_solution()` | Medium | **Mitigated (1.29.0)** — bounded reuse, residuals documented |
 | 2 | Server-signature path skips `expire` / `verified` | Replay / weak verification | `verify_server_signature()` | Medium | **Fixed** (tightened 1.30.1) |
-| 3 | Decoded payload not validated before use | Input validation / robustness | `verify()` + sub-methods | Low | **Fixed** |
+| 3 | Decoded payload not validated before use | Input validation / robustness | `verify()` + sub-methods | Low | **Fixed** (tightened 1.30.1) |
 | 4 | Broken `autocomplete` attribute on settings inputs | Info exposure / best practice | `admin/options.php` | Low | **Fixed** |
 | 5 | No rate limiting on the public challenge endpoint | DoS / abuse | REST route | Low | Accepted (documented) |
 | 6 | No HTTPS enforcement on the custom challenge URL | MITM (operator-controlled) | `get_challengeurl()` / settings | Info | Accepted (documented) |
@@ -410,6 +410,14 @@ private function decode_payload($payload)
 at the top; `verify_server_signature()` gains the equivalent guard shown in
 finding #2. Behaviour on valid payloads is unchanged; malformed input still
 fails closed, now without warnings.
+
+**Since 1.30.1.** Nothing bounded the size of a submitted token: `verify()`
+hashed it for its per-request memo, then `decode_payload()` base64-decoded and
+JSON-parsed it, at whatever length the request carried (#128). Both now refuse
+a token longer than `OpenPortePlugin::$payload_max_bytes` (4 KiB), `verify()`
+before the hash. Genuine tokens are far below it: about 580 bytes for a SHA-512
+proof of work, under 900 for a server-signature token. Pinned by
+`VerifyPrimitivesTest` at the limit and one base64 step over it.
 
 ---
 

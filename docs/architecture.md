@@ -279,7 +279,8 @@ configured mode. This distinction matters: changing the mode does not change how
 a challenge is verified. In `verify()`, the plugin decodes the submitted token
 via `decode_payload()` — a strict `base64_decode` + `json_decode` that returns
 `null` for anything malformed, so junk submissions fail closed without emitting
-PHP warnings. A valid object carrying a `verificationData` field is routed to
+PHP warnings. A token longer than `$payload_max_bytes` (4 KiB) is refused before
+it is hashed or decoded. A valid object carrying a `verificationData` field is routed to
 `verify_server_signature()`; otherwise to `verify_solution()` for proof-of-work.
 Each method re-checks that the fields it needs are present before using them.
 

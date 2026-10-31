@@ -158,6 +158,22 @@ class OpenPortePlugin
   public static $expires_horizon = 86400;
 
   /**
+   * Longest submitted token, in bytes, that verification will decode.
+   *
+   * Checked before the token is hashed, base64-decoded or JSON-parsed, so
+   * verifying an oversized submission costs a length comparison. (The
+   * integrations' sanitize_text_field() pass still runs before verify(),
+   * bounded only by PHP's post_max_size.) Genuine
+   * tokens are far below it: about 580 bytes for a SHA-512 proof of work,
+   * under 900 for a server-signature token carrying extra verification
+   * fields.
+   *
+   * @since 1.30.1
+   * @var int
+   */
+  public static $payload_max_bytes = 4096;
+
+  /**
    * Self-hosted challenge transports, in settings-page order.
    *
    * The single allowlist shared by the getter, the URL builder and the
@@ -754,10 +770,22 @@ class OpenPortePlugin
    * Tokens are base64(JSON). Decoding defensively here lets the verify methods
    * bail out before reading properties, instead of emitting PHP warnings
    * ("Attempt to read property … on null/false") on every junk submission.
+   *
+   * @since 1.27.2
+   * @since 1.30.1 Refuses a token longer than $payload_max_bytes.
+   *
+   * @param mixed $payload The submitted token.
+   * @return object|null The decoded payload, or null if it is malformed or
+   *                     oversized.
    */
   private function decode_payload($payload)
   {
     if (!is_string($payload) || $payload === '') {
+      return null;
+    }
+    // verify() checks the length too, before it hashes the token; this copy
+    // covers the deprecated primitives called directly.
+    if (strlen($payload) > OpenPortePlugin::$payload_max_bytes) {
       return null;
     }
     // base64_decode() here only parses the token's transport encoding (the
@@ -1193,6 +1221,8 @@ class OpenPortePlugin
    *               for the rest of the request.
    * @since 1.30.0 Added the `$context` parameter (the form surface), passed
    *               as argument three to the openporte_replay_limit filter.
+   * @since 1.30.1 Refuses a token longer than $payload_max_bytes before
+   *               hashing it.
    *
    * @param string      $payload  The base64-encoded token from the widget.
    * @param string|null $hmac_key The HMAC key; falls back to the configured secret.
@@ -1206,6 +1236,12 @@ class OpenPortePlugin
       $hmac_key = $this->get_secret();
     }
     if (empty($payload) || empty($hmac_key)) {
+      return $this->emit_verify_result(false);
+    }
+    // Refuse an oversized token before hashing it for the memo below: no
+    // genuine token comes near the limit, and it is the only work here whose
+    // cost the submitter controls. Not memoised, which would need that hash.
+    if (strlen((string) $payload) > OpenPortePlugin::$payload_max_bytes) {
       return $this->emit_verify_result(false);
     }
     // Memo on the submitted bytes: the cheapest short-circuit for the common
