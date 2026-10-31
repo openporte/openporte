@@ -105,7 +105,7 @@ if [ ! -f '.wpenvrc' ]; then
 fi
 
 # Verify that the script is being run from the root of a git repository
-if [ ! -d '.git' ]; then
+if [ ! -e '.git' ]; then
   echo 'This script must be run from the root of the repository.' >&2
   exit 1
 fi
