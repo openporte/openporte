@@ -4,7 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /*
  * Plugin Name: OpenPorte Spam Protection
- * Description: Stop spam without CAPTCHAs. Proof-of-Work protection for your site. Open-source, self-hosted, privacy-first.
+ * Plugin URI: https://github.com/openporte/openporte
+ * Description: Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms and logins. Open-source, self-hosted, privacy-first.
  * Author: OpenPorte Contributors
  * Author URI: https://github.com/openporte/openporte/graphs/contributors
  * Version: 1.30.0

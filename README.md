@@ -9,8 +9,8 @@
     </picture>
 </div>
 
-**Stop spam without CAPTCHAs. Proof-of-Work protection for your site.
-Open-source, self-hosted, privacy-first.**
+**Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms
+and logins. Open-source, self-hosted, privacy-first.**
 
 OpenPorte protects WordPress forms, logins, registrations and comments from
 spam and bots using a lightweight Proof-of-Work challenge. The goal is to make
