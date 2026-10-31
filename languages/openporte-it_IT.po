@@ -1,11 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.0\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-24T10:37:49+00:00\n"
-"PO-Revision-Date: 2026-10-24 10:37+0000\n"
-"Last-Translator: claude-code-2.1.309:claude-opus-5-5 - signed-off by J-C "
-"Berthon\n"
+"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
+"PO-Revision-Date: 2026-10-31 00:00+0000\n"
+"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Italian <it@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -19,14 +18,17 @@ msgstr ""
 msgid "OpenPorte Spam Protection"
 msgstr "OpenPorte Spam Protection"
 
+#. Plugin URI of the plugin
+#: openporte.php
+msgid "https://github.com/openporte/openporte"
+msgstr "https://github.com/openporte/openporte"
+
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs. Proof-of-Work protection for your site. Open-"
-"source, self-hosted, privacy-first."
-msgstr ""
-"Ferma lo spam senza CAPTCHAs. Protezione Proof-of-Work. Open-source, auto-"
-"ospitato, privacy-first."
+"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
+"and logins. Open-source, self-hosted, privacy-first."
+msgstr "Fermi lo spam senza CAPTCHAs: un controllo anti-spam Proof-of-Work per moduli e accessi. Open-source, auto-ospitato, privacy-first."
 
 #. Author of the plugin
 #: openporte.php
@@ -454,38 +456,38 @@ msgstr "Anti-spam OpenPorte"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: includes/core.php:643 integrations/enfold-theme.php:58
+#: includes/core.php:677 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verifica fallita. Riprova più tardi."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:646
+#: includes/core.php:680
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Protetto da %1$sALTCHA%2$s"
 
-#: includes/core.php:650
+#: includes/core.php:684
 msgid "I'm not a robot"
 msgstr "Non sono un robot"
 
-#: includes/core.php:651
+#: includes/core.php:685
 msgid "Verified"
 msgstr "Verificato"
 
-#: includes/core.php:652
+#: includes/core.php:686
 msgid "Verifying..."
 msgstr "Verifica in corso..."
 
-#: includes/core.php:653
+#: includes/core.php:687
 msgid "Verifying... please wait."
 msgstr "Verifica in corso... attendere prego."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1531
+#: includes/core.php:1589
 msgid "This form requires JavaScript!"
 msgstr "Questo modulo richiede JavaScript!"
 
-#: includes/core.php:1598
+#: includes/core.php:1656
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Questo sito non emette sfide in modalità API Personalizzato."
 
@@ -549,24 +551,21 @@ msgid "Only used in Self-hosted API Mode."
 msgstr "Usato solo in modalità API Self-hosted."
 
 #. translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte documentation.
-#: includes/settings.php:385
+#: includes/settings.php:387
 #, php-format
 msgid ""
 "Choose how this site serves challenges to visitors. REST API is the default; "
-"use Ajax if a security plugin blocks the REST API for logged-out visitors. "
-"After changing it, test a protected form in a private window.<br/>%1$sHow to "
-"choose and check the transport%2$s"
-msgstr ""
-"Scelga come questo sito fornisce le sfide ai visitatori. REST API è il "
-"valore predefinito; usi Ajax se un plugin di sicurezza blocca la REST API "
-"per i visitatori non autenticati. Dopo la modifica, provi un modulo protetto "
-"in una finestra privata.<br/>%1$sCome scegliere e verificare il trasporto%2$s"
+"use Ajax if a security plugin blocks the REST API for logged-out visitors, "
+"or if a page cache or CDN stores its responses. After changing it, test a "
+"protected form in a private window.<br/>%1$sHow to choose and check the "
+"transport%2$s"
+msgstr "Scelga come questo sito fornisce le sfide ai visitatori. REST API è il valore predefinito; usi Ajax se un plugin di sicurezza blocca la REST API per i visitatori non autenticati, o se una cache delle pagine o una CDN ne memorizza le risposte. Dopo la modifica, provi un modulo protetto in una finestra privata.<br/>%1$sCome scegliere e verificare il trasporto%2$s"
 
-#: includes/settings.php:399
+#: includes/settings.php:401
 msgid "Challenge URL"
 msgstr "URL della sfida"
 
-#: includes/settings.php:407
+#: includes/settings.php:409
 msgid ""
 "Only available when API Mode is set to Custom.<br/>The URL is made up of the "
 "domain and path to your <strong>custom ALTCHA-compatible backend</strong>, "
@@ -577,15 +576,15 @@ msgstr ""
 "personalizzato compatibile con ALTCHA</strong>, e facoltativamente da una "
 "chiave API (inizia con <code>gk_</code>)."
 
-#: includes/settings.php:416
+#: includes/settings.php:418
 msgid "Shared secret"
 msgstr "Segreto condiviso"
 
-#: includes/settings.php:424
+#: includes/settings.php:426
 msgid "A secret key used to sign and verify challenges."
 msgstr "Una chiave segreta utilizzata per firmare e verificare le sfide."
 
-#: includes/settings.php:427
+#: includes/settings.php:429
 msgid ""
 "OpenPorte generates a random secret automatically. Change it only if another "
 "application needs to use the same secret.<br/>In Custom API Mode, this value "
@@ -598,7 +597,7 @@ msgstr ""
 "strong> al segreto condiviso (a volte chiamato segreto HMAC) configurato nel "
 "backend."
 
-#: includes/settings.php:429
+#: includes/settings.php:431
 msgid ""
 "The \"Copy shared secret\" icon button copies the current secret to the "
 "clipboard. The \"Generate new shared secret\" icon button fills in a fresh "
@@ -615,15 +614,15 @@ msgstr ""
 "impedisce anche la verifica dei nuovi invii finché non aggiorna di "
 "conseguenza il segreto sul suo backend."
 
-#: includes/settings.php:439 includes/settings.php:445
+#: includes/settings.php:441 includes/settings.php:447
 msgid "Hash algorithm for the challenges."
 msgstr "Algoritmo di hash per le sfide."
 
-#: includes/settings.php:439
+#: includes/settings.php:441
 msgid "Algorithm"
 msgstr "Algoritmo"
 
-#: includes/settings.php:446
+#: includes/settings.php:448
 msgid ""
 "In Self-hosted API Mode this is the algorithm used to generate and verify "
 "the proof-of-work challenges.<br/>In Custom API Mode it must match the "
@@ -635,29 +634,29 @@ msgstr ""
 "corrispondere all'algoritmo usato dal backend: la maggior parte dei backend "
 "compatibili con ALTCHA usa SHA-256 come predefinito."
 
-#: includes/settings.php:456
+#: includes/settings.php:458
 msgid "Low"
 msgstr "Bassa"
 
-#: includes/settings.php:457
+#: includes/settings.php:459
 msgid "Medium"
 msgstr "Media"
 
-#: includes/settings.php:458
+#: includes/settings.php:460
 msgid "High"
 msgstr "Alta"
 
-#: includes/settings.php:468
+#: includes/settings.php:470
 msgid "Complexity"
 msgstr "Complessità"
 
-#: includes/settings.php:478
+#: includes/settings.php:480
 msgid "Disabled in Custom mode: the backend sets the challenge complexity."
 msgstr ""
 "Disabilitato in modalità Personalizzato: il backend imposta la complessità "
 "della sfida."
 
-#: includes/settings.php:479
+#: includes/settings.php:481
 msgid ""
 "Select the PoW complexity for the widget: the higher the complexity, the "
 "longer visitors (and bots) work to solve the challenge.<br/>Even High is "
@@ -671,17 +670,17 @@ msgstr ""
 "necessari alcuni secondi. Il livello Alto richiede all'incirca 2-3 volte il "
 "lavoro del livello Basso."
 
-#: includes/settings.php:486
+#: includes/settings.php:488
 msgid "Expiration"
 msgstr "Scadenza"
 
-#: includes/settings.php:497
+#: includes/settings.php:499
 msgid "Disabled in Custom mode: the backend sets the challenge expiry."
 msgstr ""
 "Disabilitato in modalità Personalizzato: il backend imposta la scadenza "
 "della sfida."
 
-#: includes/settings.php:500
+#: includes/settings.php:502
 msgid ""
 "Life-span of a challenge. Custom accepts 0 to 14400 seconds, where 0 means "
 "no expiry and 14400 is 4 hours."
@@ -689,7 +688,7 @@ msgstr ""
 "Durata di una sfida. Il campo Personalizzato accetta valori da 0 a 14400 "
 "secondi, dove 0 significa nessuna scadenza e 14400 corrisponde a 4 ore."
 
-#: includes/settings.php:502
+#: includes/settings.php:504
 msgid ""
 "Above 300 seconds the window in which a solved challenge can be replayed "
 "grows, though Replay limit still bounds how often one is accepted. Below 60 "
@@ -704,11 +703,11 @@ msgstr ""
 "scade mai: entrambe le opzioni sono sconsigliate e in fase di valutazione "
 "per la deprecazione."
 
-#: includes/settings.php:508
+#: includes/settings.php:510
 msgid "Replay limit"
 msgstr "Limite di replay"
 
-#: includes/settings.php:514
+#: includes/settings.php:516
 msgid ""
 "How many times one solved challenge may be accepted. This applies in both "
 "API Modes."
@@ -716,7 +715,7 @@ msgstr ""
 "Quante volte una sfida risolta può essere accettata. Questo si applica a "
 "entrambe le modalità API."
 
-#: includes/settings.php:516
+#: includes/settings.php:518
 msgid ""
 "A visitor whose form comes back with an unrelated error (a missing field, a "
 "mistyped password) resubmits the same challenge, so a small allowance keeps "
@@ -732,39 +731,39 @@ msgstr ""
 "valori da 0 a 100, dove 0 accetta una sfida risolta finché rimane valida: il "
 "comportamento delle versioni precedenti alla 1.29.0, non raccomandato."
 
-#: includes/settings.php:525
+#: includes/settings.php:527
 msgid "Widget Customisation"
 msgstr "Personalizzazione del widget"
 
-#: includes/settings.php:532
+#: includes/settings.php:534
 msgid "Auto verification"
 msgstr "Verifica automatica"
 
-#: includes/settings.php:538
+#: includes/settings.php:540
 msgid "Select auto-verification behaviour."
 msgstr "Seleziona il comportamento della verifica automatica."
 
-#: includes/settings.php:540
+#: includes/settings.php:542
 msgid "Disabled"
 msgstr "Disabilitato"
 
-#: includes/settings.php:541
+#: includes/settings.php:543
 msgid "On page load"
 msgstr "Al caricamento della pagina"
 
-#: includes/settings.php:542
+#: includes/settings.php:544
 msgid "On form focus"
 msgstr "Al focus sul modulo"
 
-#: includes/settings.php:543
+#: includes/settings.php:545
 msgid "On form submit"
 msgstr "All'invio del modulo"
 
-#: includes/settings.php:550
+#: includes/settings.php:552
 msgid "Display Mode"
 msgstr "Modalità di visualizzazione"
 
-#: includes/settings.php:556
+#: includes/settings.php:558
 msgid ""
 "Choose whether the widget sits inline in the page or floats near the submit "
 "button."
@@ -772,19 +771,19 @@ msgstr ""
 "Scegliere se il widget debba essere integrato nella pagina o fluttuante "
 "vicino al pulsante di invio."
 
-#: includes/settings.php:558
+#: includes/settings.php:560
 msgid "Inline"
 msgstr "Integrato"
 
-#: includes/settings.php:559
+#: includes/settings.php:561
 msgid "Floating"
 msgstr "Flottante"
 
-#: includes/settings.php:566
+#: includes/settings.php:568
 msgid "Verification Delay"
 msgstr "Ritardo di verifica"
 
-#: includes/settings.php:575
+#: includes/settings.php:577
 msgid ""
 "Some visitors perceive a slower check as more trustworthy, and that is this "
 "pause's only effect. It does not make spam-blocking any stronger; to raise "
@@ -796,16 +795,16 @@ msgstr ""
 "complessità."
 
 #. translators: %s is the added delay in seconds, e.g. "0.5"
-#: includes/settings.php:578
+#: includes/settings.php:580
 #, php-format
 msgid "Add %s second delay"
 msgstr "Aggiunga un ritardo di %s secondi"
 
-#: includes/settings.php:586
+#: includes/settings.php:588
 msgid "Acknowledgement"
 msgstr "Crediti"
 
-#: includes/settings.php:592
+#: includes/settings.php:594
 msgid ""
 "This applies to the small ALTCHA logo shown inside the widget. ALTCHA is "
 "free, open-source software — we would appreciate you keeping it visible, but "
@@ -815,11 +814,11 @@ msgstr ""
 "un software gratuito e open-source: La preghiamo di mantenerlo visibile, ma "
 "la scelta è Sua."
 
-#: includes/settings.php:593
+#: includes/settings.php:595
 msgid "Hide the ALTCHA logo"
 msgstr "Nasconda il logo ALTCHA"
 
-#: includes/settings.php:608
+#: includes/settings.php:610
 msgid ""
 "This applies to the text shown inside the widget. Same as the logo: keeping "
 "it visible helps credit the project this plugin is built on, but it has no "
@@ -829,168 +828,168 @@ msgstr ""
 "preghiamo di mantenerlo visibile per dare credito al progetto su cui è "
 "basato questo plugin, ma non ha alcun effetto sul funzionamento di OpenPorte."
 
-#: includes/settings.php:609
+#: includes/settings.php:611
 msgid "Hide the \"Protected by ALTCHA\" footer"
 msgstr "Nasconda il testo \"Protetto da ALTCHA\"."
 
-#: includes/settings.php:618
+#: includes/settings.php:620
 msgid "WordPress"
 msgstr "WordPress"
 
-#: includes/settings.php:627
+#: includes/settings.php:629
 msgid "Register page"
 msgstr "Pagina di registrazione"
 
-#: includes/settings.php:628
+#: includes/settings.php:630
 msgid "Protect WordPress registration page."
 msgstr "Proteggi la pagina di registrazione di WordPress."
 
-#: includes/settings.php:631
+#: includes/settings.php:633
 msgid "Reset password page"
 msgstr "Pagina di reimpostazione password"
 
-#: includes/settings.php:632
+#: includes/settings.php:634
 msgid "Protect WordPress password reset page."
 msgstr "Proteggi la pagina di reimpostazione della password di WordPress."
 
-#: includes/settings.php:635
+#: includes/settings.php:637
 msgid "Login page"
 msgstr "Pagina di accesso"
 
-#: includes/settings.php:636
+#: includes/settings.php:638
 msgid "Protect WordPress login page."
 msgstr "Proteggi la pagina di accesso di WordPress."
 
-#: includes/settings.php:639
+#: includes/settings.php:641
 msgid "Comments"
 msgstr "Commenti"
 
-#: includes/settings.php:640
+#: includes/settings.php:642
 msgid "Protect WordPress comments section."
 msgstr "Proteggi la sezione commenti di WordPress."
 
-#: includes/settings.php:667
+#: includes/settings.php:669
 msgid "Integrations"
 msgstr "Integrazioni"
 
-#: includes/settings.php:683
+#: includes/settings.php:685
 msgid "CoBlocks"
 msgstr "CoBlocks"
 
-#: includes/settings.php:684
+#: includes/settings.php:686
 msgid "Protect CoBlocks forms."
 msgstr "Proteggi i moduli di CoBlocks."
 
-#: includes/settings.php:688
+#: includes/settings.php:690
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: includes/settings.php:689
+#: includes/settings.php:691
 msgid "Protect Contact Form 7 forms."
 msgstr "Proteggi i moduli di Contact Form 7."
 
-#: includes/settings.php:693
+#: includes/settings.php:695
 msgid "Elementor Pro Forms"
 msgstr "Elementor Pro Forms"
 
-#: includes/settings.php:694
+#: includes/settings.php:696
 msgid "Protect Elementor Pro forms."
 msgstr "Proteggi i moduli di Elementor Pro."
 
-#: includes/settings.php:698
+#: includes/settings.php:700
 msgid "Enfold Theme"
 msgstr "Enfold Theme"
 
-#: includes/settings.php:699
+#: includes/settings.php:701
 msgid "Protect Enfold theme forms."
 msgstr "Proteggi i moduli del tema Enfold."
 
-#: includes/settings.php:701
+#: includes/settings.php:703
 msgid "Theme not active."
 msgstr "Tema non attivo."
 
-#: includes/settings.php:704
+#: includes/settings.php:706
 msgid "Formidable Forms"
 msgstr "Formidable Forms"
 
-#: includes/settings.php:705
+#: includes/settings.php:707
 msgid "Protect Formidable Forms submissions."
 msgstr "Proteggi i moduli di Formidable Forms."
 
-#: includes/settings.php:709
+#: includes/settings.php:711
 msgid "Forminator"
 msgstr "Forminator"
 
-#: includes/settings.php:710
+#: includes/settings.php:712
 msgid "Protect Forminator forms."
 msgstr "Proteggi i moduli di Forminator."
 
-#: includes/settings.php:714
+#: includes/settings.php:716
 msgid "Gravity Forms"
 msgstr "Gravity Forms"
 
-#: includes/settings.php:715
+#: includes/settings.php:717
 msgid "Protect Gravity Forms submissions."
 msgstr "Proteggi i moduli di Gravity Forms."
 
-#: includes/settings.php:719
+#: includes/settings.php:721
 msgid "HTML Forms"
 msgstr "HTML Forms"
 
-#: includes/settings.php:720
+#: includes/settings.php:722
 msgid "Protect HTML Forms submissions."
 msgstr "Proteggi i moduli di HTML Forms."
 
-#: includes/settings.php:724
+#: includes/settings.php:726
 msgid "wpDiscuz"
 msgstr "wpDiscuz"
 
-#: includes/settings.php:725
+#: includes/settings.php:727
 msgid "Protect wpDiscuz comments section."
 msgstr "Proteggi la sezione commenti di wpDiscuz."
 
-#: includes/settings.php:729
+#: includes/settings.php:731
 msgid "WPForms"
 msgstr "WPForms"
 
-#: includes/settings.php:730
+#: includes/settings.php:732
 msgid "Protect WPForms submissions."
 msgstr "Proteggi i moduli di WPForms."
 
-#: includes/settings.php:734
+#: includes/settings.php:736
 msgid "WooCommerce register page"
 msgstr "Pagina di registrazione WooCommerce"
 
-#: includes/settings.php:735
+#: includes/settings.php:737
 msgid "Protect the WooCommerce register page."
 msgstr "Proteggi la pagina di registrazione di WooCommerce."
 
-#: includes/settings.php:739
+#: includes/settings.php:741
 msgid "WooCommerce reset password page"
 msgstr "Pagina di reimpostazione password WooCommerce"
 
-#: includes/settings.php:740
+#: includes/settings.php:742
 msgid "Protect the WooCommerce reset password page."
 msgstr "Proteggi la pagina di reimpostazione della password di WooCommerce."
 
-#: includes/settings.php:744
+#: includes/settings.php:746
 msgid "WooCommerce login page"
 msgstr "Pagina di accesso WooCommerce"
 
-#: includes/settings.php:745
+#: includes/settings.php:747
 msgid "Protect the WooCommerce login page."
 msgstr "Proteggi la pagina di accesso di WooCommerce."
 
-#: includes/settings.php:752
+#: includes/settings.php:754
 msgid "Custom HTML"
 msgstr "Custom HTML"
 
-#: includes/settings.php:753
+#: includes/settings.php:755
 msgid "Configure hand-written widget tags."
 msgstr "Configuri le etichette del widget scritte manualmente."
 
 #. translators: %1$s and %2$s are opening and closing bold tags, %3$s will be replaced with the shortcode
-#: includes/settings.php:757
+#: includes/settings.php:759
 #, php-format
 msgid ""
 "%1$sDeprecated%2$s, and scheduled for removal in the next major release — "
@@ -999,23 +998,23 @@ msgstr ""
 "%1$sDeprecato%2$s, e programmato per la rimozione nella prossima versione "
 "principale: La preghiamo di utilizzare lo shortcode %3$s nel contenuto."
 
-#: includes/settings.php:778
+#: includes/settings.php:780
 msgid "Plugin not active."
 msgstr "Plugin non attivo."
 
-#: includes/settings.php:815
+#: includes/settings.php:817
 msgid "Data"
 msgstr "Dati"
 
-#: includes/settings.php:822
+#: includes/settings.php:824
 msgid "Plugin deletion"
 msgstr "Eliminazione del plugin"
 
-#: includes/settings.php:828
+#: includes/settings.php:830
 msgid "Keep settings when the plugin is deleted."
 msgstr "Mantieni le impostazioni quando il plugin viene eliminato."
 
-#: includes/settings.php:829
+#: includes/settings.php:831
 msgid ""
 "When on, deleting OpenPorte leaves its settings, including the shared "
 "secret, in the database, and a later reinstall picks them up again. "
@@ -1032,7 +1031,7 @@ msgstr ""
 msgid "Verification failed."
 msgstr "Verifica fallita."
 
-#: integrations/forminator.php:34 integrations/gravityforms/field.php:88
+#: integrations/forminator.php:34 integrations/gravityforms/field.php:149
 #: integrations/html-forms.php:48 integrations/woocommerce.php:28
 #: integrations/woocommerce.php:85 integrations/woocommerce.php:179
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
@@ -1041,9 +1040,15 @@ msgstr "Verifica fallita."
 msgid "Could not verify you are not a robot."
 msgstr "Impossibile verificare che non sia un robot."
 
-#: integrations/gravityforms/field.php:53
+#: integrations/gravityforms/field.php:65
 msgid "OpenPorte placeholder"
 msgstr "Segnaposto OpenPorte"
+
+#: integrations/gravityforms/field.php:112
+msgid ""
+"This form cannot be submitted until its OpenPorte field is moved to the last "
+"page."
+msgstr "Questo modulo non può essere inviato finché il suo campo OpenPorte non viene spostato nell'ultima pagina."
 
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
@@ -1055,7 +1060,7 @@ msgid "Registration failed. Please try again later."
 msgstr "Registrazione fallita. La preghiamo di riprovare più tardi."
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:45
+#: openporte.php:46
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1068,11 +1073,11 @@ msgstr ""
 "interno. La preghiamo di disattivare prima \"ALTCHA Spam Protection\", poi "
 "attivare OpenPorte. Veda %s per i dettagli."
 
-#: openporte.php:66
+#: openporte.php:67
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte non può essere attivato"
 
-#: openporte.php:77
+#: openporte.php:78
 msgid "Go to the Plugins page"
 msgstr "Vai alla pagina dei plugin"
 
