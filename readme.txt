@@ -297,6 +297,11 @@ instead: your backend issues the challenges there.
 Keep REST API unless a security plugin blocks the REST API for logged-out
 visitors; then either allow `/openporte/v1/challenge` in that plugin, or switch
 to Ajax. If `admin-ajax.php` is blocked for visitors instead, stay on REST API.
+The same applies when a page cache or CDN stores the REST API's responses
+(opening the challenge URL twice, logged out, shows the same challenge): exclude
+`/openporte/v1/challenge` from it, or switch to Ajax. Since 1.30.1 the challenge
+endpoints already opt out of LiteSpeed Cache and of caching plugins that honour
+`DONOTCACHEPAGE`.
 OpenPorte does not test this automatically: a check from the server cannot see
 firewall, CDN or browser-side rules. See the FAQ for how to check by hand.
 
@@ -342,6 +347,7 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 * Security hardening: a server-signed verification payload from a custom backend is now accepted only when it is marked verified and carries an expiry no more than a day ahead; a backend that omits either field has its payloads refused. The bundled widget does not use these payloads.
 * Security hardening: a submitted verification token longer than 4 KiB is now refused before it is decoded. Genuine tokens are well under 1 KiB.
 * Fixed logins and protected forms failing on sites using LiteSpeed Cache, which caches REST API responses by default: every visitor got the same challenge, refused after five uses by the replay limit and for everyone once it expired. Challenge responses now tell page-caching plugins not to store them. After updating, purge the page cache once. Present since ALTCHA Spam Protection 0.3.2. Thanks to Nico (@gooloode) for the report.
+* The Self-hosted transport setting's help now names page caches and CDNs that store REST API responses as a reason to switch to Ajax.
 * Docs: a new FAQ entry explains that login protection does not cover XML-RPC or REST API authentication, and how to turn those off when a site does not need them.
 
 = 1.30.0 =

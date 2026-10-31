@@ -380,9 +380,11 @@ if (is_admin()) {
         // server cannot see firewall, CDN or browser-side rules, so the admin
         // checks by hand, guided by the README section linked here. Keep the
         // anchor in sync with the "Self-hosted transport" heading in README.md.
+        // Page caches are named since 1.30.1 (#133): one that ignores the
+        // endpoints' no-cache opt-out serves every visitor the same challenge.
         "hint" => sprintf(
           /* translators: %1$s and %2$s are the opening and closing tags of a link to the OpenPorte documentation. */
-          __('Choose how this site serves challenges to visitors. REST API is the default; use Ajax if a security plugin blocks the REST API for logged-out visitors. After changing it, test a protected form in a private window.<br/>%1$sHow to choose and check the transport%2$s', 'openporte'),
+          __('Choose how this site serves challenges to visitors. REST API is the default; use Ajax if a security plugin blocks the REST API for logged-out visitors, or if a page cache or CDN stores its responses. After changing it, test a protected form in a private window.<br/>%1$sHow to choose and check the transport%2$s', 'openporte'),
           '<a href="https://github.com/openporte/openporte#self-hosted-transport" target="_blank" rel="noopener noreferrer">',
           '</a>'
         ),
