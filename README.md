@@ -1,5 +1,16 @@
 # OpenPorte
 
+<div align="right">
+    <a href="https://plugintracker.io/plugins/openporte" rel="sponsored">
+        <img src="https://plugintracker.io/badge/openporte/installs.svg?style=flat-square&color=gray&claim=88482bbc0c1442a9"
+            alt="OpenPorte Spam Protection Active installs on PluginTracker.io" /></a>&nbsp;
+    <a href="https://plugintracker.io/plugins/openporte" rel="sponsored">
+        <img src="https://plugintracker.io/badge/openporte/rating.svg?style=flat-square&color=gray&claim=88482bbc0c1442a9"
+            alt="OpenPorte Spam Protection Star rating on PluginTracker.io" /></a>&nbsp;
+    <a href="https://plugintracker.io/plugins/openporte" rel="sponsored">
+        <img src="https://plugintracker.io/badge/openporte/top-in-tag.svg?style=flat-square&color=gray&claim=88482bbc0c1442a9"
+            alt="OpenPorte Spam Protection Top in tag on PluginTracker.io" /></a>
+</div>
 <div align="center">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="share/branding/png/openporte-grayscale-dark-256px.png">
