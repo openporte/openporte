@@ -1,5 +1,5 @@
 === OpenPorte Spam Protection ===
-Tags: captcha, security, anti-spam, gdpr, protect
+Tags: anti-spam, captcha, privacy, proof-of-work, self-hosted
 Stable tag: 1.30.1
 Requires at least: 5.6
 Requires PHP: 8.0
@@ -8,66 +8,77 @@ License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Contributors: huygens-25
 
-Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms and logins. Open-source, self-hosted, privacy-first.
+Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and logins. Open-source, self-hosted, privacy-first.
 
 == Description ==
 
-OpenPorte is a free and open-source anti-spam plugin that protects WordPress
-forms from spam using a lightweight Proof-of-Work challenge instead of CAPTCHAs.
-The goal is to make spam expensive for bots while keeping the experience almost
-invisible for legitimate visitors and respecting their privacy.
+OpenPorte is a free and open-source WordPress plugin that protects forms, comments, logins, registrations, and WooCommerce from spam and bots using lightweight **Proof-of-Work challenges instead of CAPTCHAs**.
 
-For site owners, OpenPorte offers an easy to configure and deploy modern
-spam protection under their control.
-For the site users, it offers an accessible, transparent and privacy-friendly
-alternative to CAPTCHAs.
+The goal is simple: make spam attempts computationally costly for bots while keeping the experience unobtrusive for legitimate visitors and respecting their privacy.
 
-OpenPorte is built around the [open-source ALTCHA widget](https://github.com/altcha-org/altcha).
+**Key benefits**
 
-Some highlights:
+- **CAPTCHA-free spam protection:** No image-recognition puzzles or intrusive challenges.
+- **Open source (GPL):** Free software, developed openly and welcoming community contributions.
+- **Self-hosted by default:** Challenges are generated and verified directly by your WordPress site, without requiring an account or external service.
+- **Privacy-first:** No tracking, fingerprinting, or cookies introduced by OpenPorte, helping simplify GDPR compliance.
+- **Accessible by design:** Built around the open-source ALTCHA widget, with an emphasis on accessibility and minimal user interaction.
+- **Easy configuration:** Enable the integrations you need and configure the widget to suit your site.
+- **Flexible deployment:** Choose between WordPress REST API and Ajax for self-hosted challenge delivery, or use a compatible external challenge provider through Custom API Mode.
+- **ALTCHA v1 migration:** Supported settings from ALTCHA Spam Protection v1 (≤ 1.26.3) can be imported automatically, with deprecated compatibility aliases for existing integrations.
 
-- CAPTCHA-free spam protection
-- Fully open source (GPL)
-- Self-hosted – no mandatory external service
-- Designed to be accessible and privacy-friendly: no cookies and no tracking, which keeps GDPR compliance simple
-- Compatible with existing ALTCHA integrations
-- Easy migration for users of ALTCHA Spam Protection v1 (≤ 1.26.3)
+OpenPorte is built around the [open-source ALTCHA widget](https://github.com/altcha-org/altcha). It is a community-driven project committed to openness, transparency, privacy, and long-term stewardship.
 
-
-For the list of contributors, refer to our GitHub project: [Contributors](https://github.com/openporte/openporte/graphs/contributors?from=1.6.2024).
+For the list of contributors, see the [GitHub contributors page](https://github.com/openporte/openporte/graphs/contributors).
 
 = AI-assisted development =
 
-AI-assisted project. Architecture, security decisions, and final review are
-mine; AI tools (Claude, Mistral, and others) help with drafting code, tests,
-translations, and documentation — without them, one person couldn't keep
-this fork alive.
+OpenPorte is an AI-assisted project. I remain responsible for its architecture, security decisions, and final review. AI tools (Claude, Mistral, local LLMs and others) assist with drafting code, tests, translations, and documentation.
 
-= Background =
+Without these tools, maintaining and developing a project of this scope as a single contributor would be difficult. AI assistance helps me keep the project moving forward, while responsibility for its quality and security remains mine.
 
-The original ALTCHA Spam Protection WordPress plugin (v1) was open source
-(GPLv2). Its authors have since released a version 2/3 which is no longer
-open source. They no longer maintain the open source project and recommend
-that users migrate to v2/v3. See the official project at https://altcha.org
-for their offering.
+== Compatibility & Migration ==
 
-OpenPorte started as a fork and continues the v1 line as free software
-(GPLv2 or later) for users who want to stay on a fully open-source,
-self-hosted solution. It is a faithful fork: existing v1 installations
-can switch to OpenPorte and keep their settings (see Upgrading).
+OpenPorte can import supported settings from ALTCHA Spam Protection v1
+(≤ 1.26.3) and retains deprecated aliases for several legacy interfaces.
+Some features have changed or been removed; review your settings and test
+protected forms after migration.
 
-= Compatibility =
+= Migrating from the original ALTCHA Spam Protection v1 plugin =
 
-OpenPorte is backward-compatible with ALTCHA Spam Protection v1 plugin:
+Deactivate the original ALTCHA plugin, then install and activate OpenPorte.
+On activation, supported v1 settings are copied where corresponding OpenPorte
+settings do not already exist. The original ALTCHA settings are left untouched.
+Do not run both plugins at the same time.
 
-* Your existing settings are migrated automatically on activation.
-* The `[altcha]` shortcode keeps working (alongside the new `[openporte]`).
-* The `altcha_*` filters and actions keep firing as deprecated aliases.
-* Custom API Mode has been verified against [GateCHA](https://gatecha.org),
-an open source server implementing the creation and verification of ALTCHA challenges.
+= Migrating from ALTCHA for WordPress v2/v3 plugin =
 
-See the Deprecations section for the full list of compatibility aliases and
-what they map to.
+If you previously upgraded or were automatically upgraded to ALTCHA v2/v3,
+OpenPorte can still import your original v1 settings if they remain in the
+database. Settings introduced in v2/v3 are not imported. The original ALTCHA
+v1/v2/v3 settings are left untouched.  
+Deactivate ALTCHA, then install and activate OpenPorte. Do not run both plugins
+at the same time.
+
+= Backward compatibility =
+
+The following legacy interfaces remain available as deprecated aliases:
+
+- The `[altcha]` shortcode continues to work alongside `[openporte]`.
+- The `altcha_*` filters and actions continue to fire alongside their `openporte_*` equivalents.
+- The `altcha/v1` REST API namespace remains available alongside `openporte/v1`.
+
+These aliases are deprecated and may be removed in a future release. See the **Deprecations** section for compatibility aliases, deprecated integrations, and recommended replacements.
+
+= Custom API compatibility =
+
+OpenPorte supports Custom API Mode, allowing challenges to be obtained from an ALTCHA-compatible backend.
+
+This mode has been verified against [GateCHA](https://gatecha.org), an open-source server implementing the ALTCHA challenge protocol.
+
+Challenge verification is performed locally by OpenPorte using the configured shared secret, even when challenges are issued by an external backend. Backend-side verification features are therefore not used.
+
+OpenPorte does not support the former ALTCHA SaaS API Mode. Users who rely on ALTCHA Sentinel's advanced features should consider the official ALTCHA Spam Protection v2/v3 WordPress plugin instead.
 
 == Upgrade Notice ==
 
@@ -100,39 +111,31 @@ affected, re-enable the setting, or replace those tags with the `[openporte]`
 shortcode.
 The paid spam-filter classifier is removed.
 
-== Upgrading ==
+== Downgrading OpenPorte ==
 
-= From the original ALTCHA v1 plugin =
+Downgrading to an earlier version of OpenPorte is **not officially supported**.
 
-Deactivate the old ALTCHA plugin, then install and activate OpenPorte. Your
-existing configuration is detected and copied into the OpenPorte settings on
-first activation; the original ALTCHA settings are left untouched, so you can
-roll back to ALTCHA v1 without losing anything. Do not run both plugins at the
-same time.
+- **Major or minor version downgrade** (e.g. 1.30.1 → 1.29.0): You must remove the existing plugin settings before installing the older version. To do so, disable **Keep settings when the plugin is deleted** under Settings → OpenPorte → Data, save your changes, then deactivate and delete the plugin through WordPress's Plugins screen and install the older version.
+- **Patch version downgrade** (e.g. 1.30.1 → 1.30.0): This may work without removing your settings, but compatibility is not guaranteed.
 
-= From ALTCHA v2/v3 =
+**Important:** Deactivating OpenPorte does not remove its settings. Deleting it through WordPress's Plugins screen removes them only if **Keep settings when the plugin is deleted** is disabled. This option is available since version 1.30.0.
 
-If your site was already moved to ALTCHA v2/v3 (for example by the automatic
-3.0.0 update), your original v1 settings are normally still in the database:
-the v2/v3 upgrade neither migrates nor removes them. Deactivate ALTCHA, then
-install and activate OpenPorte — it finds and imports the v1 settings, even
-when the v1 plugin itself has long been deleted. Settings made in v2/v3 are
-not read.
+Clearing OpenPorte settings leaves the original ALTCHA settings intact. Activating a version with the legacy migration routine can import supported ALTCHA v1 settings again, so this does not necessarily produce a default configuration.
 
-= Self-hosted transport (1.30.0) and downgrading =
+**Multisite:** The current uninstall handler cleans only the current site's options table; it does not reset settings across the network. Before a major or minor downgrade, have your network administrator ensure that OpenPorte settings are removed on each affected site.
 
-Upgrading to 1.30.0 changes nothing: every site keeps serving challenges
-through the REST API until you select Ajax under Settings → OpenPorte.
+Before downgrading, back up your site and database. After installing the older version, clear your WordPress, hosting, and CDN caches to prevent cached pages from referencing features unavailable in that release. You may also need to reconfigure OpenPorte.
 
-If you selected Ajax and later downgrade to a release before 1.30.0, switch
-back to REST API first and purge your page and CDN caches. If you have already
-downgraded, purge those caches now: older release have no Ajax endpoint, so a
-page cached with the Ajax challenge URL cannot load a challenge.
+= Need help? =
+
+If you're considering a downgrade or encounter difficulties, you're welcome to ask for advice in the [OpenPorte support forum on WordPress.org](https://wordpress.org/support/plugin/openporte/).
+
+Support is provided on a voluntary, best-effort basis by the maintainer and community. Questions and contributions from other users are welcome and appreciated. Please understand that **responses and resolution times cannot be guaranteed**, as availability may vary.
 
 == Deprecations ==
 
-The following ALTCHA-era identifiers are kept as aliases for backward
-compatibility and are scheduled for removal in a future release:
+The following compatibility aliases and integrations are deprecated and
+scheduled for removal in a future release:
 
 * The `[altcha]` shortcode — use `[openporte]`.
 * The `altcha/v1` REST namespace — use `openporte/v1`.
@@ -152,9 +155,11 @@ compatibility and are scheduled for removal in a future release:
 
 OpenPorte prioritizes user privacy by avoiding the use of cookies and fingerprinting techniques.
 
-= No external service =
+= No mandatory external service =
 
-This plugin remains fully contained within your WordPress installation, eliminating any reliance on external services.
+In its default self-hosted mode, OpenPorte generates and verifies Proof-of-Work challenges entirely within your WordPress installation, without requiring an external service or account.
+
+Alternatively, Custom API Mode allows challenges to be obtained from an ALTCHA-compatible backend, including a service hosted separately from your WordPress site. Verification still takes place locally.
 
 == Modes of Operation ==
 
@@ -167,12 +172,42 @@ OpenPorte verifies submissions in one of two modes, selected in the settings
   external service and no additional setup beyond enabling the integrations you
   need.
 * Custom — point the Challenge URL at your own ALTCHA-compatible backend (for
-  example a self-hosted ALTCHA Sentinel, or [GateCHA](https://gatecha.org)).
+  example [GateCHA](https://gatecha.org)).
   Submissions are verified with your site's shared secret.
 
 The paid altcha.org regional SaaS classifier offered by earlier versions has
-been removed; both remaining modes are free and self-hostable.
- 
+been removed. Neither mode requires a paid service; a Custom backend may have
+its own costs and terms.
+
+= Self-hosted transport =
+
+In Self-hosted mode the widget fetches each challenge from your own site. The
+**Self-hosted transport** setting (Settings → OpenPorte, below API Mode) chooses
+which endpoint serves it:
+
+* REST API (default): `/wp-json/openporte/v1/challenge`, or
+  `/?rest_route=/openporte/v1/challenge` with plain permalinks.
+* Ajax: `/wp-admin/admin-ajax.php?action=openporte_challenge`.
+
+Both serve the same challenge, are verified the same way, and stay available
+whichever one is selected. The deprecated `/wp-json/altcha/v1/challenge` alias
+is still served too. In Custom API mode all of them refuse with HTTP 403
+instead: your backend issues the challenges there.
+
+Keep REST API unless a security plugin blocks the REST API for logged-out
+visitors; then either allow `/openporte/v1/challenge` in that plugin, or switch
+to Ajax. If `admin-ajax.php` is blocked for visitors instead, stay on REST API.
+The same applies when a page cache or CDN stores the REST API's responses
+(opening the challenge URL twice, logged out, shows the same challenge): exclude
+`/openporte/v1/challenge` from it, or switch to Ajax. Since 1.30.1 the challenge
+endpoints already opt out of LiteSpeed Cache and of caching plugins that honour
+`DONOTCACHEPAGE`.
+OpenPorte does not test this automatically: a check from the server cannot see
+firewall, CDN or browser-side rules. See the FAQ for how to check by hand.
+
+On multisite, each site has its own transport setting; a site where it was
+never saved uses the REST API.
+
 == Installation ==
 
 Download, install and activate `OpenPorte Spam Protection`.
@@ -278,36 +313,9 @@ nothing. To keep your configuration for a later reinstall, switch on **Keep
 settings when the plugin is deleted** under Settings → OpenPorte → Data and
 save before deleting the plugin. Temporary data such as replay counters is
 removed either way, and the settings of the original ALTCHA Spam Protection
-plugin are never touched.
-
-== Self-hosted transport (REST API or Ajax) ==
-
-In Self-hosted mode the widget fetches each challenge from your own site. The
-**Self-hosted transport** setting (Settings → OpenPorte, below API Mode) chooses
-which endpoint serves it:
-
-* REST API (default): `/wp-json/openporte/v1/challenge`, or
-  `/?rest_route=/openporte/v1/challenge` with plain permalinks.
-* Ajax: `/wp-admin/admin-ajax.php?action=openporte_challenge`.
-
-Both serve the same challenge, are verified the same way, and stay available
-whichever one is selected. The deprecated `/wp-json/altcha/v1/challenge` alias
-is still served too. In Custom API mode all of them refuse with an error
-instead: your backend issues the challenges there.
-
-Keep REST API unless a security plugin blocks the REST API for logged-out
-visitors; then either allow `/openporte/v1/challenge` in that plugin, or switch
-to Ajax. If `admin-ajax.php` is blocked for visitors instead, stay on REST API.
-The same applies when a page cache or CDN stores the REST API's responses
-(opening the challenge URL twice, logged out, shows the same challenge): exclude
-`/openporte/v1/challenge` from it, or switch to Ajax. Since 1.30.1 the challenge
-endpoints already opt out of LiteSpeed Cache and of caching plugins that honour
-`DONOTCACHEPAGE`.
-OpenPorte does not test this automatically: a check from the server cannot see
-firewall, CDN or browser-side rules. See the FAQ for how to check by hand.
-
-On multisite, each site has its own transport setting; a site where it was
-never saved uses the REST API.
+plugin are never touched. On multisite, this cleanup covers only the current
+site's options table, not every site in the network. See **Downgrading OpenPorte**
+for the reset limitations, including re-import of legacy ALTCHA settings.
 
 == Supported Integrations ==
 

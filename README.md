@@ -19,16 +19,16 @@
       src="share/branding/png/openporte-grayscale-light-256px.png" width="128">
     </picture>
 </div>
+<div>&nbsp;</div>
 
-**Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms
-and logins. Open-source, self-hosted, privacy-first.**
+**Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and logins.
+Open-source, self-hosted, privacy-first.**
 
-OpenPorte protects WordPress forms, logins, registrations and comments from
-spam and bots using a lightweight Proof-of-Work challenge. The goal is to make
-spam expensive for bots while keeping the experience almost invisible for
-legitimate visitors and respecting their privacy.
+OpenPorte is a free and open-source WordPress plugin that protects forms, comments, logins, registrations, and WooCommerce from spam and bots using lightweight **Proof-of-Work challenges instead of CAPTCHAs**.
 
-No cookies, no tracking, GDPR-friendly by design.
+The goal is simple: make spam attempts computationally costly for bots while keeping the experience unobtrusive for legitimate visitors and respecting their privacy.
+
+No cookies, no tracking, privacy-first by design.
 
 Website: <https://github.com/openporte/openporte>
 
@@ -38,12 +38,12 @@ WordPress Plugin Directory: <https://wordpress.org/plugins/openporte/>
 > Need help? See <a href="SUPPORT.md" title="Support Information"
 alt="Link to Support Information">SUPPORT.md</a>.
 
-Disclosure: This project is (using AI)[^1].
+Disclosure: This project uses AI assistance.[^1]
 
 [^1]: **AI-assisted project.** Architecture, security decisions, and final review
-are mine; AI tools (Claude, Mistral, and others) help with drafting code,
-tests, translations, and documentation — without them, one person couldn't
-keep this fork alive.
+    are mine; AI tools (Claude, Mistral, local LLMs and others) help with drafting code,
+    tests, translations, and documentation — without them, one person couldn't
+    keep this fork alive.
 
 ## Description
 
@@ -58,12 +58,14 @@ OpenPorte is built around the
 
 Some highlights:
 
-- CAPTCHA-free spam protection
-- Fully open source (GPL)
-- Self-hosted – no mandatory external service
-- Designed to be accessible and privacy-friendly
-- Compatible with existing ALTCHA integrations
-- Easy migration for users of ALTCHA Spam Protection v1 (≤ 1.26.3)
+- **CAPTCHA-free spam protection:** No image-recognition puzzles or intrusive challenges.
+- **Open source (GPL):** Free software, developed openly and welcoming community contributions.
+- **Self-hosted by default:** Challenges are generated and verified directly by your WordPress site, without requiring an account or external service.
+- **Privacy-first:** No tracking, fingerprinting, or cookies introduced by OpenPorte, helping simplify GDPR compliance.
+- **Accessible by design:** Built around the open-source ALTCHA widget, with an emphasis on accessibility and minimal user interaction.
+- **Easy configuration:** Enable the integrations you need and configure the widget to suit your site.
+- **Flexible deployment:** Choose between WordPress REST API and Ajax for self-hosted challenge delivery, or use a compatible external challenge provider through Custom API Mode.
+- **ALTCHA v1 migration:** Supported settings from ALTCHA Spam Protection v1 (≤ 1.26.3) can be imported automatically, with deprecated compatibility aliases for existing integrations.
 
 ## Background
 
@@ -72,45 +74,73 @@ The original ALTCHA Spam Protection WordPress plugin (v1) was open source
 open source. They no longer maintain the open-source project and recommend
 migrating to [v2/3](https://altcha.org).
 
-OpenPorte continues the v1 line as free software (GPLv2 or later), for people
-who want to stay on a fully open-source, self-hosted solution. It is based on
-the last GPL release of ALTCHA v1 (1.26.1).
+OpenPorte continues the GPL-licensed ALTCHA v1 line as free software (GPLv2 or
+later), for people who want to stay on a fully open-source, self-hosted solution.
 
 OpenPorte uses the upstream [ALTCHA widget](https://github.com/altcha-org/altcha)
 (MIT-licensed) as a bundled dependency.
 
-## Compatibility
+## Compatibility & migration
 
-Backward-compatible with ALTCHA v1: settings migrate automatically (the
-original `altcha_*` options are left in place, so you can roll back), and the
-`[altcha]` shortcode, the `altcha/v1` REST namespace and the `altcha_*` hooks
-keep working as **deprecated aliases** of their `openporte` equivalents.
+OpenPorte can import supported settings from ALTCHA Spam Protection v1
+(≤ 1.26.3) and retains deprecated aliases for several legacy interfaces.
+Some features have changed or been removed; review your settings and test
+protected forms after migration.
+
+### Migrating from the original ALTCHA Spam Protection v1 plugin
+
+Deactivate the original ALTCHA plugin, then install and activate OpenPorte.
+On activation, supported v1 settings are copied where corresponding OpenPorte
+settings do not already exist. The original ALTCHA settings are left untouched.
+Do not run both plugins at the same time.
+
+### Migrating from ALTCHA for WordPress v2/v3 plugin
+
+If you previously upgraded or were automatically upgraded to ALTCHA v2/v3,
+OpenPorte can still import your original v1 settings if they remain in the
+database. Settings introduced in v2/v3 are not imported. The original ALTCHA
+v1/v2/v3 settings are left untouched.  
+Deactivate ALTCHA, then install and activate OpenPorte. Do not run both plugins
+at the same time.
+
+### Backward compatibility
+
+The `[altcha]` shortcode, the `altcha/v1` REST namespace and the `altcha_*`
+hooks remain available as **deprecated aliases** of their `openporte`
+equivalents. These aliases do not imply full feature parity with ALTCHA v1.
 Integrations for paid-only plugins (e.g. Enfold) are also **deprecated** and
 will be removed.
 
+### Custom API compatibility
+
 OpenPorte supports Custom API Mode. This mode has been verified against
-[GateCHA](https://gatecha.org), an open-source implementation of the ALTCHA
-server protocol and an alternative to the proprietary ALTCHA Sentinel. Sites
-using a Sentinel-compatible backend are expected to work as well, since both
-implement the same server-signature verification, though this has not been
-directly tested.
+[GateCHA](https://gatecha.org), an open-source server implementing the ALTCHA
+challenge protocol.
 
-## Supported Integrations
+Challenge verification is performed locally by OpenPorte using the configured
+shared secret, even when challenges are issued by an external backend.
+Backend-side verification features are therefore not used.
 
-* CoBlocks
-* Contact Form 7
-* Elementor Pro Forms (deprecated — paid plugin)
-* Enfold Theme (deprecated — paid plugin)
-* Formidable Forms
-* Forminator
-* GravityForms
-* HTML Forms
-* wpDiscuz
-* WPForms
-* WordPress Login, Register, Password reset
-* WordPress Comments
-* WooCommerce
-* Many other plugins and your own content (via the `[openporte]`
+OpenPorte does not support the former ALTCHA SaaS API Mode. Users who rely on
+ALTCHA Sentinel's advanced features should consider the official ALTCHA Spam
+Protection v2/v3 WordPress plugin instead.
+
+## Supported integrations
+
+- CoBlocks
+- Contact Form 7
+- Elementor Pro Forms (deprecated — paid plugin)
+- Enfold Theme (deprecated — paid plugin)
+- Formidable Forms
+- Forminator
+- GravityForms
+- HTML Forms
+- wpDiscuz
+- WPForms
+- WordPress Login, Register, Password reset
+- WordPress Comments
+- WooCommerce
+- Many other plugins and your own content (via the `[openporte]`
   shortcode, or the deprecated `[altcha]` alias)
 
 ### What login protection does not cover
@@ -122,8 +152,8 @@ through `wp_signon()`.
 Two other ways of logging in are deliberately left alone, because the apps and
 services that use them cannot solve a challenge:
 
-* XML-RPC (`xmlrpc.php`);
-* REST API authentication with application passwords.
+- XML-RPC (`xmlrpc.php`);
+- REST API authentication with application passwords.
 
 An attacker can try passwords there without meeting the widget. If your site
 does not need them, disable them:
@@ -147,7 +177,7 @@ but with known limitations:
 
 Currently the Floating UI does not work with:
 
-* Forminator with multi-step forms
+- Forminator with multi-step forms
 
 ## Installation
 
@@ -172,30 +202,51 @@ admin UI.
 3. Activate the plugin through the 'Plugins' menu in WordPress  
 4. Review the settings and enable your integrations
 
-### Modes of Operation
+### Downgrading OpenPorte
+
+Downgrading to an earlier version of OpenPorte is **not officially supported**.
+
+- **Major or minor version downgrade** (e.g. 1.30.1 → 1.29.0): You must remove the existing plugin settings before installing the older version. To do so, disable **Keep settings when the plugin is deleted** under Settings → OpenPorte → Data, save your changes, then deactivate and delete the plugin through WordPress's Plugins screen and install the older version.
+- **Patch version downgrade** (e.g. 1.30.1 → 1.30.0): This may work without removing your settings, but compatibility is not guaranteed.
+
+**Important:** Deactivating OpenPorte does not remove its settings. Deleting it through WordPress's Plugins screen removes them only if **Keep settings when the plugin is deleted** is disabled. This option is available since version 1.30.0.
+
+Clearing OpenPorte settings leaves the original ALTCHA settings intact. Activating a version with the legacy migration routine can import supported ALTCHA v1 settings again, so this does not necessarily produce a default configuration.
+
+**Multisite:** The current uninstall handler cleans only the current site's options table; it does not reset settings across the network. Before a major or minor downgrade, have your network administrator ensure that OpenPorte settings are removed on each affected site.
+
+Before downgrading, back up your site and database. After installing the older version, clear your WordPress, hosting, and CDN caches to prevent cached pages from referencing features unavailable in that release. You may also need to reconfigure OpenPorte.
+
+#### Need help?
+
+If you're considering a downgrade or encounter difficulties, you're welcome to ask for advice in the [OpenPorte support forum on WordPress.org](https://wordpress.org/support/plugin/openporte/).
+
+Support is provided on a voluntary, best-effort basis by the maintainer and community. Questions and contributions from other users are welcome and appreciated. Please understand that **responses and resolution times cannot be guaranteed**, as availability may vary.
+
+### Modes of operation
 
 OpenPorte verifies submissions in one of two modes, selected in the settings
 (API Mode):
 
-* **Self-hosted** (default) — a proof-of-work challenge is issued and verified by
+- **Self-hosted** (default) — a proof-of-work challenge is issued and verified by
   your own WordPress site, served through the REST API (default) or
   admin-ajax.php (see [Self-hosted transport](#self-hosted-transport)). Fully
   self-contained, no external service, no account.
-* **Custom** — point the Challenge URL at your own ALTCHA-compatible backend
-  (e.g. a self-hosted ALTCHA Sentinel, or [GateCHA](https://gatecha.org));
+- **Custom** — point the Challenge URL at your own ALTCHA-compatible backend
+  (e.g. [GateCHA](https://gatecha.org));
   submissions are verified with your site's shared secret. The Algorithm
   setting must match the hash algorithm your backend uses (most
   ALTCHA-compatible backends default to SHA-256).
 
-The paid altcha.org regional SaaS classifier offered by earlier versions has been
-removed; both remaining modes are free and self-hostable.
+The paid altcha.org regional SaaS classifier offered by earlier versions has
+been removed. Neither mode requires a paid service; a Custom backend may have
+its own costs and terms.
 
 #### Which settings apply in which mode
 
 Verification always happens **locally** in WordPress, in both modes: OpenPorte
 recomputes the challenge and its HMAC signature with your shared secret. It
-never calls a backend verification API (such as GateCHA's `/api/v1/verify` or
-ALTCHA Sentinel's verify endpoint) — so in Custom mode the backend only
+never calls a backend verification API (such as GateCHA's `/api/v1/verify`) — so in Custom mode the backend only
 *issues* challenges, and its dashboard will show challenges as issued but
 never verified. A consequence: backend-side features that live in the verify
 call (replay tracking, verification statistics) are not used.
@@ -212,14 +263,12 @@ call (replay tracking, verification statistics) are not used.
 | Widget customization (auto-verify, floating, delay, logo/footer) | applies | applies |
 | Integrations | apply | apply |
 
-Two things worth knowing in Custom mode: a mismatched Algorithm or shared
-secret is invisible while the widget solves (the widget reads the algorithm
-from the challenge itself) and only shows up when a form submission is
-verified server-side; and both self-hosted challenge endpoints (REST and
-Ajax) remain registered, so challenges signed with the same secret can also be
-obtained from WordPress itself.
+In Custom mode, the configured Algorithm and shared secret must match your
+backend. A mismatch may only become apparent when the form is submitted: the
+widget can solve a challenge that OpenPorte subsequently rejects. WordPress's
+built-in challenge endpoints remain registered but return HTTP 403 in this mode.
 
-### Self-hosted transport
+#### Self-hosted transport
 
 In Self-hosted mode, the widget fetches each challenge from your own site.
 The **Self-hosted transport** setting (Settings > OpenPorte Anti-spam, below
@@ -284,10 +333,12 @@ its challenge. A form plugin that submits forms through the REST API itself
 (Contact Form 7, for example) still needs the REST API for its own submissions,
 whichever transport OpenPorte uses.
 
-**Upgrading and downgrading.** Upgrading to 1.30.0 changes nothing: every site
+**Upgrading and downgrading.** The [downgrade policy](#downgrading-openporte)
+above applies; the following is an additional transport caveat. Upgrading to
+1.30.0 changes nothing: every site
 keeps the REST API until Ajax is selected. Before downgrading to a release
 older than 1.30.0, switch back to REST API and purge page and CDN caches.  
-If you have already **downgraded, purge those caches now**: older release have
+If you have already **downgraded, purge those caches now**: older releases have
 no Ajax endpoint, so a page cached with the Ajax challenge URL cannot load a
 challenge.
 
@@ -306,23 +357,23 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
 
 #### Filters
 
-* `apply_filters('openporte_challenge_url', $challenge_url)`  
+- `apply_filters('openporte_challenge_url', $challenge_url)`  
   Override the challenge URL. In Self-hosted mode it receives the URL of the
   selected transport; in Custom mode, the configured Challenge URL.  
   **Returns:** `string`
 
-* `apply_filters('openporte_integrations', $integrations)`  
+- `apply_filters('openporte_integrations', $integrations)`  
   Modify the list of integration states. Since 1.28 each entry is the raw
   checkbox option value — truthy (`1`) when the integration is enabled, falsy
   (`0` or `''`) otherwise. The legacy mode strings (`captcha`,
   `captcha_spamfilter`, `shortcode`) are no longer used.  
   **Returns:** `array<int|string>`
 
-* `apply_filters('openporte_plugin_active', false, $name)`  
+- `apply_filters('openporte_plugin_active', false, $name)`  
   Check if an integration by `$name` is active.  
   **Returns:** `bool`
 
-* `apply_filters('openporte_replay_limit', $limit, $context, $surface, $hook)`  
+- `apply_filters('openporte_replay_limit', $limit, $context, $surface, $hook)`  
   Override how many times one solved token may be accepted, so a site can be
   stricter on login than on comments. `$context` keeps the hook/context name
   supplied in 1.29.0. On the new pre-password login gate it remains
@@ -356,38 +407,38 @@ alias** (via WordPress' deprecated-hook mechanism); use the `openporte_*` names.
   }, 10, 3);
   ```
 
-* `apply_filters('openporte_widget_attrs', $attrs, $mode, $language, $name)`  
+- `apply_filters('openporte_widget_attrs', $attrs, $mode, $language, $name)`  
   Override widget attributes.  
   **Returns:** `array<string, mixed>`
 
-* `apply_filters('openporte_widget_html', $html, $mode, $language, $name)`  
+- `apply_filters('openporte_widget_html', $html, $mode, $language, $name)`  
   Override the entire widget HTML.  
   **Returns:** `string`
 
-* `apply_filters('openporte_translations', $translations, $language)`  
+- `apply_filters('openporte_translations', $translations, $language)`  
   Override translation strings.  
   **Returns:** `array<string, string>`
 
 #### Actions
 
-* `do_action('openporte_verify_result', $result)`  
+- `do_action('openporte_verify_result', $result)`  
   Triggered after payload verification.
 
-  * `$result`: `bool` verification result.
+  - `$result`: `bool` verification result.
 
   The former `OpenPortePlugin::$instance->spamfilter_result` property was
   removed together with the spam-filter feature in 1.28 (see issue #6); the
   action now only carries the boolean result.
 
-* `do_action('openporte_replay_store_unavailable', $key, $limit, $ttl)`  
+- `do_action('openporte_replay_store_unavailable', $key, $limit, $ttl)`  
   Triggered when the replay counter cannot be read or written (object cache or
   database unreachable). The submission is still accepted — replay protection
   fails open rather than locking visitors out — but this fires so a site can
   observe the degradation.
 
-  * `$key`: `string` the replay counter's storage key.
-  * `$limit`: `int` the Replay limit that could not be enforced.
-  * `$ttl`: `int` the counter lifetime, in seconds, that would have been used.
+  - `$key`: `string` the replay counter's storage key.
+  - `$limit`: `int` the Replay limit that could not be enforced.
+  - `$ttl`: `int` the counter lifetime, in seconds, that would have been used.
 
   Since 1.29.0.
 
