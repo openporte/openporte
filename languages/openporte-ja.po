@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "CAPTCHAなしでスパムを阻止。フォームとログインを守るProof-of-Work方式のアンチスパム。オープンソース、セルフホスト、プライバシーファースト。"
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "CAPTCHAなしでスパムを阻止。フォームとログインをProof-of-Workで保護。オープンソース、セルフホスト、プライバシーファースト。"
 
 #. Author of the plugin
 #: openporte.php
@@ -450,38 +450,38 @@ msgstr "OpenPorte 迷惑メール対策"
 msgid "Settings"
 msgstr "設定"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "検証に失敗しました。後でもう一度試してください。"
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "%1$sALTCHA%2$s によって保護されています"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "私はロボットではありません"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "確認済み"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "確認中..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "確認中... しばらくお待ちください。"
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "このフォームには JavaScript が必要です！"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "このサイトはカスタム API モードでは challenge を発行しません。"
 
@@ -550,7 +550,12 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "このサイトが訪問者に challenge を提供する方法を選択します。既定は REST API です。セキュリティプラグインがログインしていない訪問者の REST API をブロックする場合、またはページキャッシュや CDN がその応答を保存する場合は Ajax を使用してください。変更後は、プライベートウィンドウで保護されたフォームをテストしてください。<br/>%1$s転送方式の選び方と確認方法%2$s"
+msgstr ""
+"このサイトが訪問者に challenge を提供する方法を選択します。既定は REST API で"
+"す。セキュリティプラグインがログインしていない訪問者の REST API をブロックす"
+"る場合、またはページキャッシュや CDN がその応答を保存する場合は Ajax を使用し"
+"てください。変更後は、プライベートウィンドウで保護されたフォームをテストして"
+"ください。<br/>%1$s転送方式の選び方と確認方法%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -1017,8 +1022,8 @@ msgid "Verification failed."
 msgstr "検証に失敗しました。"
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -1033,7 +1038,9 @@ msgstr "OpenPorte プレースホルダー"
 msgid ""
 "This form cannot be submitted until its OpenPorte field is moved to the last "
 "page."
-msgstr "このフォームは、OpenPorte フィールドを最後のページに移動するまで送信できません。"
+msgstr ""
+"このフォームは、OpenPorte フィールドを最後のページに移動するまで送信できませ"
+"ん。"
 
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
@@ -1045,7 +1052,7 @@ msgid "Registration failed. Please try again later."
 msgstr "登録に失敗しました。後でもう一度試してください。"
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1058,11 +1065,11 @@ msgstr ""
 "\"ALTCHA Spam Protection\" を無効化し、次に OpenPorte を有効化してください。"
 "詳細は %s を参照してください。"
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte を有効化できません"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "プラグインページへ進む"
 

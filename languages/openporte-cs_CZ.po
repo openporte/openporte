@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Czech\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "Zastavte spam bez CAPTCH: anti-spamová kontrola Proof-of-Work pro formuláře a přihlášení. Open-source, self-hosted, s důrazem na soukromí."
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "Zastavte spam bez CAPTCH. Ochrana Proof-of-Work pro vaše formuláře a přihlášení. Open-source, self-hosted, s důrazem na soukromí."
 
 #. Author of the plugin
 #: openporte.php
@@ -442,38 +442,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Nastavení"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verifikace se nezdařila. Zkuste to později znovu."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Chráněno pomocí %1$sALTCHA%2$s"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "Nejsem robot"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "Ověřeno"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "Probíhá ověřování..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "Probíhá ověřování... prosím, čekejte."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "Tento formulář vyžaduje JavaScript!"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Tento web v režimu Vlastní API nevydává výzvy."
 
@@ -542,7 +542,12 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "Zvolte, jak tento web doručuje výzvy návštěvníkům. Výchozí je REST API; použijte Ajax, pokud bezpečnostní plugin blokuje REST API pro nepřihlášené návštěvníky, nebo pokud jeho odpovědi ukládá mezipaměť stránek či CDN. Po změně otestujte chráněný formulář v anonymním okně.<br/>%1$sJak zvolit a ověřit přenos%2$s"
+msgstr ""
+"Zvolte, jak tento web doručuje výzvy návštěvníkům. Výchozí je REST API; "
+"použijte Ajax, pokud bezpečnostní plugin blokuje REST API pro nepřihlášené "
+"návštěvníky, nebo pokud jeho odpovědi ukládá mezipaměť stránek či CDN. Po "
+"změně otestujte chráněný formulář v anonymním okně.<br/>%1$sJak zvolit a "
+"ověřit přenos%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -1003,8 +1008,8 @@ msgid "Verification failed."
 msgstr "Ověření se nezdařilo."
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -1019,7 +1024,9 @@ msgstr "OpenPorte placeholder"
 msgid ""
 "This form cannot be submitted until its OpenPorte field is moved to the last "
 "page."
-msgstr "Tento formulář nelze odeslat, dokud jeho pole OpenPorte nepřesunete na poslední stránku."
+msgstr ""
+"Tento formulář nelze odeslat, dokud jeho pole OpenPorte nepřesunete na "
+"poslední stránku."
 
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
@@ -1031,7 +1038,7 @@ msgid "Registration failed. Please try again later."
 msgstr "Registrace se nezdařila. Zkuste to prosím později znovu."
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1044,11 +1051,11 @@ msgstr ""
 "\"ALTCHA Spam Protection\", poté aktivujte OpenPorte. Podívejte se na %s pro "
 "podrobnosti."
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte nelze aktivovat"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Přejít na stránku Pluginů"
 

@@ -1,16 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Domain: openporte\n"
 
 #. Plugin Name of the plugin
@@ -26,9 +27,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "Зупиніть спам без CAPTCHA: антиспам-перевірка Proof-of-Work для ваших форм і входу. Відкритий код, self-hosted, з пріоритетом приватності."
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "Зупиніть спам без CAPTCHA. Захист Proof-of-Work для ваших форм і входу. Відкритий код, self-hosted, з пріоритетом приватності."
 
 #. Author of the plugin
 #: openporte.php
@@ -446,38 +447,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Налаштування"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Перевірка не вдалася. Спробуйте ще раз пізніше."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Захищено %1$sALTCHA%2$s"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "Я не робот"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "Перевірено"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "Перевірка..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "Перевірка... будь ласка, зачекайте."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "Цій формі потрібен JavaScript!"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Цей сайт не видає виклики в режимі Custom API."
 
@@ -546,7 +547,12 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "Виберіть, як цей сайт надає виклики відвідувачам. За замовчуванням використовується REST API; виберіть Ajax, якщо плагін безпеки блокує REST API для відвідувачів, які не ввійшли в систему, або якщо кеш сторінок чи CDN зберігає його відповіді. Після зміни перевірте захищену форму в приватному вікні.<br/>%1$sЯк вибрати й перевірити транспорт%2$s"
+msgstr ""
+"Виберіть, як цей сайт надає виклики відвідувачам. За замовчуванням "
+"використовується REST API; виберіть Ajax, якщо плагін безпеки блокує REST "
+"API для відвідувачів, які не ввійшли в систему, або якщо кеш сторінок чи CDN "
+"зберігає його відповіді. Після зміни перевірте захищену форму в приватному "
+"вікні.<br/>%1$sЯк вибрати й перевірити транспорт%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -1011,8 +1017,8 @@ msgid "Verification failed."
 msgstr "Перевірка не вдалася."
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -1027,7 +1033,9 @@ msgstr "OpenPorte placeholder"
 msgid ""
 "This form cannot be submitted until its OpenPorte field is moved to the last "
 "page."
-msgstr "Цю форму не можна надіслати, доки її поле OpenPorte не буде переміщено на останню сторінку."
+msgstr ""
+"Цю форму не можна надіслати, доки її поле OpenPorte не буде переміщено на "
+"останню сторінку."
 
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
@@ -1039,7 +1047,7 @@ msgid "Registration failed. Please try again later."
 msgstr "Реєстрація не вдалася. Спробуйте ще раз пізніше."
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1052,11 +1060,11 @@ msgstr ""
 "Будь ласка, спочатку деактивуйте \"ALTCHA Spam Protection\", а потім "
 "активуйте OpenPorte. Деталі за посиланням %s."
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte не вдається активувати"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Перейти на сторінку плагінів"
 

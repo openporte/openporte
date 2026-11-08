@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Chinese (simplified)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "无需 CAPTCHA 即可阻止垃圾信息：为您的表单和登录提供 Proof-of-Work 反垃圾验证。开源、自托管、隐私优先。"
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "无需 CAPTCHA 即可阻止垃圾信息。为您的表单和登录提供 Proof-of-Work 保护。开源、自托管、隐私优先。"
 
 #. Author of the plugin
 #: openporte.php
@@ -421,38 +421,38 @@ msgstr "OpenPorte 反垃圾邮件"
 msgid "Settings"
 msgstr "设置"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "验证失败。请稍后重试。"
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "由 %1$sALTCHA%2$s 提供保护"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "我不是机器人"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "已验证"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "验证中..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "验证中... 请稍候。"
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "此表单需要 JavaScript！"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "在自定义 API 模式下，本站点不签发 challenge。"
 
@@ -520,7 +520,10 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "选择本站点向访问者提供 challenge 的方式。默认使用 REST API；如果安全插件为未登录访问者屏蔽了 REST API，或页面缓存或 CDN 存储了其响应，请使用 Ajax。更改后，请在隐私窗口中测试受保护的表单。<br/>%1$s如何选择和检查传输方式%2$s"
+msgstr ""
+"选择本站点向访问者提供 challenge 的方式。默认使用 REST API；如果安全插件为未"
+"登录访问者屏蔽了 REST API，或页面缓存或 CDN 存储了其响应，请使用 Ajax。更改"
+"后，请在隐私窗口中测试受保护的表单。<br/>%1$s如何选择和检查传输方式%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -965,8 +968,8 @@ msgid "Verification failed."
 msgstr "验证失败。"
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -993,7 +996,7 @@ msgid "Registration failed. Please try again later."
 msgstr "注册失败。请稍后重试。"
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1005,11 +1008,11 @@ msgstr ""
 "态时无法运行——两者共享内部代码。请先停用\"ALTCHA Spam Protection\"，然后激活 "
 "OpenPorte。详情请参阅 %s。"
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "无法激活 OpenPorte"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "前往插件页面"
 
