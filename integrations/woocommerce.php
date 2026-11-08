@@ -15,25 +15,38 @@ add_action(
   0
 );
 
-add_action(
-  'woocommerce_register_post',
-  function ($user_login, $user_email, $errors) {
-    $plugin = OpenPortePlugin::$instance;
-    $active = $plugin->get_integration_woocommerce_register();
-    if ($active) {
-      $altcha = isset($_POST['openporte_register']) ? trim(sanitize_text_field(wp_unslash($_POST['openporte_register']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-      if ($plugin->verify($altcha, null, 'woocommerce_register') === false) {
-        return $errors->add(
-          'openporte_error_message',
-          esc_html__('Could not verify you are not a robot.', 'openporte')
-        );
-      }
+/**
+ * Check the challenge on a WooCommerce My Account registration.
+ *
+ * Only that form's handler applies this filter, and it is the only form that
+ * renders the widget. Do not move this back to `woocommerce_register_post`:
+ * wc_create_new_customer() fires that hook for every account WooCommerce
+ * creates (classic and block checkout, the order confirmation page, the REST
+ * API, any WC_Customer::save()), none of which can carry a solved challenge.
+ * Running before wc_create_new_customer() also means an unsolved request
+ * cannot probe which email addresses already have an account.
+ *
+ * @since 1.26.3
+ * @since 1.30.2 Converted from a closure on `woocommerce_register_post`.
+ *
+ * @param WP_Error $errors Errors collected for the registration.
+ * @return WP_Error $errors, with an error added when the challenge fails.
+ */
+function openporte_woocommerce_process_registration_errors( $errors ) {
+  $plugin = OpenPortePlugin::$instance;
+  $active = $plugin->get_integration_woocommerce_register();
+  if ( $active ) {
+    $altcha = isset( $_POST['openporte_register'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['openporte_register'] ) ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+    if ( $plugin->verify( $altcha, null, 'woocommerce_register' ) === false ) {
+      $errors->add(
+        'openporte_error_message',
+        esc_html__( 'Could not verify you are not a robot.', 'openporte' )
+      );
     }
-    return $errors;
-  },
-  10,
-  3
-);
+  }
+  return $errors;
+}
+add_filter( 'woocommerce_process_registration_errors', 'openporte_woocommerce_process_registration_errors', 10, 1 );
 
 add_action(
   'woocommerce_login_form',

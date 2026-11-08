@@ -377,6 +377,8 @@ class OpenPortePlugin
    * @since 1.29.0
    * @since 1.30.0 Added the optional $surface parameter and additive filter
    *               arguments for the surface and actual hook.
+   * @since 1.30.2 WooCommerce registration keeps 'woocommerce_register_post'
+   *               as its legacy context.
    *
    * @param mixed $context Optional legacy hook/context name; defaults to the
    *                       current hook, or 'authenticate' at a named login gate.
@@ -394,6 +396,11 @@ class OpenPortePlugin
       // the memo answers the later authenticate check without filtering again.
       if ( 'wp_authenticate_user' === $hook && in_array( $surface, array( 'wordpress_login', 'woocommerce_login' ), true ) ) {
         $context = 'authenticate';
+      }
+      // Likewise for policies written before the registration check moved
+      // off this hook in 1.30.2.
+      if ( 'woocommerce_process_registration_errors' === $hook && 'woocommerce_register' === $surface ) {
+        $context = 'woocommerce_register_post';
       }
     }
     /**

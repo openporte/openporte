@@ -1,6 +1,6 @@
 # OpenPorte E2E suite
 
-Browser-driven tests against a running wp-env bench. Five spec files, five axes:
+Browser-driven tests against a running wp-env bench. Six spec files, six axes:
 
 - **`settings-matrix.spec.js`** — **integrations × auto-verification mode ×
   Floating UI**, so combinations too numerous to click through by hand get
@@ -25,6 +25,11 @@ Browser-driven tests against a running wp-env bench. Five spec files, five axes:
   saves settings, so it restores the options it touches afterwards, and it
   switches WordPress login protection off while it runs so the admin can log
   in without solving a challenge.
+- **`woocommerce-checkout.spec.js`** — accounts WooCommerce creates outside the
+  My Account form, which has the only widget: "Create an account" on the
+  classic and block checkouts, and `wp wc customer create`. All must succeed
+  with registration protection on. The order confirmation page's account form
+  is not driven; it reaches the same `wc_create_new_customer()`.
 
 ## The settings matrix (`settings-matrix.spec.js`)
 

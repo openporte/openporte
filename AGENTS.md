@@ -203,6 +203,15 @@ WooCommerce nonce field counts only when WooCommerce is active and the request i
 WooCommerce renames its nonce fields, its forms fall back to the WordPress handlers.
 Keep both files in sync when changing auth logic.
 
+**WooCommerce registration — check on the form's filter, not on the account hook.**
+`wc_create_new_customer()` fires `woocommerce_register_post` for every account
+WooCommerce creates: classic and block checkout, the order confirmation page, the
+REST API and any `WC_Customer::save()`. Only My Account renders the widget, so the
+check lives on `woocommerce_process_registration_errors`, which only that form's
+handler applies. Do not key the skip on `woocommerce-register-nonce` instead: the
+handler also accepts the nonce as `_wpnonce`, so omitting the field would bypass
+the check. Account creation at checkout is not gated, like guest checkout.
+
 **`integrations/coblocks.php` — intentional reCAPTCHA spoof.**
 CoBlocks has no extension API, so the integration fakes a reCAPTCHA token and intercepts
 the outbound HTTP verification call via `pre_http_request`. This is deliberate. The
