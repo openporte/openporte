@@ -1,16 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Romanian\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && "
+"n%100<20)) ? 1 : 2);\n"
 "X-Domain: openporte\n"
 
 #. Plugin Name of the plugin
@@ -26,9 +27,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "Opriți spam-ul fără CAPTCHAs: verificare anti-spam Proof-of-Work pentru formulare și autentificări. Open-source, auto-găzduire, confidențialitate."
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "Opriți spam-ul fără CAPTCHAs. Protecție Proof-of-Work pentru formulare și autentificări. Open-source, auto-găzduire, confidențialitate."
 
 #. Author of the plugin
 #: openporte.php
@@ -458,38 +459,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Setări"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Verificarea a eșuat. Încercați din nou mai târziu."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "Protejat de %1$sALTCHA%2$s"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "Nu sunt un robot"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "Verificat"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "Se verifică..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "Se verifică... vă rugăm să așteptați."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "Acest formular necesită JavaScript!"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Acest site nu emite provocări în Modul API Personalizat."
 
@@ -561,7 +562,12 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "Alegeți cum furnizează acest site provocările vizitatorilor. REST API este implicit; folosiți Ajax dacă un plugin de securitate blochează REST API pentru vizitatorii neautentificați sau dacă un cache de pagini ori un CDN îi stochează răspunsurile. După modificare, testați un formular protejat într-o fereastră privată.<br/>%1$sCum alegeți și verificați transportul%2$s"
+msgstr ""
+"Alegeți cum furnizează acest site provocările vizitatorilor. REST API este "
+"implicit; folosiți Ajax dacă un plugin de securitate blochează REST API "
+"pentru vizitatorii neautentificați sau dacă un cache de pagini ori un CDN îi "
+"stochează răspunsurile. După modificare, testați un formular protejat într-o "
+"fereastră privată.<br/>%1$sCum alegeți și verificați transportul%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -1033,8 +1039,8 @@ msgid "Verification failed."
 msgstr "Verificarea a eșuat."
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -1049,7 +1055,9 @@ msgstr "Marcaj de poziție OpenPorte"
 msgid ""
 "This form cannot be submitted until its OpenPorte field is moved to the last "
 "page."
-msgstr "Acest formular nu poate fi trimis până când câmpul OpenPorte nu este mutat pe ultima pagină."
+msgstr ""
+"Acest formular nu poate fi trimis până când câmpul OpenPorte nu este mutat "
+"pe ultima pagină."
 
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
@@ -1061,7 +1069,7 @@ msgid "Registration failed. Please try again later."
 msgstr "Înregistrarea a eșuat. Vă rugăm încercați din nou mai târziu."
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1074,11 +1082,11 @@ msgstr ""
 "Dezactivează \"ALTCHA Spam Protection\" întâi, apoi activează OpenPorte. "
 "Vezi %s pentru detalii."
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte nu poate fi activat"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Mergeți la pagina Plugin-uri"
 

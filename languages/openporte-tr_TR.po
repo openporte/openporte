@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenPorte Spam Protection 1.30.1\n"
+"Project-Id-Version: OpenPorte Spam Protection 1.30.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/openporte\n"
-"POT-Creation-Date: 2026-10-31T01:21:33+00:00\n"
-"PO-Revision-Date: 2026-10-31 00:00+0000\n"
-"Last-Translator: claude-code-2.1.310:claude-opus-5-5 - signed-off by J-C Berthon\n"
+"POT-Creation-Date: 2026-11-08T22:51:10+00:00\n"
+"PO-Revision-Date: 2026-11-08 00:00+0000\n"
+"Last-Translator: claude-code-2.1.319:claude-opus-5-5 - signed-off by J-C Berthon\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -26,9 +26,9 @@ msgstr "https://github.com/openporte/openporte"
 #. Description of the plugin
 #: openporte.php
 msgid ""
-"Stop spam without CAPTCHAs: a Proof-of-Work anti-spam check for your forms "
-"and logins. Open-source, self-hosted, privacy-first."
-msgstr "CAPTCHA olmadan spam'ı durdurun: formlarınız ve girişleriniz için Proof-of-Work anti-spam denetimi. Açık kaynak, kendi sunucunuzda, gizlilik odaklı."
+"Stop spam without CAPTCHAs. Proof-of-Work protection for your forms and "
+"logins. Open-source, self-hosted, privacy-first."
+msgstr "CAPTCHA olmadan spam'ı durdurun. Formlarınız ve girişleriniz için Proof-of-Work koruması. Açık kaynak, kendi sunucunuzda, gizlilik odaklı."
 
 #. Author of the plugin
 #: openporte.php
@@ -450,38 +450,38 @@ msgstr "OpenPorte Anti-spam"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: includes/core.php:677 integrations/enfold-theme.php:58
+#: includes/core.php:684 integrations/enfold-theme.php:58
 msgid "Verification failed. Try again later."
 msgstr "Doğrulama başarısız oldu. Daha sonra tekrar deneyin."
 
 #. translators: %1$s and %2$s are the opening and closing tags for a link (<a> tag)
-#: includes/core.php:680
+#: includes/core.php:687
 #, php-format
 msgid "Protected by %1$sALTCHA%2$s"
 msgstr "%1$sALTCHA%2$s tarafından korunmaktadır"
 
-#: includes/core.php:684
+#: includes/core.php:691
 msgid "I'm not a robot"
 msgstr "Ben bir robot değilim"
 
-#: includes/core.php:685
+#: includes/core.php:692
 msgid "Verified"
 msgstr "Doğrulandı"
 
-#: includes/core.php:686
+#: includes/core.php:693
 msgid "Verifying..."
 msgstr "Doğrulanıyor..."
 
-#: includes/core.php:687
+#: includes/core.php:694
 msgid "Verifying... please wait."
 msgstr "Doğrulanıyor... lütfen bekleyin."
 
 #. translators: Displayed inside a <noscript> block when the visitor's browser has JavaScript disabled; the ALTCHA widget cannot function without it.
-#: includes/core.php:1589
+#: includes/core.php:1596
 msgid "This form requires JavaScript!"
 msgstr "Bu form JavaScript gerektiriyor!"
 
-#: includes/core.php:1656
+#: includes/core.php:1663
 msgid "This site does not issue challenges in Custom API mode."
 msgstr "Bu site, Özel API Modunda challenge oluşturmaz."
 
@@ -552,7 +552,12 @@ msgid ""
 "or if a page cache or CDN stores its responses. After changing it, test a "
 "protected form in a private window.<br/>%1$sHow to choose and check the "
 "transport%2$s"
-msgstr "Bu sitenin challenge'ları ziyaretçilere nasıl sunacağını seçin. Varsayılan REST API'dir; bir güvenlik eklentisi oturum açmamış ziyaretçiler için REST API'yi engelliyorsa veya bir sayfa önbelleği ya da CDN yanıtlarını saklıyorsa Ajax'ı kullanın. Değiştirdikten sonra korunan bir formu gizli pencerede test edin.<br/>%1$sAktarım yöntemi nasıl seçilir ve denetlenir%2$s"
+msgstr ""
+"Bu sitenin challenge'ları ziyaretçilere nasıl sunacağını seçin. Varsayılan "
+"REST API'dir; bir güvenlik eklentisi oturum açmamış ziyaretçiler için REST "
+"API'yi engelliyorsa veya bir sayfa önbelleği ya da CDN yanıtlarını "
+"saklıyorsa Ajax'ı kullanın. Değiştirdikten sonra korunan bir formu gizli "
+"pencerede test edin.<br/>%1$sAktarım yöntemi nasıl seçilir ve denetlenir%2$s"
 
 #: includes/settings.php:401
 msgid "Challenge URL"
@@ -1019,8 +1024,8 @@ msgid "Verification failed."
 msgstr "Doğrulama başarısız oldu."
 
 #: integrations/forminator.php:34 integrations/gravityforms/field.php:149
-#: integrations/html-forms.php:48 integrations/woocommerce.php:28
-#: integrations/woocommerce.php:85 integrations/woocommerce.php:179
+#: integrations/html-forms.php:48 integrations/woocommerce.php:43
+#: integrations/woocommerce.php:98 integrations/woocommerce.php:192
 #: integrations/wordpress.php:28 integrations/wordpress.php:83
 #: integrations/wordpress.php:179 integrations/wordpress.php:229
 #: integrations/wpforms.php:27
@@ -1047,7 +1052,7 @@ msgid "Registration failed. Please try again later."
 msgstr "Kayıt başarısız oldu. Lütfen daha sonra tekrar deneyin."
 
 #. translators: %s: link to the OpenPorte plugin page.
-#: openporte.php:46
+#: openporte.php:45
 #, php-format
 msgid ""
 "OpenPorte is a fork of ALTCHA Spam Protection and cannot run while the "
@@ -1060,11 +1065,11 @@ msgstr ""
 "\"ALTCHA Spam Protection\" eklentisini devre dışı bırakın, ardından "
 "OpenPorte'ü etkinleştirin. Ayrıntılar için %s sayfasına bakın."
 
-#: openporte.php:67
+#: openporte.php:66
 msgid "OpenPorte cannot be activated"
 msgstr "OpenPorte etkinleştirilemiyor"
 
-#: openporte.php:78
+#: openporte.php:77
 msgid "Go to the Plugins page"
 msgstr "Eklentiler sayfasına gidin"
 
