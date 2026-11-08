@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Stable tag: 1.30.1
  * Requires at least: 5.6
  * Requires PHP: 8.0
- * Tested up to: 7.1
  * License: GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: openporte

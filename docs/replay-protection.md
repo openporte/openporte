@@ -188,7 +188,9 @@ For developers:
   callbacks keep working: at the earlier `wp_authenticate_user` login gate the
   legacy context remains `authenticate`, so a 1.29 strict-login policy applies
   before the password check, even though the memo answers the later check
-  without filtering again. Direct `get_replaylimit($context)` calls retain
+  without filtering again. WooCommerce registration, checked on
+  `woocommerce_process_registration_errors` since 1.30.2, likewise keeps
+  `woocommerce_register_post` as its legacy context. Direct `get_replaylimit($context)` calls retain
   their explicit context. Surfaces let new callbacks distinguish WordPress
   from WooCommerce logins while the legacy context stays compatible. The
   counter stays per token, shared across surfaces, so a token already spent

@@ -4,8 +4,8 @@ const { ensureWooCommerce, customerIdIfPresent } = require('./_woocommerce');
 
 /**
  * WooCommerce registration form (native POST; server-side check hooks
- * `woocommerce_register_post`, and the widget posts under the custom name
- * "openporte_register" — see integrations/woocommerce.php).
+ * `woocommerce_process_registration_errors`, and the widget posts under the
+ * custom name "openporte_register" — see integrations/woocommerce.php).
  *
  * Accepted: WooCommerce logs the new customer in and redirects to the
  * dashboard ("Log out" navigation). Rejected: the validation error surfaces
