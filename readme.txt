@@ -1,6 +1,6 @@
 === OpenPorte Spam Protection ===
 Tags: anti-spam, captcha, privacy, proof-of-work, self-hosted
-Stable tag: 1.30.1
+Stable tag: 1.30.2
 Requires at least: 5.6
 Requires PHP: 8.0
 Tested up to: 7.1
@@ -81,6 +81,11 @@ Challenge verification is performed locally by OpenPorte using the configured sh
 OpenPorte does not support the former ALTCHA SaaS API Mode. Users who rely on ALTCHA Sentinel's advanced features should consider the official ALTCHA Spam Protection v2/v3 WordPress plugin instead.
 
 == Upgrade Notice ==
+
+= 1.30.2 =
+WooCommerce: fixes accounts created at checkout being refused. These accounts
+are not challenged yet; only the My Account registration form is. Protection at
+checkout is planned for 1.31.0.
 
 = 1.30.1 =
 Security release; please update. Gravity Forms: move the OpenPorte field of a
@@ -349,6 +354,10 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 5. Floating UI Captcha
 
 == Changelog ==
+
+= 1.30.2 =
+
+* Fix: on WooCommerce sites with registration protection on, creating an account at checkout (classic or block), on the order confirmation page, through the REST API or from code was refused with "Could not verify you are not a robot." Only the My Account registration form is now checked; accounts created at checkout are not challenged yet. Thanks to studio10h10 for the report.
 
 = 1.30.1 =
 
