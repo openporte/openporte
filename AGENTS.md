@@ -212,6 +212,18 @@ handler applies. Do not key the skip on `woocommerce-register-nonce` instead: th
 handler also accepts the nonce as `_wpnonce`, so omitting the field would bypass
 the check. Account creation at checkout is not gated, like guest checkout.
 
+**Never run `do_shortcode` on anything a visitor can write into.**
+Up to 1.30.2, the Contact Form 7 and HTML Forms integrations ran `do_shortcode`
+on the rendered form to show `[openporte]`. That HTML carries visitor input
+(re-displayed submissions, URL parameters), so any visitor could run any
+shortcode (`docs/security-audit.md` #22). The same goes for `the_content` and
+any filter that expands shortcodes. To render the widget from a host's form,
+expand only `[openporte]`/`[altcha]`, from the admin-authored source, before the
+host fills in visitor values: a CF7 form-tag, or the scoped expander on
+`hf_form_markup` at priority 5
+(`docs/adr/0001-scoped-shortcode-expansion-in-form-integrations.md`).
+`do_shortcode` on content the admin wrote, such as post content, is fine.
+
 **`integrations/coblocks.php` — intentional reCAPTCHA spoof.**
 CoBlocks has no extension API, so the integration fakes a reCAPTCHA token and intercepts
 the outbound HTTP verification call via `pre_http_request`. This is deliberate. The

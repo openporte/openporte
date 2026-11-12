@@ -35,6 +35,9 @@
 > that carried the defect, so a site can tell whether it was affected; releases
 > before OpenPorte 1.27.0 are those of the original ALTCHA Spam Protection
 > plugin, whose code OpenPorte inherited.
+>
+> Finding #22 was reported privately through GitHub
+> (GHSA-hvr5-q69x-jp62) and is fixed in the 1.30.3 security release.
 
 ## Summary
 
@@ -82,6 +85,7 @@ logic**; the rest are low-severity hardening items.
 | 19 | "Custom" preset without a value saved as 0 | Configuration integrity (admin only) | `includes/settings.php` | Info | **Fixed (1.30.0)** |
 | 20 | Unterminated Custom-mode salts let solved challenges outlive their expiry | Replay / weak verification | `verify_solution()`, `admin/healthcheck.php` | Low | **Fixed (1.30.0)** |
 | 21 | Gravity Forms field before the last page never checked at submission | CAPTCHA bypass | `integrations/gravityforms/field.php` | Low | **Fixed (1.30.1)** |
+| 22 | Visitors could run any shortcode through Contact Form 7 and HTML Forms | Code injection (CWE-94) | `integrations/contact-form-7.php`, `integrations/html-forms.php` | High | **Fixed (1.30.3)** |
 
 > Findings 9–11 came from the framework review (Appendix A/B). None was
 > exploitable; each was a non-breaking hardening and has now been applied.
@@ -107,6 +111,13 @@ below up to and including OpenPorte 1.30.0 carries the defect; 1.30.1 fixes it.
 | # | Present since | Affected configuration |
 | - | ------------- | ---------------------- |
 | 21 | ALTCHA Spam Protection 0.3.2 (the first release) | Gravity Forms active, its integration on, a multi-page form with the OpenPorte field before the last page |
+
+**Affected releases for finding #22.** Every release from the one named below
+up to and including OpenPorte 1.30.2 carries the defect; 1.30.3 fixes it.
+
+| # | Present since | Affected configuration |
+| - | ------------- | ---------------------- |
+| 22 | ALTCHA Spam Protection 1.6.0 (Contact Form 7); 1.7.0 (HTML Forms) | Contact Form 7 active: any form with a text field. HTML Forms active: a form whose markup uses `{{url_params.*}}` (`{{user.*}}` and `{{post.*}}` too, at lower risk). Whatever the integration setting |
 
 The same review corrected three statements of this document that had been
 inaccurate since its 1.29.0 revision: the claim that the WordPress and
@@ -802,6 +813,51 @@ scheduled for removal, see `AGENTS.md`). Pinned by `GravityFormsFieldTest`, on
 stand-ins for the Gravity Forms classes; not run against a real Gravity Forms
 release.
 
+### 22. Visitors could run any shortcode through Contact Form 7 and HTML Forms — High — Fixed (1.30.3)
+
+**Type:** Code injection (CWE-94). GHSA-hvr5-q69x-jp62, CVSS 3.1 7.3
+(`AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L`). Reported by Erik Debye.
+**Location:** `integrations/contact-form-7.php`, `integrations/html-forms.php`.
+**Present since:** ALTCHA Spam Protection 1.6.0 (Contact Form 7) and 1.7.0
+(HTML Forms).
+
+To render an `[openporte]` or `[altcha]` tag placed in a form, both
+integrations added `do_shortcode` as a filter on the host plugin's
+rendered-form hook (`wpcf7_form_elements`, `hf_form_html`). By then that HTML
+contains visitor input. Contact Form 7 re-displays the values of a refused
+submission and fills `default:get` fields from the URL. HTML Forms fills
+`{{url_params.*}}` from the URL. A shortcode in that input ran on the server,
+for an unauthenticated visitor, with the privileges of whoever loaded the
+page; through a GET vector, that can be a logged-in administrator following a
+link. The filters were added whenever the host plugin was active, so the
+integration setting did not mitigate it, and neither did the CAPTCHA: a
+submission refused as spam is re-displayed too.
+
+Impact depends on the shortcodes registered on the site. Core's alone
+disclose data: `[gallery]` and `[playlist]` list attachments of private and
+draft posts. Every third-party shortcode flaw that needs a Contributor account
+(XSS, SQL injection and the like through shortcode attributes, a common class)
+becomes reachable without one. Heavy shortcodes give a cheap unauthenticated
+load.
+
+**Fix applied.** Both blanket filters are gone. Only OpenPorte's own tags are
+rendered, and only from the form as the admin wrote it: a display-only
+Contact Form 7 form-tag, and an expander on `hf_form_markup` that runs before
+HTML Forms fills in `{{…}}`. Design and rejected options:
+`docs/adr/0001-scoped-shortcode-expansion-in-form-integrations.md`. Other
+plugins' shortcodes no longer render in these forms, and deliberately nothing
+restores that: the readme FAQ explains the change and points to support.
+Pinned by `RenderShortcodeTest`, `Cf7FormTagTest` and
+`HtmlFormsTagsTest`, and on real Contact Form 7 and HTML Forms by
+`tests/e2e/shortcode-injection.spec.js`, which fails with either old filter
+put back.
+
+**Lesson.** `do_shortcode()` trusts its input: core assumes content written
+by someone allowed to run shortcodes. Never apply it (or `the_content`) to
+rendered output or anything else a visitor can put text into. Render
+OpenPorte's own tags from admin-authored source, before the host plugin fills
+in visitor values (`AGENTS.md`, "Known gotchas").
+
 ---
 
 ## Appendix C — Coding-standards tooling (WPCS)
@@ -860,7 +916,7 @@ OWASP Top 10 (2021):
 | -------- | ------ | ----- |
 | A01 Broken Access Control | Pass | Admin gated by `manage_options`; the only public surface (the challenge endpoint, over REST and, since 1.30.0, admin-ajax) is intentional and exposes no secret |
 | A02 Cryptographic Failures | Pass (note) | `random_bytes`/`random_int` CSPRNG, HMAC-SHA256, constant-time `hash_equals`; key length is finding #9 |
-| A03 Injection | Pass | SQL prepared; no command/code injection sinks; output escaped; autoloader note in finding #10 |
+| A03 Injection | Pass (fixed 1.30.3) | SQL prepared; no command injection sinks; output escaped; autoloader note in finding #10. Shortcode (code) injection through Contact Form 7 and HTML Forms was finding #22: no `do_shortcode` runs on visitor input since 1.30.3 |
 | A04 Insecure Design | Pass (note) | Stateless-PoW replay is **bounded since 1.29.0** (finding #1) — an atomic reuse counter in `verify()`, with the residuals recorded there; dead code in finding #11 |
 | A05 Security Misconfiguration | Pass (note) | Secure defaults; no debug output; PoW complexity has no seeded default → falls to the 100–10000 range (consider defaulting to medium/high) |
 | A06 Vulnerable & Outdated Components | Monitor | Vendored `public/altcha.min.js` (widget 2.3.0) — track upstream advisories on re-vendor |
@@ -986,3 +1042,18 @@ brute-forceable, so this is hardening rather than exposure.
   non-secret challenge `===` is tracked separately as uniformity work
   ([#84](https://github.com/openporte/openporte/issues/84)), not as a security
   fix.
+- **Finding 22 (shortcodes through form integrations), 1.30.3:**
+  - **The behaviour change is accepted.** Other plugins' shortcodes stop
+    rendering inside Contact Form 7 and HTML Forms forms. Such forms are
+    expected to be rare.
+  - **No opt-back-in is documented.** A draft of 1.30.3 gave the two
+    `do_shortcode` one-liners in the FAQ, behind a warning. They were dropped:
+    a pasted line re-opens the finding and is easily forgotten, because
+    nothing in the admin shows it. A site rolled back to 1.30.2 is just as
+    exposed, but its pending update stays visible. A third party that
+    publishes an equivalent line is responsible for explaining its danger.
+    Affected admins get help through support instead.
+  - **Released under the GHSA ID.** The CVE request was not waited for.
+  - **The Contact Form 7 form-tag ignores `mode`.** A tag mixing another
+    quoted attribute with `language="…"` loses its language. Both are
+    accepted limitations (ADR 0001).
