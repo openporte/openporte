@@ -29,6 +29,21 @@ abstract class OpenPorteTestCase extends TestCase
     $this->plugin->init();
   }
 
+  /**
+   * Make render_widget() return a marker instead of widget markup, naming
+   * the mode and language it was called with, e.g.
+   * "WIDGET(mode=false,language='de')". Hooks the public
+   * openporte_widget_html filter, so callers are observed from outside.
+   *
+   * @since 1.30.3
+   */
+  protected function stub_widget_html()
+  {
+    OpenPorte_Test_Env::$filters['openporte_widget_html'] = function ($html, $mode, $language) {
+      return 'WIDGET(mode=' . var_export($mode, true) . ',language=' . var_export($language, true) . ')';
+    };
+  }
+
   /** Start a new simulated request: drops the per-request verification memo. */
   protected function next_request()
   {

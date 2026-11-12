@@ -24,6 +24,22 @@ function wp(args) {
   }).trim();
 }
 
+/**
+ * Run PHP on the bench through `wp eval` and return its stdout.
+ *
+ * For fixtures wp() cannot carry: form templates with spaces, quotes and
+ * markup. The code travels base64-encoded, wrapped in an argument escaped for
+ * the remote shell (the one layer wp-env.sh exposes it to, see wp()) and
+ * single-quoted for the local one. Piping it to `wp eval-file -` does not
+ * work: stdin does not reach the cli container.
+ */
+function wpEval(php) {
+  const b64 = Buffer.from(php, 'utf8').toString('base64');
+  const code = `eval(base64_decode('${b64}'));`;
+  const remote = code.replace(/[^A-Za-z0-9_/.:=,@%+-]/g, (c) => `\\${c}`);
+  return wp(`eval '${remote.replace(/'/g, "'\\''")}'`);
+}
+
 /** Set an option, using delete for empty values (safer than passing '' through ssh+docker layers). */
 function wpSetOption(name, value) {
   if (value === '' || value === null || value === undefined) {
@@ -272,6 +288,7 @@ module.exports = {
   captureWidgetToken,
   injectToken,
   wp,
+  wpEval,
   wpSetOption,
   waitForFrontEnd,
   ensureCommentsPost,

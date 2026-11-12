@@ -1,6 +1,6 @@
 # OpenPorte E2E suite
 
-Browser-driven tests against a running wp-env bench. Six spec files, six axes:
+Browser-driven tests against a running wp-env bench. Seven spec files, seven axes:
 
 - **`settings-matrix.spec.js`** — **integrations × auto-verification mode ×
   Floating UI**, so combinations too numerous to click through by hand get
@@ -30,6 +30,16 @@ Browser-driven tests against a running wp-env bench. Six spec files, six axes:
   classic and block checkouts, and `wp wc customer create`. All must succeed
   with registration protection on. The order confirmation page's account form
   is not driven; it reaches the same `wc_create_new_customer()`.
+- **`shortcode-injection.spec.js`** — the Contact Form 7 and HTML Forms
+  integrations render only `[openporte]`/`[altcha]`, and only from the
+  admin's template (GHSA-hvr5-q69x-jp62). A shortcode a visitor puts in the
+  URL (CF7 `default:get`, HTML Forms `{{url_params}}`) or in a refused CF7
+  submission comes back as text; core's `[audio]` is the probe, since its
+  output carries `wp-audio-shortcode`. The hand-placed widget still renders
+  once, with or without the CF7 integration, keeps its language
+  (`language:de_DE` and the legacy `language="de_DE"`), and is still verified
+  with the integration off (#76). Installs the `de_DE` core language pack on
+  first run (needs network). Its fixtures go through `wpEval()`.
 
 ## The settings matrix (`settings-matrix.spec.js`)
 
@@ -154,6 +164,7 @@ npm run test:ajax                              # the matrix over the Ajax transp
 npx playwright test --grep "onsubmit"          # one mode across drivers
 npx playwright test replay-limit.spec.js       # just the replay-limit suite
 npx playwright test shared-secret.spec.js      # just the shared secret controls
+npx playwright test shortcode-injection.spec.js # just the shortcode-injection suite
 npm run test:headed                            # watch it
 npm run report                                 # open the HTML report
 ```
@@ -297,6 +308,10 @@ receive.
   `ssh "… wp-env $*"`, so the remote shell strips one layer of quoting.
   Values passed to the `wp()` helper must contain no spaces or quotes
   (fixture values are deliberately space-free, e.g. `E2E-Comments`).
+  For fixtures that need spaces, quotes or markup, use `wpEval(php)`: it
+  sends the PHP base64-encoded through `wp eval`. Piping PHP to
+  `wp eval-file -` does not work, because stdin does not reach the cli
+  container.
 - **Comment flood throttle**: core rejects a comment posted within 15 s of
   the previous one from the same IP ("You are posting comments too
   quickly") — every submission here comes from one browser IP, so the
