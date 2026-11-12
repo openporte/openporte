@@ -1,6 +1,6 @@
 === OpenPorte Spam Protection ===
 Tags: anti-spam, captcha, privacy, proof-of-work, self-hosted
-Stable tag: 1.30.2
+Stable tag: 1.30.3
 Requires at least: 5.6
 Requires PHP: 8.0
 Tested up to: 7.1
@@ -81,6 +81,11 @@ Challenge verification is performed locally by OpenPorte using the configured sh
 OpenPorte does not support the former ALTCHA SaaS API Mode. Users who rely on ALTCHA Sentinel's advanced features should consider the official ALTCHA Spam Protection v2/v3 WordPress plugin instead.
 
 == Upgrade Notice ==
+
+= 1.30.3 =
+Security release, update now (GHSA-hvr5-q69x-jp62): visitors could run any
+shortcode through Contact Form 7 and HTML Forms. Other plugins' shortcodes no
+longer render inside those forms. If you relied on that, read the FAQ.
 
 = 1.30.2 =
 WooCommerce: fixes accounts created at checkout being refused. These accounts
@@ -240,6 +245,25 @@ the widget and visitors still have to tick it, but nothing checks the result on
 the server — a bot posting directly to the form's endpoint is not stopped. See
 **Supported Integrations** for the list.
 
+= Shortcodes in my Contact Form 7 or HTML Forms form stopped working. Why? =
+
+Since 1.30.3, OpenPorte renders only its own `[openporte]` and `[altcha]` tags
+inside Contact Form 7 and HTML Forms forms. Until then it ran every shortcode
+in the displayed form, including text that visitors typed into its fields or
+put in the page's URL, so any visitor could run any shortcode on your site
+(security advisory GHSA-hvr5-q69x-jp62). Other plugins' shortcodes in these
+forms only ever worked because of that; neither form plugin renders them
+itself.
+
+The fix is to take those shortcodes out of the form: put the content they
+produce directly in the form, or next to it on the page.
+
+There is deliberately no setting or code snippet to bring the old behaviour
+back: it would let any visitor run any shortcode again. If a form depended on
+another plugin's shortcode and you can't see how to replace it, ask in the
+[OpenPorte support forum on WordPress.org](https://wordpress.org/support/plugin/openporte/)
+and we'll help you find a safe way.
+
 = Does login protection also cover XML-RPC and the REST API? =
 
 No. The WordPress and WooCommerce login protection covers the login forms:
@@ -354,6 +378,12 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 5. Floating UI Captcha
 
 == Changelog ==
+
+= 1.30.3 =
+
+* Security: any visitor could run any shortcode registered on the site through a Contact Form 7 or HTML Forms form (GHSA-hvr5-q69x-jp62). To show the widget in those forms, OpenPorte expanded every shortcode in the displayed form, including text visitors had typed into its fields or put in the page's URL. Depending on the plugins installed, this could expose private content or open the way to flaws in other plugins' shortcodes. Neither the integration toggles nor the CAPTCHA prevented it. OpenPorte now renders only its own `[openporte]`/`[altcha]` tags, and only from the form as you wrote it. Present since ALTCHA Spam Protection 1.6.0 (Contact Form 7) and 1.7.0 (HTML Forms). Thanks to Erik Debye for the report.
+* Behaviour change: other plugins' shortcodes placed in a Contact Form 7 or HTML Forms form are no longer rendered. Neither form plugin renders them itself; it only worked as a side effect of OpenPorte. If you relied on it, see the FAQ entry "Shortcodes in my Contact Form 7 or HTML Forms form stopped working".
+* Contact Form 7: `[openporte]` and `[altcha]` are now Contact Form 7 form-tags. Write the widget language as `[openporte language:de_DE]`; the old `[openporte language="de_DE"]` keeps working.
 
 = 1.30.2 =
 
