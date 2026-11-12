@@ -94,3 +94,33 @@ function openporte_enqueue_scripts() {
     true
   );
 }
+
+/**
+ * Render the widget for an [openporte] (or legacy [altcha]) tag.
+ *
+ * The one renderer behind every place an admin can place the widget by hand:
+ * the WordPress shortcode, the Contact Form 7 form-tag and the HTML Forms tag
+ * expander. Each caller must pass attributes taken from admin-authored
+ * content only, never from the request (see GHSA-hvr5-q69x-jp62).
+ *
+ * @since 1.30.3
+ *
+ * @param array|string $attrs Tag attributes: `language` (a locale for the
+ *                            widget strings) and `mode`. WordPress passes ''
+ *                            for a shortcode without attributes.
+ * @return string Widget HTML.
+ */
+function openporte_render_shortcode( $attrs ) {
+  $plugin  = OpenPortePlugin::$instance;
+  $default = array(
+    'language' => null,
+    // `mode` is a vestige of the pre-1.28 mode-string era: render_widget()
+    // never branches on it, it is only passed through to the widget filters.
+    // Read the option directly — get_integration_custom() is deprecated (#62)
+    // and would log a notice on every shortcode render. The whole `mode`
+    // plumbing is slated for cleanup in the next major release (#74).
+    'mode'     => get_option( OpenPortePlugin::$option_integration_custom ),
+  );
+  $a = shortcode_atts( $default, $attrs );
+  return wp_kses( $plugin->render_widget( $a['mode'], true, $a['language'] ), OpenPortePlugin::$html_espace_allowed_tags );
+}

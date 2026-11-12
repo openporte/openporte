@@ -147,23 +147,9 @@ register_deactivation_hook(__FILE__, 'openporte_deactivate');
 
 add_action('after_plugin_row_' . plugin_basename(__FILE__), 'openporte_plugin_custom_message');
 
-$openporte_shortcode = function ($attrs) {
-  $plugin = OpenPortePlugin::$instance;
-  $default = array(
-    'language' => null,
-    // `mode` is a vestige of the pre-1.28 mode-string era: render_widget()
-    // never branches on it, it is only passed through to the widget filters.
-    // Read the option directly — get_integration_custom() is deprecated (#62)
-    // and would log a notice on every shortcode render. The whole `mode`
-    // plumbing is slated for cleanup in the next major release.
-    'mode' => get_option(OpenPortePlugin::$option_integration_custom),
-  );
-  $a = shortcode_atts($default, $attrs);
-  return wp_kses($plugin->render_widget($a['mode'], true, $a['language']), OpenPortePlugin::$html_espace_allowed_tags);
-};
-add_shortcode('openporte', $openporte_shortcode);
+add_shortcode( 'openporte', 'openporte_render_shortcode' );
 // Deprecated [altcha] alias kept for back-compat; remove in a future release.
-add_shortcode('altcha', $openporte_shortcode);
+add_shortcode( 'altcha', 'openporte_render_shortcode' );
 
 // Note: we intentionally do NOT call load_plugin_textdomain(). Since WordPress
 // 4.6 (and we require 5.6+), translations are loaded automatically via core's
