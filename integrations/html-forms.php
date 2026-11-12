@@ -3,10 +3,50 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if (openporte_plugin_active('html-forms')) {
-  add_filter(
-    'hf_form_html',
-    'do_shortcode'
-  );
+  // Expand our own tags only, and only in the admin's form markup: never run
+  // do_shortcode on the rendered form. hf_template() fills {{url_params.*}},
+  // {{user.*}} and {{post.*}} into the markup at priority 10, so the rendered
+  // form contains visitor input, and expanding it let anyone run any
+  // registered shortcode (GHSA-hvr5-q69x-jp62). Priority 5 runs before that.
+  add_filter( 'hf_form_markup', 'openporte_hf_expand_tags', 5, 1 );
+
+  /**
+   * Render the [openporte] and legacy [altcha] tags in HTML Forms markup.
+   *
+   * Matches only those two tags, with WordPress's own shortcode grammar
+   * (attributes, [[openporte]] escaping); every other shortcode stays text.
+   *
+   * @since 1.30.3
+   *
+   * @param string $markup The form's markup, as written by the admin.
+   * @return string Markup with the widget in place of each tag.
+   */
+  function openporte_hf_expand_tags( $markup ) {
+    $markup = (string) $markup;
+    if ( false === strpos( $markup, '[' ) ) {
+      return $markup;
+    }
+    $pattern = '/' . get_shortcode_regex( array( 'openporte', 'altcha' ) ) . '/';
+    return preg_replace_callback( $pattern, 'openporte_hf_render_tag', $markup );
+  }
+
+  /**
+   * Render one matched [openporte]/[altcha] tag, like core's do_shortcode_tag().
+   *
+   * @since 1.30.3
+   *
+   * @param array<int,string> $m get_shortcode_regex() match: 0 the whole tag,
+   *                             1 and 6 the escaping brackets, 3 the
+   *                             attributes.
+   * @return string Widget HTML, or the tag itself when escaped.
+   */
+  function openporte_hf_render_tag( $m ) {
+    // [[openporte]] escapes the tag: print [openporte] as text.
+    if ( '[' === $m[1] && ']' === $m[6] ) {
+      return substr( $m[0], 1, -1 );
+    }
+    return $m[1] . openporte_render_shortcode( shortcode_parse_atts( $m[3] ) ) . $m[6];
+  }
 
   add_filter(
     'hf_form_html',
