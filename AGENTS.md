@@ -72,13 +72,12 @@ memory or docs — audit the source. Two ways:
 
 (The bundled *widget* has its own upstream doc: @docs/agents/altcha-upstream.md.)
 
-## Scope: paid-plugin integrations being removed
+## Scope: paid-plugin integrations remain supported
 
-   Integrations targeting paid-only plugins (Enfold; check others in
-   `integrations/` against their authors' licensing) are scheduled for removal
-   from this fork. Users should migrate to the official ALTCHA plugin (v2/v3).
-
-   Until removed, commits modifying these files should use the `Deprecate` verb.
+Continue supporting integrations with third-party plugins and themes, including
+paid products. Do not deprecate or remove an integration because its target is
+paid, and use the normal commit conventions when maintaining it. Document target
+licensing and access requirements, and track paid-plugin validation work in #146.
 
 ## Verification protocol
 
@@ -231,9 +230,10 @@ LiteSpeed Cache never caches, so the bench cannot reproduce this.
 **`has_active_integrations()` / `get_integrations()` are deprecated dead code.**
 Both deprecated in 1.28.0, removal at the next major (#62). The "only enqueue scripts
 on pages with active integrations" gate they served was removed upstream in 1.21.0,
-so they have had no caller since. Do not wire new code to them, and do not "fix"
-their incomplete integration list (Enfold Theme and WP-Members are missing) —
-it is frozen with the deprecation. The "Custom HTML" integration
+so they have had no caller since. Do not wire new code to them or expand their
+integration list; it is frozen with the deprecation. Enfold Theme is already
+listed, and WP-Members uses the listed WordPress registration option rather than
+a separate integration toggle. The "Custom HTML" integration
 (`integrations/custom.php`, `get_integration_custom()`) is deprecated on the
 same schedule.
 
