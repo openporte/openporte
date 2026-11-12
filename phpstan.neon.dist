@@ -93,7 +93,12 @@ parameters:
 			path: integrations/wpforms.php
 		# Contact Form 7 is likewise optional; the callback only touches the
 		# submission behind an instanceof guard, which is also what trips the
-		# class.notFound report.
+		# class.notFound report. The [openporte] form-tag (1.30.3) adds CF7's
+		# registration function, called only from CF7's own wpcf7_init action,
+		# and the WPCF7_FormTag that CF7 hands to the tag's handler.
 		-
-			message: '#(unknown class|Class) WPCF7_Submission#'
+			message: '#(unknown class|Class|invalid type) (WPCF7_Submission|WPCF7_FormTag)#'
+			path: integrations/contact-form-7.php
+		-
+			message: '#^Function wpcf7_add_form_tag not found\.$#'
 			path: integrations/contact-form-7.php
