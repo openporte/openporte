@@ -108,8 +108,10 @@ at the same time.
 The `[altcha]` shortcode, the `altcha/v1` REST namespace and the `altcha_*`
 hooks remain available as **deprecated aliases** of their `openporte`
 equivalents. These aliases do not imply full feature parity with ALTCHA v1.
-Integrations for paid-only plugins (e.g. Enfold) are also **deprecated** and
-will be removed.
+
+OpenPorte continues to support integrations with third-party plugins and themes,
+including paid products. These integrations are not deprecated because the
+target product is paid.
 
 ### Custom API compatibility
 
@@ -129,8 +131,8 @@ Protection v2/v3 WordPress plugin instead.
 
 - CoBlocks
 - Contact Form 7
-- Elementor Pro Forms (deprecated — paid plugin)
-- Enfold Theme (deprecated — paid plugin)
+- Elementor Pro Forms
+- Enfold Theme
 - Formidable Forms
 - Forminator
 - GravityForms

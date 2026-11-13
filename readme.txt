@@ -153,8 +153,6 @@ scheduled for removal in a future release:
   hook mechanism; use the `openporte_*` equivalents.
 * The `AltchaPlugin` class and the `ALTCHA_VERSION` / `ALTCHA_WIDGET_VERSION`
   constants — use `OpenPortePlugin` and the `OPENPORTE_*` constants.
-* Integrations targeting paid-only third-party plugins; affected users should
-  migrate to the official ALTCHA v2/v3 plugin.
 * The "Custom HTML" integration (auto-configuration of hand-written
   `<altcha-widget>` tags) — place the `[openporte]` shortcode instead. You can
   re-enable it for now under Settings → OpenPorte → Integrations.
@@ -346,11 +344,16 @@ plugin are never touched. On multisite, this cleanup covers only the current
 site's options table, not every site in the network. See **Downgrading OpenPorte**
 for the reset limitations, including re-import of legacy ALTCHA settings.
 
+OpenPorte continues to support integrations with third-party plugins and themes,
+including paid products. These integrations are not deprecated because the
+target product is paid.
+
 == Supported Integrations ==
 
 * CoBlocks
 * Contact Form 7
-* Elementor Pro Forms (deprecated — paid plugin, see Deprecations)
+* Elementor Pro Forms
+* Enfold Theme
 * Formidable Forms
 * Forminator
 * GravityForms
