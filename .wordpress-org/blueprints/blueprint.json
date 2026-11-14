@@ -1,0 +1,82 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "meta": {
+    "title": "Try OpenPorte with Contact Form 7",
+    "author": "openporte",
+    "description": "Try a message-only form with real OpenPorte verification, then explore its settings."
+  },
+  "landingPage": "/",
+  "preferredVersions": {
+    "php": "8.3",
+    "wp": "latest"
+  },
+  "login": true,
+  "steps": [
+    {
+      "step": "setSiteLanguage",
+      "language": "en_US"
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "contact-form-7"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "openporte"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installTheme",
+      "themeData": {
+        "resource": "wordpress.org/themes",
+        "slug": "twentytwentyfive"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "mkdir",
+      "path": "/wordpress/wp-content/mu-plugins/openporte-demo"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/openporte-demo/content.php",
+      "data": "<?php\n/**\n * English source strings for the Playground demo (separate gettext domain).\n *\n * @package OpenPorteDemo\n */\n\n/**\n * Get demo copy after the selected locale and translation catalogue are loaded.\n *\n * @since 1.31.0\n * @return array<string, string> Complete strings, keyed by stable identifiers.\n */\nfunction openporte_demo_content() {\n  return array(\n    'title'       => __( 'Try OpenPorte', 'openporte-demo' ),\n    'intro'       => __( 'Try a Contact Form 7 form protected by OpenPorte. Write a sample message, tick the verification box, and submit. No puzzles to solve.', 'openporte-demo' ),\n    'notice'      => __( 'Demo only—no email is sent.', 'openporte-demo' ),\n    'message'     => __( 'Message', 'openporte-demo' ),\n    'placeholder' => __( 'Hello from the OpenPorte demo!', 'openporte-demo' ),\n    'submit'      => __( 'Submit message', 'openporte-demo' ),\n    'success'     => __( 'Verification successful. Your demo message was accepted. No email was sent.', 'openporte-demo' ),\n    'invalid'     => __( 'Please check the message field and try again.', 'openporte-demo' ),\n    'required'    => __( 'Please enter a sample message.', 'openporte-demo' ),\n    'spam'        => __( 'Verification could not be completed. Please verify again and retry your message.', 'openporte-demo' ),\n    'failed'      => __( 'The demo could not accept your message. Please try again.', 'openporte-demo' ),\n    'setup'       => __( 'See how this is set up', 'openporte-demo' ),\n    'explanation' => __( 'OpenPorte generates and verifies a small proof-of-work challenge within WordPress. The Contact Form 7 integration adds the widget and checks the result when the form is submitted.', 'openporte-demo' ),\n    'settings'    => __( 'Explore OpenPorte settings', 'openporte-demo' ),\n    'edit_form'   => __( 'View the Contact Form 7 form', 'openporte-demo' ),\n    'return'      => __( 'Back to demo', 'openporte-demo' ),\n    'next'        => __( 'Use OpenPorte on your site', 'openporte-demo' ),\n    'install'     => __( 'Install and activate OpenPorte and Contact Form 7 from the WordPress plugin directory.', 'openporte-demo' ),\n    'enable'      => __( 'Under Settings → OpenPorte Anti-spam → Integrations, enable Contact Form 7. Keep the default self-hosted mode; no external account is needed.', 'openporte-demo' ),\n    'publish'     => __( 'Create and publish your contact form, then test a submission as a visitor. Configure email delivery for your own site; it is disabled only in this demo.', 'openporte-demo' ),\n    'docs'        => __( 'Documentation', 'openporte-demo' ),\n    'support'     => __( 'Community support', 'openporte-demo' ),\n    'reset'       => __( 'Want to start over? Open a new Preview from the OpenPorte listing on WordPress.org to create a fresh demo. Reloading this page keeps your current changes.', 'openporte-demo' ),\n    'listing'     => __( 'OpenPorte on WordPress.org', 'openporte-demo' ),\n  );\n}\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/openporte-demo/demo.css",
+      "data": ".openporte-demo {\n  max-inline-size: 42rem;\n  margin-inline: auto;\n}\n\n.openporte-demo textarea {\n  box-sizing: border-box;\n  inline-size: 100%;\n  max-inline-size: 100%;\n  min-block-size: 8rem;\n  font: inherit;\n  padding: 0.75rem;\n}\n\n.openporte-demo .wpcf7-submit {\n  margin-block-start: 1rem;\n  padding: 0.65rem 1.25rem;\n  font: inherit;\n  cursor: pointer;\n}\n\n.openporte-demo details {\n  margin-block: 2rem;\n  padding: 1rem;\n  border: 1px solid currentColor;\n}\n\n.openporte-demo summary {\n  cursor: pointer;\n  font-weight: 600;\n}\n\n.openporte-demo li {\n  margin-block: 0.75rem;\n}\n\n.openporte-demo-note {\n  font-size: 0.9em;\n}\n\n.openporte-demo :focus-visible {\n  outline: 2px solid currentColor;\n  outline-offset: 4px;\n}\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/wordpress/wp-content/mu-plugins/openporte-demo.php",
+      "data": "<?php\n/**\n * Plugin Name: OpenPorte Playground demo\n * Description: Navigation and presentation for the temporary demo only.\n * Author: OpenPorte contributors\n * License: GPL-2.0-or-later\n * Text Domain: openporte-demo\n *\n * @package OpenPorteDemo\n */\n\nif ( ! defined( 'ABSPATH' ) ) {\n  exit;\n}\n\nrequire_once __DIR__ . '/openporte-demo/content.php';\n\n/**\n * Load the demo's catalogue independently of OpenPorte's translations.\n *\n * @since 1.31.0\n * @return void\n */\nfunction openporte_demo_load_textdomain() {\n  load_muplugin_textdomain( 'openporte-demo', 'openporte-demo/languages' );\n}\nadd_action( 'init', 'openporte_demo_load_textdomain' );\n\n/**\n * Link to the actual settings and generated form, including after URL changes.\n *\n * @since 1.31.0\n * @return string Escaped navigation markup.\n */\nfunction openporte_demo_links() {\n  $copy     = openporte_demo_content();\n  $settings = admin_url( 'options-general.php?page=openporte_admin' );\n  $form     = add_query_arg(\n    array( 'page' => 'wpcf7', 'post' => (int) get_option( 'openporte_demo_form_id' ), 'action' => 'edit' ),\n    admin_url( 'admin.php' )\n  );\n  return '<ul><li><a href=\"' . esc_url( $settings ) . '\">' . esc_html( $copy['settings'] ) . '</a></li><li><a href=\"' . esc_url( $form ) . '\">' . esc_html( $copy['edit_form'] ) . '</a></li></ul>';\n}\nadd_shortcode( 'openporte_demo_links', 'openporte_demo_links' );\n\n/**\n * Offer a return route from the two configuration screens.\n *\n * @since 1.31.0\n * @return void\n */\nfunction openporte_demo_admin_notice() {\n  $screen = get_current_screen();\n  // CF7's editor may be a top-level page or a submenu of its dashboard.\n  if ( ! $screen || ( 'settings_page_openporte_admin' !== $screen->id && ! preg_match( '/_page_wpcf7$/', $screen->id ) ) ) {\n    return;\n  }\n  $url = get_permalink( (int) get_option( 'openporte_demo_page_id' ) );\n  if ( $url && current_user_can( 'manage_options' ) ) {\n    $copy = openporte_demo_content();\n    echo '<div class=\"notice notice-info\"><p><a href=\"' . esc_url( $url ) . '\">' . esc_html( $copy['return'] ) . '</a></p></div>';\n  }\n}\nadd_action( 'admin_notices', 'openporte_demo_admin_notice' );\n\n/**\n * Apply the small demo stylesheet only to the generated landing page.\n *\n * @since 1.31.0\n * @return void\n */\nfunction openporte_demo_styles() {\n  if ( is_page( (int) get_option( 'openporte_demo_page_id' ) ) ) {\n    wp_enqueue_style( 'openporte-demo', WPMU_PLUGIN_URL . '/openporte-demo/demo.css', array(), '1.31.0' );\n  }\n}\nadd_action( 'wp_enqueue_scripts', 'openporte_demo_styles' );\n"
+    },
+    {
+      "step": "writeFile",
+      "path": "/tmp/openporte-demo-setup.php",
+      "data": "<?php\n/**\n * Seed the temporary Playground site after both plugins have been activated.\n *\n * @package OpenPorteDemo\n */\n\n/**\n * Create or refresh the demo without depending on titles or fixed database IDs.\n *\n * @since 1.31.0\n * @return void\n * @throws RuntimeException When dependencies or content creation fail.\n */\nfunction openporte_demo_setup() {\n  if ( ! class_exists( 'WPCF7_ContactForm' ) || ! class_exists( 'OpenPortePlugin' ) ) {\n    throw new RuntimeException( 'The demo requires active Contact Form 7 and OpenPorte plugins.' );\n  }\n\n  $copy = openporte_demo_content();\n  update_option( OpenPortePlugin::$option_api, 'selfhosted' );\n  update_option( OpenPortePlugin::$option_selfhosted_transport, 'rest' );\n  update_option( OpenPortePlugin::$option_integration_contact_form_7, 1 );\n  update_option( OpenPortePlugin::$option_auto, '' );\n  update_option( OpenPortePlugin::$option_floating, '' );\n\n  $form = WPCF7_ContactForm::get_instance( (int) get_option( 'openporte_demo_form_id' ) );\n  if ( ! $form ) {\n    $form = WPCF7_ContactForm::get_template( array( 'locale' => get_locale() ) );\n  }\n  $form->set_title( $copy['title'] );\n  $messages                    = $form->prop( 'messages' );\n  $messages['mail_sent_ok']     = $copy['success'];\n  $messages['mail_sent_ng']     = $copy['failed'];\n  $messages['validation_error'] = $copy['invalid'];\n  $messages['invalid_required'] = $copy['required'];\n  $messages['spam']             = $copy['spam'];\n  $form->set_properties(\n    array(\n      // OpenPorte inserts the widget through its normal CF7 integration.\n      'form'                => '<label for=\"demo-message\">' . esc_html( $copy['message'] ) . '</label>' . \"\\n\"\n        . '[textarea* demo-message id:demo-message 40x5 placeholder \"' . esc_attr( $copy['placeholder'] ) . '\"]' . \"\\n\"\n        . '[submit \"' . esc_attr( $copy['submit'] ) . '\"]',\n      'messages'            => $messages,\n      // Suppress delivery only; the real spam/verification pipeline still runs.\n      'additional_settings' => \"skip_mail: on\\ndo_not_store: true\",\n    )\n  );\n  $form->save();\n  $form_id = $form->id();\n  if ( ! $form_id ) {\n    throw new RuntimeException( 'Could not create the demo form.' );\n  }\n  update_option( 'openporte_demo_form_id', $form_id );\n\n  $content = '<div class=\"openporte-demo\">'\n    . '<p>' . esc_html( $copy['intro'] ) . '</p>'\n    . '<p class=\"openporte-demo-note\">' . esc_html( $copy['notice'] ) . '</p>'\n    . '[contact-form-7 id=\"' . (int) $form_id . '\"]'\n    . '<details><summary>' . esc_html( $copy['setup'] ) . '</summary>'\n    . '<p>' . esc_html( $copy['explanation'] ) . '</p>[openporte_demo_links]</details>'\n    . '<h2>' . esc_html( $copy['next'] ) . '</h2><ol>'\n    . '<li>' . esc_html( $copy['install'] ) . '</li>'\n    . '<li>' . esc_html( $copy['enable'] ) . '</li>'\n    . '<li>' . esc_html( $copy['publish'] ) . '</li></ol>'\n    . '<p><a href=\"https://wordpress.org/plugins/openporte/#faq\">' . esc_html( $copy['docs'] ) . '</a> · '\n    . '<a href=\"https://wordpress.org/support/plugin/openporte/\">' . esc_html( $copy['support'] ) . '</a></p>'\n    . '<hr><p>' . esc_html( $copy['reset'] ) . '</p>'\n    . '<p><a href=\"https://wordpress.org/plugins/openporte/\">' . esc_html( $copy['listing'] ) . '</a></p></div>';\n\n  $page_id = (int) get_option( 'openporte_demo_page_id' );\n  $page_id = wp_insert_post(\n    array(\n      'ID'             => get_post( $page_id ) ? $page_id : 0,\n      'post_type'      => 'page',\n      'post_name'      => 'openporte-demo',\n      'post_title'     => $copy['title'],\n      'post_content'   => wp_slash( $content ),\n      'post_status'    => 'publish',\n      'comment_status' => 'closed',\n    ),\n    true\n  );\n  if ( is_wp_error( $page_id ) ) {\n    throw new RuntimeException( esc_html( $page_id->get_error_message() ) );\n  }\n  update_option( 'openporte_demo_page_id', $page_id );\n  update_option( 'show_on_front', 'page' );\n  update_option( 'page_on_front', $page_id );\n  update_option( 'blogname', $copy['title'] );\n  update_option( 'blogdescription', '' );\n\n  // A focused front-page template avoids the theme's sample navigation/footer.\n  $template_id = (int) get_option( 'openporte_demo_template_id' );\n  $template_id = wp_insert_post(\n    array(\n      'ID'           => get_post( $template_id ) ? $template_id : 0,\n      'post_type'    => 'wp_template',\n      'post_name'    => 'front-page',\n      'post_title'   => $copy['title'],\n      'post_status'  => 'publish',\n      'post_content' => '<!-- wp:group {\"tagName\":\"main\",\"style\":{\"spacing\":{\"padding\":{\"top\":\"2rem\",\"bottom\":\"2rem\",\"left\":\"1rem\",\"right\":\"1rem\"}}},\"layout\":{\"type\":\"constrained\",\"contentSize\":\"42rem\"}} -->'\n        . '<main class=\"wp-block-group\" style=\"padding-top:2rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem\">'\n        . '<!-- wp:post-title {\"level\":1} /--><!-- wp:post-content /--></main><!-- /wp:group -->',\n    ),\n    true\n  );\n  if ( is_wp_error( $template_id ) ) {\n    throw new RuntimeException( esc_html( $template_id->get_error_message() ) );\n  }\n  wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );\n  update_option( 'openporte_demo_template_id', $template_id );\n}\n"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php require '/wordpress/wp-load.php'; require '/tmp/openporte-demo-setup.php'; openporte_demo_setup();"
+    },
+    {
+      "step": "rm",
+      "path": "/tmp/openporte-demo-setup.php"
+    }
+  ]
+}

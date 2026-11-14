@@ -64,6 +64,7 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="openporte"/>
+				<element value="openporte-demo"/>
 			</property>
 		</properties>
 	</rule>

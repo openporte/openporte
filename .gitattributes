@@ -21,6 +21,7 @@
 # Documents
 *.md text eol=lf
 docs/** linguist-documentation
+.wordpress-org/blueprints/blueprint.json linguist-generated
 *.po text eol=lf linguist-documentation
 *.pot text eol=lf linguist-documentation
 *.mo binary linguist-generated

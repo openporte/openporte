@@ -34,6 +34,8 @@ jobs:
           fi
       - name: Install Subversion
         run: sudo apt-get update && sudo apt-get install -y subversion
+      - name: Check generated Playground blueprint
+        run: npm run demo:check
       - name: WordPress Plugin Publish
         # Pinned to a commit SHA (supply-chain hardening); the trailing comment
         # tracks the human-readable version. 2.3.0 is the current @stable.

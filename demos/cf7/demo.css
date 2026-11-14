@@ -1,0 +1,44 @@
+.openporte-demo {
+  max-inline-size: 42rem;
+  margin-inline: auto;
+}
+
+.openporte-demo textarea {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-block-size: 8rem;
+  font: inherit;
+  padding: 0.75rem;
+}
+
+.openporte-demo .wpcf7-submit {
+  margin-block-start: 1rem;
+  padding: 0.65rem 1.25rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.openporte-demo details {
+  margin-block: 2rem;
+  padding: 1rem;
+  border: 1px solid currentColor;
+}
+
+.openporte-demo summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.openporte-demo li {
+  margin-block: 0.75rem;
+}
+
+.openporte-demo-note {
+  font-size: 0.9em;
+}
+
+.openporte-demo :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}

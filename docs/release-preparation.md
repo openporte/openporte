@@ -22,6 +22,7 @@ their linked section.
 | `npm run release:version -- X.Y.Z` | Bump the version in `openporte.php`/`readme.txt` — Phase 1 |
 | `npm run release:i18n -- X.Y.Z` | Regenerate `.pot`/`.po`/`.mo` — Phase 2 (only if strings changed) |
 | `npm run release:assets` | Sync WordPress.org listing icons from `share/branding` — Phase 7 (only if branding changed) |
+| `npm run demo:build` / `npm run demo:check` | Generate/check the [Playground demo](playground-demo.md); validate before publishing preview assets |
 | `npm run release:check` | Run `php -l`/`bash -n` (blocking) and `phpcs`/`phpstan` (informative) — Phase 4 |
 | `npm run release:dist` | Build and verify the local/archival zip — Phase 7 |
 | `npm run release:tag -- vX.Y.Z` | Create the signed, annotated release tag (does not push) — Phase 7 |
