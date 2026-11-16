@@ -1080,8 +1080,10 @@ brute-forceable, so this is hardening rather than exposure.
     itself adds gives 0.0 ("None"), which would contradict Low; leaving the
     score out avoids both. The 1.30.0 changelog and release notes are left
     as published.
-  - **CVE request withdrawn.** The request to GitHub's CNA, pending since
-    1.30.0, was withdrawn: a Low protection failure that WPScan does not
-    track is not worth a CVE. The advisory stands on its GHSA ID alone.
+  - **CVE request left pending.** A Low protection failure that WPScan does
+    not track is not worth a CVE, but the request to GitHub's CNA, made at
+    1.30.0, cannot be cancelled from the advisory. It is left to GitHub: if
+    they assign an ID, record it here; if they decline, nothing changes and
+    the advisory stands on its GHSA ID alone.
   - Findings #13 and #22 were also submitted to WPScan and are still under
     analysis.
