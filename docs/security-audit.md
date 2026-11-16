@@ -1078,6 +1078,10 @@ brute-forceable, so this is hardening rather than exposure.
     without a CVSS score: the former CVSS 4.0 score (6.9) took all its impact
     from `VC:L`, which only the oracle justified. Scoring only what OpenPorte
     itself adds gives 0.0 ("None"), which would contradict Low; leaving the
-    score out avoids both. The 1.30.0 changelog and release notes are left as published.
+    score out avoids both. The 1.30.0 changelog and release notes are left
+    as published.
+  - **CVE request withdrawn.** The request to GitHub's CNA, pending since
+    1.30.0, was withdrawn: a Low protection failure that WPScan does not
+    track is not worth a CVE. The advisory stands on its GHSA ID alone.
   - Findings #13 and #22 were also submitted to WPScan and are still under
     analysis.
