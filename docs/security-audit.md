@@ -1076,8 +1076,8 @@ brute-forceable, so this is hardening rather than exposure.
   - **GHSA-8g7w-538v-w54x is updated to match.** CWE-204 and CWE-307 replaced
     by CWE-693; the oracle wording dropped. Severity is set to Low by hand,
     without a CVSS score: the former CVSS 4.0 score (6.9) took all its impact
-    from `VC:L`, which only the oracle justified. Scoring what OpenPorte
-    itself adds gives no impact at all, so no score is honest and still reads
-    as Low. The 1.30.0 changelog and release notes are left as published.
+    from `VC:L`, which only the oracle justified. Scoring only what OpenPorte
+    itself adds gives 0.0 ("None"), which would contradict Low; leaving the
+    score out avoids both. The 1.30.0 changelog and release notes are left as published.
   - Findings #13 and #22 were also submitted to WPScan and are still under
     analysis.
