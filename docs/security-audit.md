@@ -77,7 +77,7 @@ logic**; the rest are low-severity hardening items.
 | 11 | Unused dead code from the removed paid-SaaS path | Attack surface / maintainability | `core.php` | Info | **Fixed** |
 | 12 | Inline-script JSON not hardened against `</script>` breakout | XSS (defence in depth) | `integrations/custom.php` | Info | **Fixed** |
 | 13 | Solved challenges accepted after their expiry | Replay / weak verification | `verify_solution()` | Medium | **Fixed (1.30.0)** |
-| 14 | Login challenge checked only after the password | Brute force / oracle | `integrations/wordpress.php`, `integrations/woocommerce.php` | Medium | **Fixed (1.30.0)** |
+| 14 | Login challenge checked only after the password | Protection mechanism failure (CWE-693) | `integrations/wordpress.php`, `integrations/woocommerce.php` | Low | **Fixed (1.30.0)** |
 | 15 | Forged WooCommerce field skips login and reset checks | CAPTCHA bypass | `integrations/wordpress.php`, `integrations/woocommerce.php` | Medium | **Fixed (1.30.0)** |
 | 16 | CoBlocks reCAPTCHA overridden while the integration is off | CAPTCHA bypass | `integrations/coblocks.php` | Medium | **Fixed (1.30.0)** |
 | 17 | Site endpoints issue challenges in Custom API mode | CAPTCHA policy bypass | challenge endpoints in `includes/core.php` | Low | **Fixed (1.30.0)** |
@@ -651,17 +651,23 @@ a refused token writes no replay state. Pinned by `VerifyPrimitivesTest`
 (accepted shapes, 14 refused shapes each correctly signed, integral JSON floats,
 and the boundary regression for all three algorithms).
 
-### 14. Login challenge checked only after the password — Medium — Fixed (1.30.0)
+### 14. Login challenge checked only after the password — Low — Fixed (1.30.0)
 
-**Type:** Brute force / password-correctness oracle.
+**Type:** Protection mechanism failure (CWE-693).
 **Location:** `integrations/wordpress.php`, `integrations/woocommerce.php`.
 **Present since:** ALTCHA Spam Protection 0.3.2 (the first release).
+**Advisory:** GHSA-8g7w-538v-w54x. Reclassified from Medium after release (see
+"Maintainer decisions on record").
 
 The login checks ran on `authenticate` at priority 20, after core's own
 credential check registered at the same priority (and so running first). A wrong
 password failed before the challenge was looked at, so password guessing cost
-no proof-of-work, and a correct guess stood out by getting the CAPTCHA error
-instead of "incorrect password".
+no proof-of-work: the login protection did not do what it advertised. A correct
+guess stood out by getting the CAPTCHA error instead of "incorrect password",
+but that is no oracle: core already answers a correct password differently from
+a wrong one, and ships no CAPTCHA, lockout or rate limit on its login form. An
+affected site was therefore no more exposed than one without the protection.
+That is why this is Low and not Medium.
 
 **Fix applied.** Both integrations check the challenge on `wp_authenticate_user`,
 which core applies after the user lookup and before `wp_check_password()`, in
@@ -1057,3 +1063,27 @@ brute-forceable, so this is hardening rather than exposure.
   - **The Contact Form 7 form-tag ignores `mode`.** A tag mixing another
     quoted attribute with `language="…"` loses its language. Both are
     accepted limitations (ADR 0001).
+- **Finding 14 (login challenge after the password), reclassified 2026-11-16:**
+  - **WPScan rejected it** (submission #62869). WordPress core has no CAPTCHA,
+    lockout or rate limit on its login form and already tells a wrong password
+    from a right one, so a login-only CAPTCHA that runs after the password
+    check gives an attacker nothing an unprotected login does not. They track
+    a CAPTCHA bypass as a vulnerability only when it reaches comment,
+    registration or contact forms. Their reasoning holds.
+  - **Downgraded from Medium to Low**, and retyped from "brute force /
+    password-correctness oracle" to protection mechanism failure (CWE-693). It
+    stays a security fix: admins who turned on login protection did not get it.
+  - **GHSA-8g7w-538v-w54x is updated to match.** CWE-204 and CWE-307 replaced
+    by CWE-693; the oracle wording dropped. Severity is set to Low by hand,
+    without a CVSS score: the former CVSS 4.0 score (6.9) took all its impact
+    from `VC:L`, which only the oracle justified. Scoring only what OpenPorte
+    itself adds gives 0.0 ("None"), which would contradict Low; leaving the
+    score out avoids both. The 1.30.0 changelog and release notes are left
+    as published.
+  - **CVE request left pending.** A Low protection failure that WPScan does
+    not track is not worth a CVE, but the request to GitHub's CNA, made at
+    1.30.0, cannot be cancelled from the advisory. It is left to GitHub: if
+    they assign an ID, record it here; if they decline, nothing changes and
+    the advisory stands on its GHSA ID alone.
+  - Findings #13 and #22 were also submitted to WPScan and are still under
+    analysis.
