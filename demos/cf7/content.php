@@ -5,6 +5,31 @@
  * @package OpenPorteDemo
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+  exit;
+}
+
+/**
+ * Demo form option key.
+ *
+ * @since 1.31.0
+ */
+const OPENPORTE_DEMO_FORM_ID = 'openporte_demo_form_id';
+
+/**
+ * Demo page option key.
+ *
+ * @since 1.31.0
+ */
+const OPENPORTE_DEMO_PAGE_ID = 'openporte_demo_page_id';
+
+/**
+ * Demo template option key.
+ *
+ * @since 1.31.0
+ */
+const OPENPORTE_DEMO_TEMPLATE_ID = 'openporte_demo_template_id';
+
 /**
  * Get demo copy after the selected locale and translation catalogue are loaded.
  *
@@ -31,6 +56,7 @@ function openporte_demo_content() {
     'return'      => __( 'Back to demo', 'openporte-demo' ),
     'next'        => __( 'Use OpenPorte on your site', 'openporte-demo' ),
     'install'     => __( 'Install and activate OpenPorte and Contact Form 7 from the WordPress plugin directory.', 'openporte-demo' ),
+    /* translators: Settings is the WordPress menu; OpenPorte Anti-spam and Integrations must match the plugin's translated menu/tab labels. */
     'enable'      => __( 'Under Settings → OpenPorte Anti-spam → Integrations, enable Contact Form 7. Keep the default self-hosted mode; no external account is needed.', 'openporte-demo' ),
     'publish'     => __( 'Create and publish your contact form, then test a submission as a visitor. Configure email delivery for your own site; it is disabled only in this demo.', 'openporte-demo' ),
     'docs'        => __( 'Documentation', 'openporte-demo' ),

@@ -17,16 +17,26 @@ storage are disabled. Settings exploration is optional.
   `.wordpress-org/blueprints/blueprint.json`. Do not hand-edit the output.
 
 ```sh
+npm ci --ignore-scripts
 npm run demo:build
 npm run demo:check
 ```
 
-Generation uses Node.js built-ins and requires no npm installation. All demo
+Generation requires Node.js 24.18+ and npm 11.16+. The lockfile pins the
+Playground schema validator (`@wp-playground/blueprints` 3.1.64); validation
+runs locally without fetching a schema at check time. Upgrade the validator
+explicitly when adopting new blueprint features. All demo
 setup files are embedded; the preview downloads WordPress, released OpenPorte,
 CF7, and Twenty Twenty-Five from WordPress.org. PHP is set to 8.3, WordPress to
 `latest`, and the locale to `en_US`. Each fresh launch follows the public plugin
 releases; it does not install the current Git branch. For release-candidate
 testing, use a temporary copy of the blueprint pointing at the candidate zip.
+
+The seeded site title and minimal front-page template keep the visitor focused
+on the form. REST is selected explicitly for a predictable starting transport;
+visitors can change it in settings. These choices affect only the demo site.
+The generated helper uses a hash of `demo.css` as its cache version, so directory
+asset updates do not depend on a new plugin release.
 
 The plugin's normal CF7 integration inserts the widget and checks the proof.
 The sample form uses `skip_mail: on` and `do_not_store: true`. Do not enable
@@ -41,8 +51,9 @@ listing creates a fresh instance. Reloading the page is not a reset.
 ## Validate before publication
 
 First run `npm run demo:check`, PHP syntax checks on `demos/cf7/*.php`, and the
-repository's PHP analysers. Validate the JSON against
-<https://playground.wordpress.net/blueprint-schema.json>.
+repository's PHP analysers. `demo:check` validates against the pinned Playground
+schema and checks that the committed JSON matches the source. Both checks also
+run in PR CI and before deployment.
 
 Launch the generated JSON in Playground (import it through Playground's
 Blueprint interface), or serve it locally with the Playground CLI:
@@ -66,13 +77,23 @@ OPENPORTE_PLAYGROUND_URL=http://127.0.0.1:9400 npm run test:playground
 The demo test skips during the ordinary wp-env matrix unless its URL is supplied.
 
 The automated journey covers the message-only form, real proof solving, repeated
-successful submissions, direct missing/invalid-proof rejection, settings/editor
-navigation, keyboard interaction, a narrow viewport, and logged-out submission.
-It also checks for uncaught browser errors. Manually check readable status
-messages, empty-message validation, configuration changes followed by retrying
-the form, and recovery through a new Preview. Inspect PHP/browser logs and
-confirm no outgoing mail or message storage. Record the WordPress, PHP,
-OpenPorte, CF7, and Playground versions used in the PR/release checks.
+successful submissions, empty-message validation, and direct missing/invalid-proof
+rejection in authenticated and anonymous REST requests. The authenticated cases
+obtain a REST nonce from WordPress's logged-in admin AJAX action and check
+`wp/v2/users/me` using the same credentials as the CF7 POSTs. A valid proof must
+also succeed with those credentials. The test changes REST transport to AJAX,
+saves, returns and submits, then restores REST. It exercises the form editor,
+a complete keyboard submission with confirmation, and a narrow viewport.
+It also checks for uncaught browser errors. Manually check status-message
+readability and recovery through a new Preview. Inspect PHP/browser logs and
+confirm no outgoing mail or message storage.
+
+Initial validation (2026-11-14): Playground CLI **3.1.64**, WordPress **7.1.4**,
+PHP **8.3**, OpenPorte **1.30.3**, and Contact Form 7 **6.2.5**. These are tested
+versions, not pins in the public blueprint. Revalidated on **2026-11-17** with
+the same versions: the expanded browser journey passed, repeated setup kept
+the same IDs, and the mail-attempt guard remained unused. Record updated
+versions here when revalidating the preview.
 
 ## Translation later
 
@@ -99,7 +120,8 @@ of navigation and layout. No language picker or additional locale ships yet.
 The pinned 10up deployment action defaults `ASSETS_DIR` to `.wordpress-org`,
 recursively copies it to SVN `assets/`, and runs `svn add --force`. Nested
 `blueprints/blueprint.json` is therefore included. The release workflow checks
-that the generated file matches its sources before deploying. The existing
+that the generated file matches its sources and passes schema validation before
+deploying. The existing
 branding sync script copies named images and leaves the blueprint directory alone.
 
 1. Publish through the normal release process. Demo sources and helpers are

@@ -36,7 +36,11 @@ function openporte_demo_links() {
   $copy     = openporte_demo_content();
   $settings = admin_url( 'options-general.php?page=openporte_admin' );
   $form     = add_query_arg(
-    array( 'page' => 'wpcf7', 'post' => (int) get_option( 'openporte_demo_form_id' ), 'action' => 'edit' ),
+    array(
+      'page'   => 'wpcf7',
+      'post'   => (int) get_option( OPENPORTE_DEMO_FORM_ID ),
+      'action' => 'edit',
+    ),
     admin_url( 'admin.php' )
   );
   return '<ul><li><a href="' . esc_url( $settings ) . '">' . esc_html( $copy['settings'] ) . '</a></li><li><a href="' . esc_url( $form ) . '">' . esc_html( $copy['edit_form'] ) . '</a></li></ul>';
@@ -55,7 +59,7 @@ function openporte_demo_admin_notice() {
   if ( ! $screen || ( 'settings_page_openporte_admin' !== $screen->id && ! preg_match( '/_page_wpcf7$/', $screen->id ) ) ) {
     return;
   }
-  $url = get_permalink( (int) get_option( 'openporte_demo_page_id' ) );
+  $url = get_permalink( (int) get_option( OPENPORTE_DEMO_PAGE_ID ) );
   if ( $url && current_user_can( 'manage_options' ) ) {
     $copy = openporte_demo_content();
     echo '<div class="notice notice-info"><p><a href="' . esc_url( $url ) . '">' . esc_html( $copy['return'] ) . '</a></p></div>';
@@ -70,8 +74,8 @@ add_action( 'admin_notices', 'openporte_demo_admin_notice' );
  * @return void
  */
 function openporte_demo_styles() {
-  if ( is_page( (int) get_option( 'openporte_demo_page_id' ) ) ) {
-    wp_enqueue_style( 'openporte-demo', WPMU_PLUGIN_URL . '/openporte-demo/demo.css', array(), '1.31.0' );
+  if ( is_page( (int) get_option( OPENPORTE_DEMO_PAGE_ID ) ) ) {
+    wp_enqueue_style( 'openporte-demo', WPMU_PLUGIN_URL . '/openporte-demo/demo.css', array(), 'OPENPORTE_DEMO_CSS_HASH' );
   }
 }
 add_action( 'wp_enqueue_scripts', 'openporte_demo_styles' );

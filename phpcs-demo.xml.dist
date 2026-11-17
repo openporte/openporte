@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ruleset name="openporte-demo">
+	<!-- Separate invocations keep text-domain properties scoped to each tree. -->
+	<file>demos</file>
+	<rule ref="bin/lint/phpcs-common.xml"/>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="openporte-demo"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

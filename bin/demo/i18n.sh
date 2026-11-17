@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# Usage: bin/demo/i18n.sh (requires WP-CLI with the i18n command).
 # Extract only demo strings; the plugin's openporte catalogue is unchanged.
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/../.."

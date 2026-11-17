@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-14T23:01:52+00:00\n"
+"POT-Creation-Date: 2026-11-17T00:04:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: openporte-demo\n"
@@ -29,98 +29,99 @@ msgstr ""
 msgid "OpenPorte contributors"
 msgstr ""
 
-#: content.php:16
+#: content.php:41
 msgid "Try OpenPorte"
 msgstr ""
 
-#: content.php:17
+#: content.php:42
 msgid "Try a Contact Form 7 form protected by OpenPorte. Write a sample message, tick the verification box, and submit. No puzzles to solve."
 msgstr ""
 
-#: content.php:18
+#: content.php:43
 msgid "Demo only—no email is sent."
 msgstr ""
 
-#: content.php:19
+#: content.php:44
 msgid "Message"
 msgstr ""
 
-#: content.php:20
+#: content.php:45
 msgid "Hello from the OpenPorte demo!"
 msgstr ""
 
-#: content.php:21
+#: content.php:46
 msgid "Submit message"
 msgstr ""
 
-#: content.php:22
+#: content.php:47
 msgid "Verification successful. Your demo message was accepted. No email was sent."
 msgstr ""
 
-#: content.php:23
+#: content.php:48
 msgid "Please check the message field and try again."
 msgstr ""
 
-#: content.php:24
+#: content.php:49
 msgid "Please enter a sample message."
 msgstr ""
 
-#: content.php:25
+#: content.php:50
 msgid "Verification could not be completed. Please verify again and retry your message."
 msgstr ""
 
-#: content.php:26
+#: content.php:51
 msgid "The demo could not accept your message. Please try again."
 msgstr ""
 
-#: content.php:27
+#: content.php:52
 msgid "See how this is set up"
 msgstr ""
 
-#: content.php:28
+#: content.php:53
 msgid "OpenPorte generates and verifies a small proof-of-work challenge within WordPress. The Contact Form 7 integration adds the widget and checks the result when the form is submitted."
 msgstr ""
 
-#: content.php:29
+#: content.php:54
 msgid "Explore OpenPorte settings"
 msgstr ""
 
-#: content.php:30
+#: content.php:55
 msgid "View the Contact Form 7 form"
 msgstr ""
 
-#: content.php:31
+#: content.php:56
 msgid "Back to demo"
 msgstr ""
 
-#: content.php:32
+#: content.php:57
 msgid "Use OpenPorte on your site"
 msgstr ""
 
-#: content.php:33
+#: content.php:58
 msgid "Install and activate OpenPorte and Contact Form 7 from the WordPress plugin directory."
 msgstr ""
 
-#: content.php:34
+#. translators: Settings is the WordPress menu; OpenPorte Anti-spam and Integrations must match the plugin's translated menu/tab labels.
+#: content.php:60
 msgid "Under Settings → OpenPorte Anti-spam → Integrations, enable Contact Form 7. Keep the default self-hosted mode; no external account is needed."
 msgstr ""
 
-#: content.php:35
+#: content.php:61
 msgid "Create and publish your contact form, then test a submission as a visitor. Configure email delivery for your own site; it is disabled only in this demo."
 msgstr ""
 
-#: content.php:36
+#: content.php:62
 msgid "Documentation"
 msgstr ""
 
-#: content.php:37
+#: content.php:63
 msgid "Community support"
 msgstr ""
 
-#: content.php:38
+#: content.php:64
 msgid "Want to start over? Open a new Preview from the OpenPorte listing on WordPress.org to create a fresh demo. Reloading this page keeps your current changes."
 msgstr ""
 
-#: content.php:39
+#: content.php:65
 msgid "OpenPorte on WordPress.org"
 msgstr ""

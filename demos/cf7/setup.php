@@ -5,6 +5,30 @@
  * @package OpenPorteDemo
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+  exit;
+}
+
+/**
+ * Create or update one seeded post and remember its ID.
+ *
+ * @since 1.31.0
+ * @param string $option  Demo option holding the post ID.
+ * @param array  $postarr Post fields passed to WordPress.
+ * @return int Saved post ID.
+ * @throws RuntimeException When WordPress cannot save the post.
+ */
+function openporte_demo_upsert_post( $option, $postarr ) {
+  $post_id       = (int) get_option( $option );
+  $postarr['ID'] = $post_id && get_post( $post_id ) ? $post_id : 0;
+  $post_id       = wp_insert_post( $postarr, true );
+  if ( is_wp_error( $post_id ) ) {
+    throw new RuntimeException( esc_html( $post_id->get_error_message() ) );
+  }
+  update_option( $option, $post_id );
+  return $post_id;
+}
+
 /**
  * Create or refresh the demo without depending on titles or fixed database IDs.
  *
@@ -24,12 +48,12 @@ function openporte_demo_setup() {
   update_option( OpenPortePlugin::$option_auto, '' );
   update_option( OpenPortePlugin::$option_floating, '' );
 
-  $form = WPCF7_ContactForm::get_instance( (int) get_option( 'openporte_demo_form_id' ) );
+  $form = WPCF7_ContactForm::get_instance( (int) get_option( OPENPORTE_DEMO_FORM_ID ) );
   if ( ! $form ) {
     $form = WPCF7_ContactForm::get_template( array( 'locale' => get_locale() ) );
   }
   $form->set_title( $copy['title'] );
-  $messages                    = $form->prop( 'messages' );
+  $messages                     = $form->prop( 'messages' );
   $messages['mail_sent_ok']     = $copy['success'];
   $messages['mail_sent_ng']     = $copy['failed'];
   $messages['validation_error'] = $copy['invalid'];
@@ -51,7 +75,7 @@ function openporte_demo_setup() {
   if ( ! $form_id ) {
     throw new RuntimeException( 'Could not create the demo form.' );
   }
-  update_option( 'openporte_demo_form_id', $form_id );
+  update_option( OPENPORTE_DEMO_FORM_ID, $form_id );
 
   $content = '<div class="openporte-demo">'
     . '<p>' . esc_html( $copy['intro'] ) . '</p>'
@@ -68,33 +92,26 @@ function openporte_demo_setup() {
     . '<hr><p>' . esc_html( $copy['reset'] ) . '</p>'
     . '<p><a href="https://wordpress.org/plugins/openporte/">' . esc_html( $copy['listing'] ) . '</a></p></div>';
 
-  $page_id = (int) get_option( 'openporte_demo_page_id' );
-  $page_id = wp_insert_post(
+  $page_id = openporte_demo_upsert_post(
+    OPENPORTE_DEMO_PAGE_ID,
     array(
-      'ID'             => get_post( $page_id ) ? $page_id : 0,
       'post_type'      => 'page',
       'post_name'      => 'openporte-demo',
       'post_title'     => $copy['title'],
       'post_content'   => wp_slash( $content ),
       'post_status'    => 'publish',
       'comment_status' => 'closed',
-    ),
-    true
+    )
   );
-  if ( is_wp_error( $page_id ) ) {
-    throw new RuntimeException( esc_html( $page_id->get_error_message() ) );
-  }
-  update_option( 'openporte_demo_page_id', $page_id );
   update_option( 'show_on_front', 'page' );
   update_option( 'page_on_front', $page_id );
   update_option( 'blogname', $copy['title'] );
   update_option( 'blogdescription', '' );
 
   // A focused front-page template avoids the theme's sample navigation/footer.
-  $template_id = (int) get_option( 'openporte_demo_template_id' );
-  $template_id = wp_insert_post(
+  $template_id = openporte_demo_upsert_post(
+    OPENPORTE_DEMO_TEMPLATE_ID,
     array(
-      'ID'           => get_post( $template_id ) ? $template_id : 0,
       'post_type'    => 'wp_template',
       'post_name'    => 'front-page',
       'post_title'   => $copy['title'],
@@ -102,12 +119,7 @@ function openporte_demo_setup() {
       'post_content' => '<!-- wp:group {"tagName":"main","style":{"spacing":{"padding":{"top":"2rem","bottom":"2rem","left":"1rem","right":"1rem"}}},"layout":{"type":"constrained","contentSize":"42rem"}} -->'
         . '<main class="wp-block-group" style="padding-top:2rem;padding-right:1rem;padding-bottom:2rem;padding-left:1rem">'
         . '<!-- wp:post-title {"level":1} /--><!-- wp:post-content /--></main><!-- /wp:group -->',
-    ),
-    true
+    )
   );
-  if ( is_wp_error( $template_id ) ) {
-    throw new RuntimeException( esc_html( $template_id->get_error_message() ) );
-  }
   wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );
-  update_option( 'openporte_demo_template_id', $template_id );
 }

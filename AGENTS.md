@@ -124,8 +124,9 @@ check `OpenPortePlugin::$instance->get_integration_*()` to decide whether to act
 - **Singleton access:** always `OpenPortePlugin::$instance`. Never call `new OpenPortePlugin()`.
 - **WP options keys:** all defined as `static` properties on `OpenPortePlugin` (e.g.,
 `OpenPortePlugin::$option_api`). Never hardcode the raw option string `"openporte_*"`
-anywhere — always reference the property. (The legacy `altcha_*` keys live only in the
-activation-time migration map.)
+anywhere in plugin code — always reference the property. Demo-owned option
+keys are defined separately as constants in `demos/cf7/content.php`. (The legacy
+`altcha_*` keys live only in the activation-time migration map.)
 - **i18n:** most user-facing strings use `__()` / `esc_html__()`. Exceptions exist (see
 fix-mes below) — follow the existing pattern when adding new strings.
 - **Static analysis**: only necessary for code changes, then read `@docs/agents/static-analysis.md`.
@@ -263,7 +264,9 @@ same schedule.
 
 The WordPress.org Playground preview is generated with `npm run demo:build`
 from `demos/cf7/`; do not hand-edit `.wordpress-org/blueprints/blueprint.json`.
-Run `npm run demo:check` after edits. Demo strings use the separate
+Install demo validation tooling with `npm ci --ignore-scripts` (Node.js 24.18+ /
+npm 11.16+). Run `npm run demo:check` after edits; it validates the schema and
+checks generated output. Demo strings use the separate
 `openporte-demo` gettext domain; `npm run demo:i18n` extracts its POT.
 The demo sources and helper are excluded from the installable plugin package.
 Setup, testing, and publication: @docs/playground-demo.md.

@@ -27,6 +27,12 @@ their linked section.
 | `npm run release:dist` | Build and verify the local/archival zip — Phase 7 |
 | `npm run release:tag -- vX.Y.Z` | Create the signed, annotated release tag (does not push) — Phase 7 |
 
+The Playground check is a deployment gate: stale generated output or a schema
+error stops publication before the SVN deployment action. Before tagging, run
+`npm ci --ignore-scripts` (Node.js 24.18+ / npm 11.16+), `npm run demo:build`,
+and `npm run demo:check`, then commit any regenerated blueprint. Fix failures
+on the release branch before creating the tag; do not bypass the gate.
+
 ## Phase 0 — Pre-flight
 
 1. **Branch.** `main` is protected — never commit the release prep directly to

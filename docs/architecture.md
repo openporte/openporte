@@ -1,14 +1,5 @@
 # Architecture
 
-## Playground preview assets
-
-The WordPress.org CF7 preview is generated from `demos/cf7` into
-`.wordpress-org/blueprints/blueprint.json`. Its setup and MU helper run only in
-the temporary Playground site and are excluded from the installable plugin.
-It uses the existing CF7 verification path without changing plugin runtime code.
-See [Playground demo](playground-demo.md) for generation, localisation, testing,
-and publication.
-
 > Maintainer / contributor reference. User-facing essentials (how to choose a
 > mode, the privacy stance) live in `readme.txt`; coding conventions live in
 > `AGENTS.md`. This document reflects the codebase as of **1.28.0** — after the
@@ -22,6 +13,15 @@ and publication.
 > identifiers still carry the `altcha_` prefix pending a follow-up cleanup.
 > References are by function name rather than line number on purpose — line
 > numbers in this codebase have already shifted several times.
+
+## Playground preview assets
+
+The WordPress.org CF7 preview is generated from `demos/cf7` into
+`.wordpress-org/blueprints/blueprint.json`. Its setup and MU helper run only in
+the temporary Playground site and are excluded from the installable plugin.
+It uses the existing CF7 verification path without changing plugin runtime code.
+See [Playground demo](playground-demo.md) for generation, localisation, testing,
+and publication.
 
 ## Overview and modes
 

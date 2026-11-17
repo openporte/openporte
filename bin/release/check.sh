@@ -21,7 +21,8 @@ else
 fi
 if [[ -n "$PHPCS" ]]; then
   echo "== phpcs (informative) =="
-  "$PHPCS" || true
+  "$PHPCS" --standard=phpcs.xml.dist || true
+  "$PHPCS" --standard=phpcs-demo.xml.dist || true
 else
   echo "phpcs not installed (composer install), skipping — informative only."
 fi
