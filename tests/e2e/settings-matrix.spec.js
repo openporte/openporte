@@ -7,6 +7,7 @@ const {
   expectTransport,
   waitForVerified,
   clickWidgetCheckbox,
+  solveWidgetWithMouse,
   tamperWidgetToken,
   removeWidgets,
   captureWidgetToken,
@@ -94,8 +95,7 @@ for (const driver of drivers) {
 
       await driver.open(page, ctx);
       await driver.fill(page, ctx, marker);
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       await tamperWidgetToken(page);
       await driver.submit(page, ctx);
       await driver.expectRejected(page, ctx);
@@ -114,8 +114,7 @@ for (const driver of drivers) {
 
           await driver.open(page, ctx);
           await driver.fill(page, ctx, marker);
-          await clickWidgetCheckbox(page);
-          await waitForVerified(page);
+          await solveWidgetWithMouse(page);
           // Capture the solved token and detach the widget: a live widget
           // auto-refetches expired challenges (refetchonexpire defaults on)
           // and would swap in a fresh token before we submit. Detaching turns

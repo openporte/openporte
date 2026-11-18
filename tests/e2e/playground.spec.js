@@ -1,5 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
+const { solveWidgetWithMouse } = require('./helpers');
+
 const demoURL = process.env.OPENPORTE_PLAYGROUND_URL;
 
 /** Post directly to CF7 so browser validation cannot mask a verification bypass. */
@@ -56,8 +58,7 @@ test.describe('WordPress.org Playground demo', () => {
     expect((await postProof(page, null, nonce)).status).toBe('spam');
     expect((await postProof(page, 'invalid-proof', nonce)).status).toBe('spam');
     await page.getByLabel('Message', { exact: true }).fill('Authenticated submission');
-    await page.locator('altcha-widget input[type="checkbox"]').click();
-    await expect(page.locator('altcha-widget .altcha')).toHaveAttribute('data-state', 'verified');
+    await solveWidgetWithMouse(page);
     const proof = await page.locator('input[name="altcha"]').inputValue();
     expect((await postProof(page, proof, nonce)).status).toBe('mail_sent');
     await page.reload();
@@ -69,8 +70,7 @@ test.describe('WordPress.org Playground demo', () => {
 
     for (let attempt = 0; attempt < 2; attempt++) {
       await page.getByLabel('Message', { exact: true }).fill(`Hello from test ${attempt}`);
-      await page.locator('altcha-widget input[type="checkbox"]').click();
-      await expect(page.locator('altcha-widget .altcha')).toHaveAttribute('data-state', 'verified');
+      await solveWidgetWithMouse(page);
       await page.getByRole('button', { name: 'Submit message' }).click();
       await expect(page.locator('form.wpcf7-form')).toHaveAttribute('data-status', 'sent');
       await expect(page.locator('.wpcf7-response-output')).toHaveText(
@@ -88,8 +88,7 @@ test.describe('WordPress.org Playground demo', () => {
     await page.getByRole('link', { name: 'Back to demo', exact: true }).click();
     await expect(page.locator('altcha-widget')).toHaveAttribute('challengeurl', /admin-ajax\.php/);
     await page.getByLabel('Message', { exact: true }).fill('Retry after changing transport');
-    await page.locator('altcha-widget input[type="checkbox"]').click();
-    await expect(page.locator('altcha-widget .altcha')).toHaveAttribute('data-state', 'verified');
+    await solveWidgetWithMouse(page);
     await page.getByRole('button', { name: 'Submit message' }).click();
     await expect(page.locator('form.wpcf7-form')).toHaveAttribute('data-status', 'sent');
     await page.getByText('See how this is set up', { exact: true }).click();
@@ -136,8 +135,7 @@ test.describe('WordPress.org Playground demo', () => {
     expect((await postProof(page, null)).status).toBe('spam');
     expect((await postProof(page, 'invalid-proof')).status).toBe('spam');
     await page.getByLabel('Message', { exact: true }).fill('Visitor submission');
-    await page.locator('altcha-widget input[type="checkbox"]').click();
-    await expect(page.locator('altcha-widget .altcha')).toHaveAttribute('data-state', 'verified');
+    await solveWidgetWithMouse(page);
     await page.getByRole('button', { name: 'Submit message' }).click();
     await expect(page.locator('form.wpcf7-form')).toHaveAttribute('data-status', 'sent');
     expect(errors).toEqual([]);

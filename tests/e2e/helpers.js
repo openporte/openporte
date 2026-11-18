@@ -180,6 +180,12 @@ async function clickWidgetCheckbox(page) {
   await page.locator('.altcha input[type="checkbox"]').first().click();
 }
 
+/** Solve the visible checkbox with a mouse and wait for proof completion. */
+async function solveWidgetWithMouse(page) {
+  await clickWidgetCheckbox(page);
+  await waitForVerified(page);
+}
+
 /**
  * Negative-control helper: corrupt the solved widget's token so the payload
  * decodes fine but its HMAC signature no longer matches — the forged-token
@@ -298,6 +304,7 @@ module.exports = {
   expectTransport,
   waitForVerified,
   clickWidgetCheckbox,
+  solveWidgetWithMouse,
   tamperWidgetToken,
   removeWidgets,
 };

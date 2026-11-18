@@ -4,8 +4,7 @@ const {
   wp,
   wpSetOption,
   applyBaseline,
-  waitForVerified,
-  clickWidgetCheckbox,
+  solveWidgetWithMouse,
   removeWidgets,
 } = require('./helpers');
 
@@ -67,8 +66,7 @@ async function fillLogin(page, password, { solve }) {
   await page.locator('#user_login').fill(LOGIN_USER);
   await page.locator('#user_pass').fill(password);
   if (solve) {
-    await clickWidgetCheckbox(page);
-    await waitForVerified(page);
+    await solveWidgetWithMouse(page);
   } else {
     await removeWidgets(page);
   }
@@ -149,8 +147,7 @@ test.describe('wp-login.php protection', () => {
     test('a lost-password request with a solved challenge passes the check', async ({ page }) => {
       await page.goto('/wp-login.php?action=lostpassword');
       await page.locator('#user_login').fill(LOGIN_USER);
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       await page.locator('#wp-submit').click();
       await page.waitForLoadState('load');
 

@@ -6,8 +6,7 @@ const {
   wpSetOption,
   applyBaseline,
   applyCombo,
-  waitForVerified,
-  clickWidgetCheckbox,
+  solveWidgetWithMouse,
   removeWidgets,
 } = require('./helpers');
 
@@ -196,8 +195,7 @@ test.describe('shortcode injection (GHSA-hvr5-q69x-jp62)', () => {
 
       await contactForm7.open(page, ctx);
       await contactForm7.fill(page, ctx, 'E2E solved');
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       await contactForm7.submit(page);
       await contactForm7.expectAccepted(page);
     });
@@ -228,8 +226,7 @@ test.describe('shortcode injection (GHSA-hvr5-q69x-jp62)', () => {
 
       await page.goto(paths.hf);
       await page.locator('[name="message"]').fill('E2E solved');
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       await page.locator('form.hf-form [type="submit"]').click();
       await expect(page.getByText(ACCEPTED)).toBeVisible();
     });
