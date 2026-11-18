@@ -109,6 +109,12 @@ function openporte_demo_setup() {
   update_option( 'blogdescription', '' );
 
   // A focused front-page template avoids the theme's sample navigation/footer.
+  // Only block themes render it: a classic theme would still resolve the saved
+  // post below, then display its own PHP template, so the check would pass for
+  // nothing. The blueprint activates a block theme; fail if that ever changes.
+  if ( ! wp_is_block_theme() ) {
+    throw new RuntimeException( 'The demo front-page template requires an active block theme.' );
+  }
   $template_id = openporte_demo_upsert_post(
     OPENPORTE_DEMO_TEMPLATE_ID,
     array(
