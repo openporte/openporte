@@ -121,5 +121,15 @@ function openporte_demo_setup() {
         . '<!-- wp:post-title {"level":1} /--><!-- wp:post-content /--></main><!-- /wp:group -->',
     )
   );
-  wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );
+  $theme = get_stylesheet();
+  $terms = wp_set_object_terms( $template_id, $theme, 'wp_theme' );
+  if ( is_wp_error( $terms ) ) {
+    throw new RuntimeException( 'Could not assign the demo front-page template: ' . esc_html( $terms->get_error_message() ) );
+  }
+
+  // A saved post alone does not guarantee that the active theme will use it.
+  $resolved = get_block_template( $theme . '//front-page', 'wp_template' );
+  if ( ! $resolved || (int) $resolved->wp_id !== $template_id ) {
+    throw new RuntimeException( 'The active theme did not resolve the demo front-page template.' );
+  }
 }
