@@ -30,16 +30,16 @@ async function postProof(page, proof, nonce = null) {
 
 test.describe('WordPress.org Playground demo', () => {
   test.skip(!demoURL, 'Set OPENPORTE_PLAYGROUND_URL to a fresh generated blueprint instance.');
+  // wp-admin opts into cross-document view transitions unless reduced motion
+  // is preferred. In headless Chromium the transition after the settings
+  // save redirect is skipped and the page stops rendering, so no later click
+  // becomes actionable. Visitors still get the transition; the test opts out.
+  // (Not a top-level `use` option in Playwright Test: it goes through contextOptions.)
+  test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
   test('real verification, navigation, and visitor experience', async ({ page }) => {
     const errors = [];
-    page.on('pageerror', (error) => {
-      // Chromium can cancel WordPress's cross-document transition when the
-      // journey navigates between admin and front end. This native cancellation
-      // is unrelated to application JS; keep every other error observable.
-      if (error.message === 'Transition was aborted because of invalid state. ViewTransition opt-in disabled') return;
-      errors.push(error.message);
-    });
+    page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(demoURL);
     await expect(page.getByRole('heading', { name: 'Try OpenPorte', exact: true })).toBeVisible();
     await expect(page.locator('altcha-widget')).toHaveCount(1);

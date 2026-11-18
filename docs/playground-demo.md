@@ -84,8 +84,10 @@ obtain a REST nonce from WordPress's logged-in admin AJAX action and check
 also succeed with those credentials. The test changes REST transport to AJAX,
 saves, returns and submits, then restores REST. It exercises the form editor,
 a complete keyboard submission with confirmation, and a narrow viewport.
-It also checks for uncaught browser errors. Manually check status-message
-readability and recovery through a new Preview. Inspect PHP/browser logs and
+It also checks for uncaught browser errors. The test emulates reduced motion:
+wp-admin's cross-document view transitions otherwise stall headless Chromium
+after the settings save redirect, and no later click goes through. Manually
+check status-message readability and recovery through a new Preview. Inspect PHP/browser logs and
 confirm no outgoing mail or message storage.
 
 Initial validation (2026-11-14): Playground CLI **3.1.64**, WordPress **7.1.4**,
