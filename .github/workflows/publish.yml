@@ -75,6 +75,8 @@ jobs:
         run: |
           # An already-published version makes 10up exit early with a trunk ZIP.
           # A newly staged tag must be scheduled for addition in its working copy.
+          # The action has no output for that path: its deploy.sh uses
+          # $HOME/svn-$SLUG. Recheck this line whenever the action's pin moves.
           cd "$HOME/svn-openporte"
           svn status --depth empty "tags/$WPORG_VERSION" | grep '^A'
           cmp assets/blueprints/blueprint.json "$GITHUB_WORKSPACE/.wordpress-org/blueprints/blueprint.json"
