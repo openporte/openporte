@@ -1,65 +1,9 @@
 <?xml version="1.0"?>
-<ruleset name="OpenPorte">
-	<description>
-		OpenPorte coding standards: WordPress security and correctness sniffs plus
-		PHP cross-version compatibility. Deliberately scoped to security/correctness
-		(not whole-file formatting) because the code base inherits ALTCHA's
-		two-space indentation; reformatting is out of scope for this ruleset.
-	</description>
-
-	<!-- Scan the plugin from the repo root. -->
+<ruleset name="openporte">
+	<!-- Separate invocations keep text-domain properties scoped to each tree. -->
 	<file>.</file>
-
-	<!-- Dev, vendored and non-PHP paths are not plugin code. -->
-	<exclude-pattern>/vendor/*</exclude-pattern>
-	<exclude-pattern>/node_modules/*</exclude-pattern>
-	<exclude-pattern>/tests/*</exclude-pattern>
-	<exclude-pattern>/local/*</exclude-pattern>
-	<exclude-pattern>*/languages/*</exclude-pattern>
-	<!-- Vendored MIT widget: never ours to lint or modify. -->
-	<exclude-pattern>*/public/altcha.min.js</exclude-pattern>
-
-	<!-- Only PHP. -->
-	<arg name="extensions" value="php"/>
-	<!-- Show sniff codes and a progress bar; run in parallel. -->
-	<arg value="ps"/>
-	<arg name="parallel" value="8"/>
-	<arg name="colors"/>
-
-	<!-- Security sniffs: nonces, capability checks, escaping, sanitising. -->
-	<rule ref="WordPress.Security"/>
-
-	<!-- Database access: prepared statements, caching, schema changes. -->
-	<rule ref="WordPress.DB"/>
-
-	<!-- WordPress API correctness (enqueueing, alternative functions, deprecated). -->
-	<rule ref="WordPress.WP"/>
-
-	<!-- Discouraged / risky PHP functions and loose comparisons. base64 is
-	     legitimate here (ALTCHA payloads are base64(JSON)), so its "obfuscation"
-	     warnings are noise. Yoda conditions are a pure style preference and are
-	     out of scope for this security/correctness ruleset. -->
-	<rule ref="WordPress.PHP">
-		<exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode"/>
-		<exclude name="WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode"/>
-		<exclude name="WordPress.PHP.YodaConditions"/>
-		<!-- Deprecated in WPCS 3.3 (superseded by the PHPCompatibility standard,
-		     included below); excluded to silence the deprecation notice. -->
-		<exclude name="WordPress.PHP.POSIXFunctions"/>
-	</rule>
-
-	<!-- Every global symbol must carry the plugin prefix. -->
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-		<properties>
-			<property name="prefixes" type="array">
-				<element value="openporte"/>
-				<element value="OpenPorte"/>
-				<element value="OPENPORTE"/>
-			</property>
-		</properties>
-	</rule>
-
-	<!-- i18n: correct text domain and translator-comment placement. -->
+	<exclude-pattern>/demos/*</exclude-pattern>
+	<rule ref="bin/lint/phpcs-common.xml"/>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
@@ -67,9 +11,4 @@
 			</property>
 		</properties>
 	</rule>
-
-	<!-- PHP cross-version compatibility against the declared support floor.
-	     Requires phpcompatibility/phpcompatibility-wp (dev dependency). -->
-	<config name="testVersion" value="8.0-"/>
-	<rule ref="PHPCompatibilityWP"/>
 </ruleset>

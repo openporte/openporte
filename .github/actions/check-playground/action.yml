@@ -1,0 +1,22 @@
+name: Check Playground blueprint
+description: Install pinned tooling and validate the generated demo
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: '24'
+        cache: npm
+
+    - name: Set up npm for Playground tooling
+      shell: bash
+      run: npm install --global npm@11.16.0 --ignore-scripts
+
+    - name: Install demo validation dependencies
+      shell: bash
+      run: npm ci --ignore-scripts
+
+    - name: Check Playground blueprint
+      shell: bash
+      run: npm run demo:check

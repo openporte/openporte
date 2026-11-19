@@ -379,6 +379,10 @@ All source code for the plugin, and the ALTCHA widget is available on GitHub. In
 
 == Changelog ==
 
+= 1.31.0 (unreleased) =
+
+* Add a WordPress.org Playground preview with a message-only Contact Form 7 form, real OpenPorte verification, and optional settings exploration.
+
 = 1.30.3 =
 
 * Security: any visitor could run any shortcode registered on the site through a Contact Form 7 or HTML Forms form (GHSA-hvr5-q69x-jp62). To show the widget in those forms, OpenPorte expanded every shortcode in the displayed form, including text visitors had typed into its fields or put in the page's URL. Depending on the plugins installed, this could expose private content or open the way to flaws in other plugins' shortcodes. Neither the integration toggles nor the CAPTCHA prevented it. OpenPorte now renders only its own `[openporte]`/`[altcha]` tags, and only from the form as you wrote it. Present since ALTCHA Spam Protection 1.6.0 (Contact Form 7) and 1.7.0 (HTML Forms). Thanks to Erik Debye for the report.

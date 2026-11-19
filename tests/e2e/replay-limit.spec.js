@@ -8,8 +8,7 @@ const {
   applyBaseline,
   applyCombo,
   purgeComments,
-  waitForVerified,
-  clickWidgetCheckbox,
+  solveWidgetWithMouse,
   removeWidgets,
   captureWidgetToken,
   injectToken,
@@ -80,8 +79,7 @@ test.describe('replay limit', () => {
   async function solveAndCapture(page, marker) {
     await comments.open(page, ctx);
     await comments.fill(page, ctx, marker);
-    await clickWidgetCheckbox(page);
-    await waitForVerified(page);
+    await solveWidgetWithMouse(page);
     return captureWidgetToken(page);
   }
 
@@ -179,8 +177,7 @@ test.describe('replay limit', () => {
       const stamp = Date.now();
       await contactForm7.open(page, cf7);
       await contactForm7.fill(page, cf7, `e2e ajax resubmit 1 ${stamp}`);
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       const token = await captureWidgetToken(page);
 
       await contactForm7.submit(page, cf7);
@@ -226,8 +223,7 @@ test.describe('replay limit', () => {
       await page.goto('/wp-login.php');
       await page.locator('#user_login').fill(LOGIN_USER);
       await page.locator('#user_pass').fill(LOGIN_PASS);
-      await clickWidgetCheckbox(page);
-      await waitForVerified(page);
+      await solveWidgetWithMouse(page);
       const token = await captureWidgetToken(page);
       await page.locator('#wp-submit').click();
 

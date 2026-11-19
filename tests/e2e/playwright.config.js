@@ -12,6 +12,9 @@ module.exports = defineConfig({
   fullyParallel: false,
   retries: 0,
   use: {
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE }
+      : {},
     baseURL: process.env.WP_BASE_URL || 'http://localhost:8888',
     trace: 'retain-on-failure',
     video: 'retain-on-failure',

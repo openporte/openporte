@@ -24,3 +24,6 @@ docs/** linguist-documentation
 *.po text eol=lf linguist-documentation
 *.pot text eol=lf linguist-documentation
 *.mo binary linguist-generated
+
+# Generated preview assets
+.wordpress-org/blueprints/blueprint.json linguist-generated

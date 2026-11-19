@@ -115,9 +115,12 @@ scripts and need no `npm install`.
 
 | Command | What it checks | CI workflow | Blocking? |
 | ------- | -------------- | ----------- | --------- |
-| `npm run lint:phpcs` | WordPress security/correctness sniffs and PHP cross-version compatibility, per [`phpcs.xml.dist`](phpcs.xml.dist) | `.github/workflows/phpcs.yml` | **Yes** — a finding fails the PR |
+| `npm run lint:phpcs` | WordPress security/correctness sniffs and PHP cross-version compatibility, per [`phpcs.xml.dist`](phpcs.xml.dist) and [`phpcs-demo.xml.dist`](phpcs-demo.xml.dist) | `.github/workflows/phpcs.yml` | **Yes** — a finding fails the PR |
 | `npm run lint:phpmd` | Complexity, dead code and design smells, per [`phpmd.xml.dist`](phpmd.xml.dist) | `.github/workflows/phpmd.yml` | No — advisory, uploaded to the repo's Security tab |
 | `npm run lint:phpstan` | Type correctness — wrong argument types, impossible conditions, unknown symbols — per [`phpstan.neon.dist`](phpstan.neon.dist) | `.github/workflows/phpstan.yml` | **Yes** — a *new* finding fails the PR |
+
+PHPCS runs the plugin and demo separately so each accepts only its own text
+domain. Both configurations share `bin/lint/phpcs-common.xml`.
 
 All three workflows invoke exactly what you run locally (PHPMD via
 [`bin/lint/phpmd.sh`](bin/lint/phpmd.sh), PHPStan via

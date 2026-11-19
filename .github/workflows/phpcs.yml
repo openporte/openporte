@@ -34,4 +34,7 @@ jobs:
         run: composer install --prefer-dist --no-progress
 
       - name: Run PHP_CodeSniffer
-        run: vendor/bin/phpcs -q --report=full
+        run: npm run lint:phpcs
+
+      - name: Check Playground blueprint
+        uses: ./.github/actions/check-playground

@@ -22,9 +22,16 @@ their linked section.
 | `npm run release:version -- X.Y.Z` | Bump the version in `openporte.php`/`readme.txt` — Phase 1 |
 | `npm run release:i18n -- X.Y.Z` | Regenerate `.pot`/`.po`/`.mo` — Phase 2 (only if strings changed) |
 | `npm run release:assets` | Sync WordPress.org listing icons from `share/branding` — Phase 7 (only if branding changed) |
+| `npm run demo:build` / `npm run demo:check` | Generate/check the [Playground demo](playground-demo.md); validate before publishing preview assets |
 | `npm run release:check` | Run `php -l`/`bash -n` (blocking) and `phpcs`/`phpstan` (informative) — Phase 4 |
 | `npm run release:dist` | Build and verify the local/archival zip — Phase 7 |
 | `npm run release:tag -- vX.Y.Z` | Create the signed, annotated release tag (does not push) — Phase 7 |
+
+The Playground check is a deployment gate: stale generated output or a schema
+error stops publication before the SVN deployment action. Before tagging, run
+`npm ci --ignore-scripts` (Node.js 24.18+ / npm 11.16+), `npm run demo:build`,
+and `npm run demo:check`, then commit any regenerated blueprint. Fix failures
+on the release branch before creating the tag; do not bypass the gate.
 
 ## Phase 0 — Pre-flight
 
@@ -257,7 +264,11 @@ git switch main
 git fetch origin
 git merge --ff-only origin/main
 
-# 2. Tag main (now at the merge commit) and push the tag:
+# Rehearse the merged commit using Actions → ci → Run workflow on main.
+# Supply the release-ready version and inspect the SVN status and verified ZIP.
+# For an earlier packaging rehearsal, leave the version blank.
+
+# 2. Tag the same tested commit and push the tag:
 VERSION="vX.Y.Z"
 git tag -a "${VERSION}" -m "Release ${VERSION}"
 git push origin "${VERSION}"

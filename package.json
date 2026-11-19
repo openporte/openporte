@@ -3,7 +3,10 @@
   "private": true,
   "description": "Release-preparation scripts for the OpenPorte WordPress plugin. See docs/release-preparation.md.",
   "scripts": {
-    "lint:phpcs": "vendor/bin/phpcs -q --report=full",
+    "demo:build": "node bin/demo/build.mjs",
+    "demo:check": "node bin/demo/build.mjs --check",
+    "demo:i18n": "bash bin/demo/i18n.sh",
+    "lint:phpcs": "vendor/bin/phpcs -q --report=full --standard=phpcs.xml.dist && vendor/bin/phpcs -q --report=full --standard=phpcs-demo.xml.dist",
     "lint:phpmd": "bash bin/lint/phpmd.sh",
     "lint:phpstan": "bash bin/lint/phpstan.sh",
     "test:unit": "vendor/bin/phpunit",
@@ -15,5 +18,8 @@
     "release:tag": "bash bin/release/tag.sh",
     "altcha:update": "bash bin/release/altcha-update.sh",
     "altcha:verify": "bash bin/release/altcha-verify.sh"
+  },
+  "devDependencies": {
+    "@wp-playground/blueprints": "3.1.64"
   }
 }
