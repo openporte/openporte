@@ -140,3 +140,25 @@ branding sync script copies named images and leaves the blueprint directory alon
 
 Other integrations, migration walkthroughs, multilingual navigation, and broader
 directory marketing changes remain outside this first demo.
+
+## Rehearse immediately after merge
+
+Open **Actions → ci → Run workflow**, select **main**, and leave the version
+blank. The runner checks out that Git commit and stages the plugin, directory
+assets and a uniquely named tag in a temporary SVN working copy. The rehearsal
+checks the staged blueprint and verifies the actual 10up ZIP with
+`tests/bin/check-dist.sh`. Inspect the SVN status in the job log and download
+the verified ZIP from the run's Artifacts section (retained for 14 days).
+The temporary tag exists only on the runner. The ZIP carries the checked-out
+plugin headers. For the final rehearsal, enter the intended version after the
+release bump to exercise the same stable-tag check as a release tag push.
+
+To try the actual directory integration before release, a plugin committer can
+check out the plugin's SVN **assets** directory, copy the rehearsed commit's
+`.wordpress-org/blueprints/blueprint.json` to `blueprints/blueprint.json`
+inside that checkout, run `svn add --parents --force blueprints/blueprint.json`,
+and inspect `svn status` and `svn diff`. Commit the reviewed `blueprints`
+path. Then use **Test Preview** on WordPress.org. The blueprint installs the
+public plugin release. To exercise the rehearsed code itself, install the
+downloaded ZIP in a separate Playground instance. After pushing the real Git
+tag, repeat Test Preview against the released version before enabling Preview.

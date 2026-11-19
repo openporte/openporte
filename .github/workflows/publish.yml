@@ -1,5 +1,11 @@
 name: ci
 on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Optional release-ready version (e.g. 1.31.0). Leave blank for a packaging rehearsal before the version bump.'
+        type: string
+        required: false
   push:
     tags:
       # Coarse gate: only vMAJOR.MINOR.PATCH-shaped tags start a deploy at all.
@@ -12,36 +18,47 @@ permissions:
   contents: read
 jobs:
   deploy:
-    name: Publish
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    name: ${{ github.event_name == 'workflow_dispatch' && 'Rehearse publish' || 'Publish' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Validate the tag is vMAJOR.MINOR.PATCH
+      - name: Select and validate the release version
+        env:
+          REQUESTED_VERSION: ${{ inputs.release_version }}
         run: |
-          if [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "::error::Tag '$GITHUB_REF_NAME' must be vMAJOR.MINOR.PATCH (e.g. v1.27.2)."
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch && -z "$REQUESTED_VERSION" ]]; then
+            # A unique local SVN tag exercises staging even before version bump.
+            echo "WPORG_VERSION=rehearsal-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" >> "$GITHUB_ENV"
+            exit 0
+          fi
+          tag="$GITHUB_REF_NAME"
+          if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch ]]; then
+            tag="v$REQUESTED_VERSION"
+          fi
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Expected a vMAJOR.MINOR.PATCH release tag"
             exit 1
           fi
-      - name: Derive WordPress.org version from the git tag (strip leading "v")
-        run: echo "WPORG_VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
-      - name: Ensure the readme "Stable tag" matches the release version
-        run: |
-          stable=$(grep -iE '^Stable tag:' readme.txt | head -n1 \
-            | sed -E 's/^[Ss]table [Tt]ag:[[:space:]]*//' | tr -d '[:space:]')
-          if [[ "$stable" != "$WPORG_VERSION" ]]; then
-            echo "::error::readme.txt 'Stable tag' ($stable) does not match the tag version ($WPORG_VERSION)."
+          version="${tag#v}"
+          stable=$(awk 'tolower($0) ~ /^stable tag:/ {print $NF; exit}' readme.txt | tr -d '\r')
+          if [[ "$stable" != "$version" ]]; then
+            echo "::error::readme.txt Stable tag ($stable) must match $version"
             exit 1
           fi
+          echo "WPORG_VERSION=$version" >> "$GITHUB_ENV"
       - name: Install Subversion
         run: sudo apt-get update && sudo apt-get install -y subversion
       - name: Check Playground blueprint
         uses: ./.github/actions/check-playground
       - name: WordPress Plugin Publish
+        id: deploy
         # Pinned to a commit SHA (supply-chain hardening); the trailing comment
         # tracks the human-readable version. 2.3.0 is the current @stable.
         uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # 2.3.0 (stable)
         with:
           generate-zip: true
+          dry-run: ${{ github.event_name != 'push' }}
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
@@ -51,3 +68,23 @@ jobs:
           # "Stable tag" use X.Y.Z (no leading "v"). Override the version the
           # action would otherwise derive from the tag name so they match.
           VERSION: ${{ env.WPORG_VERSION }}
+      - name: Verify rehearsal staging and ZIP
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          ZIP_PATH: ${{ steps.deploy.outputs.zip-path }}
+        run: |
+          # An already-published version makes 10up exit early with a trunk ZIP.
+          # A newly staged tag must be scheduled for addition in its working copy.
+          cd "$HOME/svn-openporte"
+          svn status --depth empty "tags/$WPORG_VERSION" | grep '^A'
+          cmp assets/blueprints/blueprint.json "$GITHUB_WORKSPACE/.wordpress-org/blueprints/blueprint.json"
+          cd "$GITHUB_WORKSPACE"
+          ./tests/bin/check-dist.sh "$ZIP_PATH"
+      - name: Retain verified rehearsal ZIP
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: openporte-rehearsal-${{ github.sha }}-${{ github.run_attempt }}
+          path: ${{ steps.deploy.outputs.zip-path }}
+          if-no-files-found: error
+          retention-days: 14

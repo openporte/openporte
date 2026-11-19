@@ -264,7 +264,11 @@ git switch main
 git fetch origin
 git merge --ff-only origin/main
 
-# 2. Tag main (now at the merge commit) and push the tag:
+# Rehearse the merged commit using Actions → ci → Run workflow on main.
+# Supply the release-ready version and inspect the SVN status and verified ZIP.
+# For an earlier packaging rehearsal, leave the version blank.
+
+# 2. Tag the same tested commit and push the tag:
 VERSION="vX.Y.Z"
 git tag -a "${VERSION}" -m "Release ${VERSION}"
 git push origin "${VERSION}"
