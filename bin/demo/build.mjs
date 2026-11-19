@@ -13,6 +13,20 @@ const muPluginsDir = '/wordpress/wp-content/mu-plugins';
 const locale = 'en_US';
 // Directory assets can change independently of the released plugin version.
 const cssHash = createHash('sha256').update(readFileSync(resolve(source, 'demo.css'))).digest('hex').slice(0, 16);
+const cssHashPlaceholder = 'OPENPORTE_DEMO_CSS_HASH';
+
+/** Read one embedded file; only demo.php carries the stylesheet version. */
+function embed(file) {
+  const data = readFileSync(resolve(source, file), 'utf8');
+  if (file !== 'demo.php') {
+    return data;
+  }
+  // Without the placeholder, the stylesheet would keep a stale cache version.
+  if (!data.includes(cssHashPlaceholder)) {
+    throw new Error(`demos/cf7/demo.php must contain ${cssHashPlaceholder}.`);
+  }
+  return data.replaceAll(cssHashPlaceholder, cssHash);
+}
 const blueprint = {
   $schema: 'https://playground.wordpress.net/blueprint-schema.json',
   meta: { title: 'Try OpenPorte with Contact Form 7', author: 'openporte', description: 'Try a message-only form with real OpenPorte verification, then explore its settings.' },
@@ -30,7 +44,7 @@ const blueprint = {
       ['demo.css', `${muPluginsDir}/openporte-demo/demo.css`],
       ['demo.php', `${muPluginsDir}/openporte-demo.php`],
       ['setup.php', '/tmp/openporte-demo-setup.php'],
-    ].map(([file, path]) => ({ step: 'writeFile', path, data: readFileSync(resolve(source, file), 'utf8').replace('OPENPORTE_DEMO_CSS_HASH', cssHash) })),
+    ].map(([file, path]) => ({ step: 'writeFile', path, data: embed(file) })),
     { step: 'runPHP', code: "<?php require '/wordpress/wp-load.php'; require '/tmp/openporte-demo-setup.php'; openporte_demo_setup();" },
     { step: 'rm', path: '/tmp/openporte-demo-setup.php' },
   ],
